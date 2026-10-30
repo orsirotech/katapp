@@ -1,0 +1,1481 @@
+{
+  "versione": 1,
+  "lingua": "it",
+  "glossario": [
+    {
+      "id": "karate",
+      "romaji": "Karate",
+      "kanji": "空手",
+      "kana": "からて",
+      "significato": "Mano vuota: si combatte senza armi.",
+      "parti": [
+        {
+          "parte": "kara 空",
+          "senso": "vuoto"
+        },
+        {
+          "parte": "te 手",
+          "senso": "mano"
+        }
+      ],
+      "categoria": "gen",
+      "alias": []
+    },
+    {
+      "id": "do",
+      "romaji": "Dō",
+      "kanji": "道",
+      "kana": "どう",
+      "significato": "Via: un percorso che dura tutta la vita, non solo una tecnica.",
+      "parti": [],
+      "categoria": "gen",
+      "alias": []
+    },
+    {
+      "id": "dojo",
+      "romaji": "Dōjō",
+      "kanji": "道場",
+      "kana": "どうじょう",
+      "significato": "Il luogo dove si pratica la via.",
+      "parti": [
+        {
+          "parte": "dō 道",
+          "senso": "via"
+        },
+        {
+          "parte": "jō 場",
+          "senso": "luogo"
+        }
+      ],
+      "categoria": "dojo",
+      "alias": []
+    },
+    {
+      "id": "sensei",
+      "romaji": "Sensei",
+      "kanji": "先生",
+      "kana": "せんせい",
+      "significato": "Maestro. Letteralmente \"nato prima\": chi ha percorso la via prima di te.",
+      "parti": [
+        {
+          "parte": "sen 先",
+          "senso": "prima"
+        },
+        {
+          "parte": "sei 生",
+          "senso": "nascere"
+        }
+      ],
+      "categoria": "dojo",
+      "alias": []
+    },
+    {
+      "id": "senpai",
+      "romaji": "Senpai",
+      "kanji": "先輩",
+      "kana": "せんぱい",
+      "significato": "Allievo più anziano di pratica, che aiuta i nuovi.",
+      "parti": [
+        {
+          "parte": "sen 先",
+          "senso": "prima"
+        },
+        {
+          "parte": "pai 輩",
+          "senso": "compagno"
+        }
+      ],
+      "categoria": "dojo",
+      "alias": []
+    },
+    {
+      "id": "kohai",
+      "romaji": "Kōhai",
+      "kanji": "後輩",
+      "kana": "こうはい",
+      "significato": "Allievo più giovane di pratica.",
+      "parti": [
+        {
+          "parte": "kō 後",
+          "senso": "dopo"
+        },
+        {
+          "parte": "hai 輩",
+          "senso": "compagno"
+        }
+      ],
+      "categoria": "dojo",
+      "alias": []
+    },
+    {
+      "id": "karategi",
+      "romaji": "Karategi",
+      "kanji": "空手着",
+      "kana": "からてぎ",
+      "significato": "La divisa bianca del karate.",
+      "parti": [
+        {
+          "parte": "karate 空手",
+          "senso": "mano vuota"
+        },
+        {
+          "parte": "gi 着",
+          "senso": "abito"
+        }
+      ],
+      "categoria": "dojo",
+      "alias": []
+    },
+    {
+      "id": "obi",
+      "romaji": "Obi",
+      "kanji": "帯",
+      "kana": "おび",
+      "significato": "Cintura: il colore indica il grado.",
+      "parti": [],
+      "categoria": "dojo",
+      "alias": []
+    },
+    {
+      "id": "kyu",
+      "romaji": "Kyū",
+      "kanji": "級",
+      "kana": "きゅう",
+      "significato": "Grado prima della cintura nera, dal 10° al 1°.",
+      "parti": [],
+      "categoria": "dojo",
+      "alias": []
+    },
+    {
+      "id": "dan",
+      "romaji": "Dan",
+      "kanji": "段",
+      "kana": "だん",
+      "significato": "Grado di cintura nera, dal 1° in su. Vuol dire anche \"livello\".",
+      "parti": [],
+      "categoria": "dojo",
+      "alias": []
+    },
+    {
+      "id": "rei",
+      "romaji": "Rei",
+      "kanji": "礼",
+      "kana": "れい",
+      "significato": "Saluto e rispetto, espresso con l'inchino.",
+      "parti": [],
+      "categoria": "dojo",
+      "alias": []
+    },
+    {
+      "id": "seiza",
+      "romaji": "Seiza",
+      "kanji": "正座",
+      "kana": "せいざ",
+      "significato": "Seduta corretta, in ginocchio sui talloni.",
+      "parti": [
+        {
+          "parte": "sei 正",
+          "senso": "corretto"
+        },
+        {
+          "parte": "za 座",
+          "senso": "sedere"
+        }
+      ],
+      "categoria": "dojo",
+      "alias": []
+    },
+    {
+      "id": "mokuso",
+      "romaji": "Mokusō",
+      "kanji": "黙想",
+      "kana": "もくそう",
+      "significato": "Breve meditazione in silenzio a inizio e fine lezione.",
+      "parti": [
+        {
+          "parte": "moku 黙",
+          "senso": "silenzio"
+        },
+        {
+          "parte": "sō 想",
+          "senso": "pensiero"
+        }
+      ],
+      "categoria": "dojo",
+      "alias": []
+    },
+    {
+      "id": "osu",
+      "romaji": "Osu",
+      "kanji": "押忍",
+      "kana": "おす",
+      "significato": "Saluto e \"ho capito\" tra praticanti, usato in molti dojo. Unisce \"spingere\" e \"sopportare\".",
+      "parti": [
+        {
+          "parte": "o 押",
+          "senso": "spingere"
+        },
+        {
+          "parte": "su 忍",
+          "senso": "sopportare"
+        }
+      ],
+      "categoria": "dojo",
+      "alias": []
+    },
+    {
+      "id": "shotokan",
+      "romaji": "Shōtōkan",
+      "kanji": "松濤館",
+      "kana": "しょうとうかん",
+      "significato": "La casa di Shōtō. Shōtō, \"onde tra i pini\", era il nome con cui Funakoshi firmava le sue poesie.",
+      "parti": [
+        {
+          "parte": "shō 松",
+          "senso": "pino"
+        },
+        {
+          "parte": "tō 濤",
+          "senso": "onde"
+        },
+        {
+          "parte": "kan 館",
+          "senso": "casa"
+        }
+      ],
+      "categoria": "gen",
+      "alias": []
+    },
+    {
+      "id": "kiai",
+      "romaji": "Kiai",
+      "kanji": "気合",
+      "kana": "きあい",
+      "significato": "Grido che unisce energia, respiro e tecnica nello stesso istante.",
+      "parti": [
+        {
+          "parte": "ki 気",
+          "senso": "energia"
+        },
+        {
+          "parte": "ai 合",
+          "senso": "unire"
+        }
+      ],
+      "categoria": "gen",
+      "alias": []
+    },
+    {
+      "id": "kime",
+      "romaji": "Kime",
+      "kanji": "決め",
+      "kana": "きめ",
+      "significato": "Decisione: l'istante di massima concentrazione alla fine della tecnica.",
+      "parti": [],
+      "categoria": "gen",
+      "alias": []
+    },
+    {
+      "id": "zanshin",
+      "romaji": "Zanshin",
+      "kanji": "残心",
+      "kana": "ざんしん",
+      "significato": "Mente che resta: l'attenzione continua anche dopo la tecnica.",
+      "parti": [
+        {
+          "parte": "zan 残",
+          "senso": "restare"
+        },
+        {
+          "parte": "shin 心",
+          "senso": "mente, cuore"
+        }
+      ],
+      "categoria": "gen",
+      "alias": []
+    },
+    {
+      "id": "kokoro",
+      "romaji": "Kokoro",
+      "kanji": "心",
+      "kana": "こころ",
+      "significato": "Cuore e mente insieme: lo spirito con cui si pratica.",
+      "parti": [],
+      "categoria": "gen",
+      "alias": []
+    },
+    {
+      "id": "kihon",
+      "romaji": "Kihon",
+      "kanji": "基本",
+      "kana": "きほん",
+      "significato": "Fondamentali: le tecniche di base, ripetute fino a renderle naturali.",
+      "parti": [
+        {
+          "parte": "ki 基",
+          "senso": "base"
+        },
+        {
+          "parte": "hon 本",
+          "senso": "origine"
+        }
+      ],
+      "categoria": "gen",
+      "alias": []
+    },
+    {
+      "id": "kata",
+      "romaji": "Kata",
+      "kanji": "形",
+      "kana": "かた",
+      "significato": "Forma: una sequenza fissa di tecniche contro avversari immaginari.",
+      "parti": [],
+      "categoria": "kata",
+      "alias": []
+    },
+    {
+      "id": "kumite",
+      "romaji": "Kumite",
+      "kanji": "組手",
+      "kana": "くみて",
+      "significato": "Combattimento con un compagno, \"mani che si incontrano\".",
+      "parti": [
+        {
+          "parte": "kumi 組",
+          "senso": "incontrare, unire"
+        },
+        {
+          "parte": "te 手",
+          "senso": "mano"
+        }
+      ],
+      "categoria": "gen",
+      "alias": []
+    },
+    {
+      "id": "kamae",
+      "romaji": "Kamae",
+      "kanji": "構え",
+      "kana": "かまえ",
+      "significato": "Guardia: la posizione pronta prima e dopo la tecnica.",
+      "parti": [],
+      "categoria": "gen",
+      "alias": []
+    },
+    {
+      "id": "yoi",
+      "romaji": "Yoi",
+      "kanji": "用意",
+      "kana": "ようい",
+      "significato": "Pronti: posizione di attesa prima di iniziare.",
+      "parti": [],
+      "categoria": "dojo",
+      "alias": []
+    },
+    {
+      "id": "hikite",
+      "romaji": "Hikite",
+      "kanji": "引き手",
+      "kana": "ひきて",
+      "significato": "Mano che tira al fianco mentre l'altra colpisce o para.",
+      "parti": [
+        {
+          "parte": "hiki 引き",
+          "senso": "tirare"
+        },
+        {
+          "parte": "te 手",
+          "senso": "mano"
+        }
+      ],
+      "categoria": "gen",
+      "alias": []
+    },
+    {
+      "id": "hanmi",
+      "romaji": "Hanmi",
+      "kanji": "半身",
+      "kana": "はんみ",
+      "significato": "Mezzo corpo: busto ruotato di tre quarti.",
+      "parti": [
+        {
+          "parte": "han 半",
+          "senso": "metà"
+        },
+        {
+          "parte": "mi 身",
+          "senso": "corpo"
+        }
+      ],
+      "categoria": "gen",
+      "alias": []
+    },
+    {
+      "id": "shomen",
+      "romaji": "Shōmen",
+      "kanji": "正面",
+      "kana": "しょうめん",
+      "significato": "Di fronte: busto frontale. Indica anche la parete principale del dojo.",
+      "parti": [
+        {
+          "parte": "shō 正",
+          "senso": "diritto"
+        },
+        {
+          "parte": "men 面",
+          "senso": "viso"
+        }
+      ],
+      "categoria": "gen",
+      "alias": []
+    },
+    {
+      "id": "dachi",
+      "romaji": "Dachi",
+      "kanji": "立ち",
+      "kana": "だち",
+      "significato": "Posizione. Viene da tachi, \"stare in piedi\".",
+      "parti": [],
+      "categoria": "dachi",
+      "alias": [
+        "tachi"
+      ]
+    },
+    {
+      "id": "zenkutsu",
+      "romaji": "Zenkutsu",
+      "kanji": "前屈",
+      "kana": "ぜんくつ",
+      "significato": "Piegato in avanti.",
+      "parti": [
+        {
+          "parte": "zen 前",
+          "senso": "avanti"
+        },
+        {
+          "parte": "kutsu 屈",
+          "senso": "piegare"
+        }
+      ],
+      "categoria": "dachi",
+      "alias": []
+    },
+    {
+      "id": "kokutsu",
+      "romaji": "Kōkutsu",
+      "kanji": "後屈",
+      "kana": "こうくつ",
+      "significato": "Piegato indietro.",
+      "parti": [
+        {
+          "parte": "kō 後",
+          "senso": "dietro"
+        },
+        {
+          "parte": "kutsu 屈",
+          "senso": "piegare"
+        }
+      ],
+      "categoria": "dachi",
+      "alias": []
+    },
+    {
+      "id": "kiba",
+      "romaji": "Kiba",
+      "kanji": "騎馬",
+      "kana": "きば",
+      "significato": "Cavaliere: si sta come in sella a un cavallo.",
+      "parti": [
+        {
+          "parte": "ki 騎",
+          "senso": "cavalcare"
+        },
+        {
+          "parte": "ba 馬",
+          "senso": "cavallo"
+        }
+      ],
+      "categoria": "dachi",
+      "alias": []
+    },
+    {
+      "id": "musubi",
+      "romaji": "Musubi",
+      "kanji": "結び",
+      "kana": "むすび",
+      "significato": "Legato, unito: i talloni si toccano.",
+      "parti": [],
+      "categoria": "dachi",
+      "alias": []
+    },
+    {
+      "id": "heiko",
+      "romaji": "Heikō",
+      "kanji": "平行",
+      "kana": "へいこう",
+      "significato": "Parallelo.",
+      "parti": [],
+      "categoria": "dachi",
+      "alias": []
+    },
+    {
+      "id": "hachiji",
+      "romaji": "Hachiji",
+      "kanji": "八字",
+      "kana": "はちじ",
+      "significato": "A forma del carattere 八, \"otto\": piedi aperti in fuori.",
+      "parti": [
+        {
+          "parte": "hachi 八",
+          "senso": "otto"
+        },
+        {
+          "parte": "ji 字",
+          "senso": "carattere"
+        }
+      ],
+      "categoria": "dachi",
+      "alias": []
+    },
+    {
+      "id": "uke",
+      "romaji": "Uke",
+      "kanji": "受け",
+      "kana": "うけ",
+      "significato": "Ricevere: parata. Indica anche chi riceve la tecnica nel kumite.",
+      "parti": [],
+      "categoria": "uke",
+      "alias": []
+    },
+    {
+      "id": "age",
+      "romaji": "Age",
+      "kanji": "上げ",
+      "kana": "あげ",
+      "significato": "Alzare, verso l'alto.",
+      "parti": [],
+      "categoria": "uke",
+      "alias": []
+    },
+    {
+      "id": "gedan",
+      "romaji": "Gedan",
+      "kanji": "下段",
+      "kana": "げだん",
+      "significato": "Livello basso, sotto la cintura.",
+      "parti": [
+        {
+          "parte": "ge 下",
+          "senso": "sotto"
+        },
+        {
+          "parte": "dan 段",
+          "senso": "livello"
+        }
+      ],
+      "categoria": "uke",
+      "alias": []
+    },
+    {
+      "id": "chudan",
+      "romaji": "Chūdan",
+      "kanji": "中段",
+      "kana": "ちゅうだん",
+      "significato": "Livello medio: il busto.",
+      "parti": [
+        {
+          "parte": "chū 中",
+          "senso": "mezzo"
+        },
+        {
+          "parte": "dan 段",
+          "senso": "livello"
+        }
+      ],
+      "categoria": "uke",
+      "alias": []
+    },
+    {
+      "id": "jodan",
+      "romaji": "Jōdan",
+      "kanji": "上段",
+      "kana": "じょうだん",
+      "significato": "Livello alto: la testa.",
+      "parti": [
+        {
+          "parte": "jō 上",
+          "senso": "sopra"
+        },
+        {
+          "parte": "dan 段",
+          "senso": "livello"
+        }
+      ],
+      "categoria": "uke",
+      "alias": []
+    },
+    {
+      "id": "barai",
+      "romaji": "Barai",
+      "kanji": "払い",
+      "kana": "ばらい",
+      "significato": "Spazzare via. Viene da harai.",
+      "parti": [],
+      "categoria": "uke",
+      "alias": [
+        "harai"
+      ]
+    },
+    {
+      "id": "soto",
+      "romaji": "Soto",
+      "kanji": "外",
+      "kana": "そと",
+      "significato": "Esterno: da fuori verso dentro.",
+      "parti": [],
+      "categoria": "uke",
+      "alias": []
+    },
+    {
+      "id": "uchi",
+      "romaji": "Uchi",
+      "kanji": "内 · 打ち",
+      "kana": "うち",
+      "significato": "Ha due significati. 内 è \"interno\" (uchi-uke), 打ち è \"colpo\" (shutō-uchi).",
+      "parti": [],
+      "categoria": "uke",
+      "alias": []
+    },
+    {
+      "id": "ude",
+      "romaji": "Ude",
+      "kanji": "腕",
+      "kana": "うで",
+      "significato": "Braccio, avambraccio.",
+      "parti": [],
+      "categoria": "uke",
+      "alias": []
+    },
+    {
+      "id": "haiwan",
+      "romaji": "Haiwan",
+      "kanji": "背腕",
+      "kana": "はいわん",
+      "significato": "Dorso dell'avambraccio.",
+      "parti": [
+        {
+          "parte": "hai 背",
+          "senso": "dorso"
+        },
+        {
+          "parte": "wan 腕",
+          "senso": "braccio"
+        }
+      ],
+      "categoria": "uke",
+      "alias": []
+    },
+    {
+      "id": "morote",
+      "romaji": "Morote",
+      "kanji": "諸手",
+      "kana": "もろて",
+      "significato": "Con entrambe le mani.",
+      "parti": [
+        {
+          "parte": "moro 諸",
+          "senso": "tutti e due"
+        },
+        {
+          "parte": "te 手",
+          "senso": "mano"
+        }
+      ],
+      "categoria": "uke",
+      "alias": []
+    },
+    {
+      "id": "tsuki",
+      "romaji": "Tsuki",
+      "kanji": "突き",
+      "kana": "つき",
+      "significato": "Spinta: pugno diretto. Nei nomi composti diventa -zuki.",
+      "parti": [],
+      "categoria": "att",
+      "alias": [
+        "zuki"
+      ]
+    },
+    {
+      "id": "oi",
+      "romaji": "Oi",
+      "kanji": "追い",
+      "kana": "おい",
+      "significato": "Inseguire: il pugno che avanza con il passo.",
+      "parti": [],
+      "categoria": "att",
+      "alias": []
+    },
+    {
+      "id": "gyaku",
+      "romaji": "Gyaku",
+      "kanji": "逆",
+      "kana": "ぎゃく",
+      "significato": "Contrario, opposto.",
+      "parti": [],
+      "categoria": "att",
+      "alias": []
+    },
+    {
+      "id": "kizami",
+      "romaji": "Kizami",
+      "kanji": "刻み",
+      "kana": "きざみ",
+      "significato": "Incidere, tagliare corto: colpo veloce con la mano avanti.",
+      "parti": [],
+      "categoria": "att",
+      "alias": []
+    },
+    {
+      "id": "ura",
+      "romaji": "Ura",
+      "kanji": "裏",
+      "kana": "うら",
+      "significato": "Rovescio, il lato nascosto.",
+      "parti": [],
+      "categoria": "att",
+      "alias": []
+    },
+    {
+      "id": "shuto",
+      "romaji": "Shutō",
+      "kanji": "手刀",
+      "kana": "しゅとう",
+      "significato": "Mano a spada: il taglio della mano.",
+      "parti": [
+        {
+          "parte": "shu 手",
+          "senso": "mano"
+        },
+        {
+          "parte": "tō 刀",
+          "senso": "spada"
+        }
+      ],
+      "categoria": "att",
+      "alias": []
+    },
+    {
+      "id": "uraken",
+      "romaji": "Uraken",
+      "kanji": "裏拳",
+      "kana": "うらけん",
+      "significato": "Pugno rovescio: si colpisce con il dorso delle nocche.",
+      "parti": [
+        {
+          "parte": "ura 裏",
+          "senso": "rovescio"
+        },
+        {
+          "parte": "ken 拳",
+          "senso": "pugno"
+        }
+      ],
+      "categoria": "att",
+      "alias": []
+    },
+    {
+      "id": "empi",
+      "romaji": "Empi",
+      "kanji": "猿臂",
+      "kana": "えんぴ",
+      "significato": "Gomito. Letteralmente \"braccio di scimmia\".",
+      "parti": [
+        {
+          "parte": "en 猿",
+          "senso": "scimmia"
+        },
+        {
+          "parte": "pi 臂",
+          "senso": "braccio"
+        }
+      ],
+      "categoria": "att",
+      "alias": [
+        "enpi"
+      ]
+    },
+    {
+      "id": "nukite",
+      "romaji": "Nukite",
+      "kanji": "貫手",
+      "kana": "ぬきて",
+      "significato": "Mano che trafigge, a punta di dita.",
+      "parti": [
+        {
+          "parte": "nuki 貫",
+          "senso": "trafiggere"
+        },
+        {
+          "parte": "te 手",
+          "senso": "mano"
+        }
+      ],
+      "categoria": "att",
+      "alias": []
+    },
+    {
+      "id": "tettsui",
+      "romaji": "Tettsui",
+      "kanji": "鉄槌",
+      "kana": "てっつい",
+      "significato": "Martello di ferro: si colpisce con il lato del pugno.",
+      "parti": [
+        {
+          "parte": "tetsu 鉄",
+          "senso": "ferro"
+        },
+        {
+          "parte": "tsui 槌",
+          "senso": "martello"
+        }
+      ],
+      "categoria": "att",
+      "alias": [
+        "tetsui"
+      ]
+    },
+    {
+      "id": "geri",
+      "romaji": "Geri",
+      "kanji": "蹴り",
+      "kana": "げり",
+      "significato": "Calcio. Viene da keri.",
+      "parti": [],
+      "categoria": "geri",
+      "alias": [
+        "keri"
+      ]
+    },
+    {
+      "id": "mae",
+      "romaji": "Mae",
+      "kanji": "前",
+      "kana": "まえ",
+      "significato": "Davanti.",
+      "parti": [],
+      "categoria": "geri",
+      "alias": []
+    },
+    {
+      "id": "yoko",
+      "romaji": "Yoko",
+      "kanji": "横",
+      "kana": "よこ",
+      "significato": "Lato.",
+      "parti": [],
+      "categoria": "geri",
+      "alias": []
+    },
+    {
+      "id": "mawashi",
+      "romaji": "Mawashi",
+      "kanji": "回し",
+      "kana": "まわし",
+      "significato": "Girare: traiettoria circolare.",
+      "parti": [],
+      "categoria": "geri",
+      "alias": []
+    },
+    {
+      "id": "ushiro",
+      "romaji": "Ushiro",
+      "kanji": "後ろ",
+      "kana": "うしろ",
+      "significato": "Dietro.",
+      "parti": [],
+      "categoria": "geri",
+      "alias": []
+    },
+    {
+      "id": "keage",
+      "romaji": "Keage",
+      "kanji": "蹴上げ",
+      "kana": "けあげ",
+      "significato": "Calciare verso l'alto, a frusta.",
+      "parti": [
+        {
+          "parte": "ke 蹴",
+          "senso": "calciare"
+        },
+        {
+          "parte": "age 上げ",
+          "senso": "alzare"
+        }
+      ],
+      "categoria": "geri",
+      "alias": []
+    },
+    {
+      "id": "kekomi",
+      "romaji": "Kekomi",
+      "kanji": "蹴込み",
+      "kana": "けこみ",
+      "significato": "Calciare spingendo dentro, in profondità.",
+      "parti": [
+        {
+          "parte": "ke 蹴",
+          "senso": "calciare"
+        },
+        {
+          "parte": "komi 込み",
+          "senso": "spingere dentro"
+        }
+      ],
+      "categoria": "geri",
+      "alias": []
+    },
+    {
+      "id": "sokuto",
+      "romaji": "Sokutō",
+      "kanji": "足刀",
+      "kana": "そくとう",
+      "significato": "Piede a spada: il taglio esterno del piede.",
+      "parti": [
+        {
+          "parte": "soku 足",
+          "senso": "piede"
+        },
+        {
+          "parte": "tō 刀",
+          "senso": "spada"
+        }
+      ],
+      "categoria": "geri",
+      "alias": []
+    },
+    {
+      "id": "koshi",
+      "romaji": "Koshi",
+      "kanji": "虎趾",
+      "kana": "こし",
+      "significato": "Avampiede, la parte sotto le dita. Letteralmente \"zampa di tigre\".",
+      "parti": [
+        {
+          "parte": "ko 虎",
+          "senso": "tigre"
+        },
+        {
+          "parte": "shi 趾",
+          "senso": "dita del piede"
+        }
+      ],
+      "categoria": "geri",
+      "alias": []
+    },
+    {
+      "id": "haisoku",
+      "romaji": "Haisoku",
+      "kanji": "背足",
+      "kana": "はいそく",
+      "significato": "Collo del piede.",
+      "parti": [
+        {
+          "parte": "hai 背",
+          "senso": "dorso"
+        },
+        {
+          "parte": "soku 足",
+          "senso": "piede"
+        }
+      ],
+      "categoria": "geri",
+      "alias": []
+    },
+    {
+      "id": "kakato",
+      "romaji": "Kakato",
+      "kanji": "踵",
+      "kana": "かかと",
+      "significato": "Tallone.",
+      "parti": [],
+      "categoria": "geri",
+      "alias": []
+    },
+    {
+      "id": "hidari",
+      "romaji": "Hidari",
+      "kanji": "左",
+      "kana": "ひだり",
+      "significato": "Sinistra.",
+      "parti": [],
+      "categoria": "gen",
+      "alias": []
+    },
+    {
+      "id": "migi",
+      "romaji": "Migi",
+      "kanji": "右",
+      "kana": "みぎ",
+      "significato": "Destra.",
+      "parti": [],
+      "categoria": "gen",
+      "alias": []
+    },
+    {
+      "id": "heian",
+      "romaji": "Heian",
+      "kanji": "平安",
+      "kana": "へいあん",
+      "significato": "Pace e tranquillità.",
+      "parti": [
+        {
+          "parte": "hei 平",
+          "senso": "calmo"
+        },
+        {
+          "parte": "an 安",
+          "senso": "sicuro"
+        }
+      ],
+      "categoria": "kata",
+      "alias": []
+    },
+    {
+      "id": "taikyoku",
+      "romaji": "Taikyoku",
+      "kanji": "太極",
+      "kana": "たいきょく",
+      "significato": "Il grande principio: l'origine da cui nasce tutto.",
+      "parti": [
+        {
+          "parte": "tai 太",
+          "senso": "grande"
+        },
+        {
+          "parte": "kyoku 極",
+          "senso": "estremo, principio"
+        }
+      ],
+      "categoria": "kata",
+      "alias": []
+    },
+    {
+      "id": "shodan",
+      "romaji": "Shodan",
+      "kanji": "初段",
+      "kana": "しょだん",
+      "significato": "Primo livello. È anche il nome del 1° dan.",
+      "parti": [
+        {
+          "parte": "sho 初",
+          "senso": "primo"
+        },
+        {
+          "parte": "dan 段",
+          "senso": "livello"
+        }
+      ],
+      "categoria": "kata",
+      "alias": []
+    },
+    {
+      "id": "nidan",
+      "romaji": "Nidan",
+      "kanji": "二段",
+      "kana": "にだん",
+      "significato": "Secondo livello.",
+      "parti": [
+        {
+          "parte": "ni 二",
+          "senso": "due"
+        },
+        {
+          "parte": "dan 段",
+          "senso": "livello"
+        }
+      ],
+      "categoria": "kata",
+      "alias": []
+    },
+    {
+      "id": "embusen",
+      "romaji": "Embusen",
+      "kanji": "演武線",
+      "kana": "えんぶせん",
+      "significato": "La linea che il kata disegna sul pavimento.",
+      "parti": [
+        {
+          "parte": "en 演",
+          "senso": "eseguire"
+        },
+        {
+          "parte": "bu 武",
+          "senso": "arte marziale"
+        },
+        {
+          "parte": "sen 線",
+          "senso": "linea"
+        }
+      ],
+      "categoria": "kata",
+      "alias": [
+        "enbusen"
+      ]
+    }
+  ],
+  "comandi": [
+    {
+      "romaji": "Rei",
+      "kana": "れい",
+      "significato": "Saluto, inchino"
+    },
+    {
+      "romaji": "Seiza",
+      "kana": "せいざ",
+      "significato": "In ginocchio, seduti sui talloni"
+    },
+    {
+      "romaji": "Mokusō",
+      "kana": "もくそう",
+      "significato": "Occhi chiusi, meditazione"
+    },
+    {
+      "romaji": "Mokusō yame",
+      "kana": "もくそう やめ",
+      "significato": "Fine della meditazione"
+    },
+    {
+      "romaji": "Shōmen ni rei",
+      "kana": "しょうめんに れい",
+      "significato": "Saluto verso la parete principale"
+    },
+    {
+      "romaji": "Sensei ni rei",
+      "kana": "せんせいに れい",
+      "significato": "Saluto al maestro"
+    },
+    {
+      "romaji": "Otagai ni rei",
+      "kana": "おたがいに れい",
+      "significato": "Saluto tra di voi"
+    },
+    {
+      "romaji": "Kiritsu",
+      "kana": "きりつ",
+      "significato": "In piedi"
+    },
+    {
+      "romaji": "Yoi",
+      "kana": "ようい",
+      "significato": "Pronti"
+    },
+    {
+      "romaji": "Kamaete",
+      "kana": "かまえて",
+      "significato": "In guardia"
+    },
+    {
+      "romaji": "Hajime",
+      "kana": "はじめ",
+      "significato": "Iniziate"
+    },
+    {
+      "romaji": "Yame",
+      "kana": "やめ",
+      "significato": "Fermi"
+    },
+    {
+      "romaji": "Mawatte",
+      "kana": "まわって",
+      "significato": "Giratevi"
+    },
+    {
+      "romaji": "Naore",
+      "kana": "なおれ",
+      "significato": "Tornate in posizione"
+    },
+    {
+      "romaji": "Yasume",
+      "kana": "やすめ",
+      "significato": "Riposo"
+    }
+  ],
+  "conteggio": [
+    {
+      "numero": 1,
+      "romaji": "Ichi",
+      "kana": "いち"
+    },
+    {
+      "numero": 2,
+      "romaji": "Ni",
+      "kana": "に"
+    },
+    {
+      "numero": 3,
+      "romaji": "San",
+      "kana": "さん"
+    },
+    {
+      "numero": 4,
+      "romaji": "Shi (yon)",
+      "kana": "し"
+    },
+    {
+      "numero": 5,
+      "romaji": "Go",
+      "kana": "ご"
+    },
+    {
+      "numero": 6,
+      "romaji": "Roku",
+      "kana": "ろく"
+    },
+    {
+      "numero": 7,
+      "romaji": "Shichi (nana)",
+      "kana": "しち"
+    },
+    {
+      "numero": 8,
+      "romaji": "Hachi",
+      "kana": "はち"
+    },
+    {
+      "numero": 9,
+      "romaji": "Ku (kyū)",
+      "kana": "く"
+    },
+    {
+      "numero": 10,
+      "romaji": "Jū",
+      "kana": "じゅう"
+    }
+  ],
+  "dojo_kun": [
+    {
+      "giapponese": "Hitotsu, jinkaku kansei ni tsutomuru koto",
+      "italiano": "Impegnarsi a perfezionare il carattere",
+      "spiegazione": "Il primo scopo non è vincere, ma diventare una persona migliore."
+    },
+    {
+      "giapponese": "Hitotsu, makoto no michi o mamoru koto",
+      "italiano": "Essere fedeli alla via della sincerità",
+      "spiegazione": "Essere onesti con gli altri e con sé stessi, anche quando nessuno guarda."
+    },
+    {
+      "giapponese": "Hitotsu, doryoku no seishin o yashinau koto",
+      "italiano": "Coltivare lo spirito dell'impegno",
+      "spiegazione": "I progressi vengono dalla costanza, non dal talento."
+    },
+    {
+      "giapponese": "Hitotsu, reigi o omonzuru koto",
+      "italiano": "Rispettare la cortesia",
+      "spiegazione": "Il rispetto per il maestro, i compagni e il luogo viene prima della tecnica."
+    },
+    {
+      "giapponese": "Hitotsu, kekki no yū o imashimuru koto",
+      "italiano": "Trattenere la violenza impulsiva",
+      "spiegazione": "La forza va controllata: chi pratica karate evita lo scontro."
+    }
+  ],
+  "nijukun": [
+    {
+      "n": 1,
+      "giapponese": "Karate-dō wa rei ni hajimari rei ni owaru koto o wasuruna",
+      "italiano": "Il karate inizia e finisce con il saluto.",
+      "spiegazione": "Il rispetto non è una formalità: apre e chiude ogni pratica.",
+      "domanda": "Oggi, con chi hai mostrato rispetto senza che te lo chiedessero?"
+    },
+    {
+      "n": 2,
+      "giapponese": "Karate ni sente nashi",
+      "italiano": "Nel karate non si attacca per primi.",
+      "spiegazione": "Il karate nasce per difendersi. Molte sequenze iniziano infatti con una parata.",
+      "domanda": "In quale situazione recente hai scelto di non reagire?"
+    },
+    {
+      "n": 3,
+      "giapponese": "Karate wa gi no tasuke",
+      "italiano": "Il karate sta dalla parte della giustizia.",
+      "spiegazione": "Ciò che impari serve a proteggere, non a prevaricare.",
+      "domanda": "Come useresti ciò che impari per aiutare qualcuno?"
+    },
+    {
+      "n": 4,
+      "giapponese": "Mazu onore o shire, shikashite ta o shire",
+      "italiano": "Prima conosci te stesso, poi gli altri.",
+      "spiegazione": "Capire i propri limiti e le proprie paure è il primo allenamento.",
+      "domanda": "Qual è il tuo punto debole nella pratica di oggi?"
+    },
+    {
+      "n": 5,
+      "giapponese": "Gijutsu yori shinjutsu",
+      "italiano": "Lo spirito viene prima della tecnica.",
+      "spiegazione": "Una tecnica perfetta senza l'atteggiamento giusto resta vuota.",
+      "domanda": "Con quale spirito hai iniziato l'allenamento?"
+    },
+    {
+      "n": 6,
+      "giapponese": "Kokoro wa hanatan koto o yōsu",
+      "italiano": "Lascia libera la mente.",
+      "spiegazione": "Una mente rigida reagisce in ritardo; una mente libera si adatta.",
+      "domanda": "Che cosa ti distrae quando ti alleni?"
+    },
+    {
+      "n": 7,
+      "giapponese": "Wazawai wa ketai ni shōzu",
+      "italiano": "Le sventure nascono dalla negligenza.",
+      "spiegazione": "Gli infortuni e gli errori arrivano quando si abbassa l'attenzione.",
+      "domanda": "Dove sei stato distratto, oggi?"
+    },
+    {
+      "n": 8,
+      "giapponese": "Dōjō nomi no karate to omou na",
+      "italiano": "Il karate non è solo nel dojo.",
+      "spiegazione": "Postura, respiro e calma servono anche a casa, a scuola, al lavoro.",
+      "domanda": "Dove hai usato il karate fuori dal dojo?"
+    },
+    {
+      "n": 9,
+      "giapponese": "Karate no shugyō wa isshō de aru",
+      "italiano": "L'allenamento dura tutta la vita.",
+      "spiegazione": "Non esiste un traguardo finale: anche la cintura nera è un inizio.",
+      "domanda": "Cosa vorresti saper fare tra dieci anni?"
+    },
+    {
+      "n": 10,
+      "giapponese": "Arayuru mono o karate-ka seyo, soko ni myōmi ari",
+      "italiano": "Porta il karate in ogni cosa: lì sta la sua bellezza.",
+      "spiegazione": "Lo stesso impegno del kata si può mettere in qualunque attività.",
+      "domanda": "Quale attività quotidiana potresti fare \"come un kata\"?"
+    },
+    {
+      "n": 11,
+      "giapponese": "Karate wa yu no gotoku taezu netsu o ataezareba moto no mizu ni kaeru",
+      "italiano": "Il karate è come l'acqua calda: se smetti di scaldarla, torna fredda.",
+      "spiegazione": "Senza pratica costante le abilità svaniscono.",
+      "domanda": "Quanti giorni a settimana riesci davvero ad allenarti?"
+    },
+    {
+      "n": 12,
+      "giapponese": "Katsu kangae wa motsuna, makenu kangae wa hitsuyō",
+      "italiano": "Non pensare a vincere, pensa a non perdere.",
+      "spiegazione": "Più che sconfiggere l'altro, conta non perdere il controllo di sé.",
+      "domanda": "Quando hai perso la calma l'ultima volta?"
+    },
+    {
+      "n": 13,
+      "giapponese": "Teki ni yotte tenka seyo",
+      "italiano": "Cambia in base all'avversario.",
+      "spiegazione": "Non esiste una risposta valida per tutti: osserva e adattati.",
+      "domanda": "Come cambi il tuo modo di fare con persone diverse?"
+    },
+    {
+      "n": 14,
+      "giapponese": "Ikusa wa kyojitsu no sōjū ikan ni ari",
+      "italiano": "Il combattimento dipende da come gestisci il vuoto e il pieno.",
+      "spiegazione": "Sapere quando essere forti e quando cedere è una tecnica.",
+      "domanda": "In cosa ti sarebbe utile \"cedere\" invece di spingere?"
+    },
+    {
+      "n": 15,
+      "giapponese": "Hito no teashi o ken to omoe",
+      "italiano": "Pensa alle mani e ai piedi dell'altro come a spade.",
+      "spiegazione": "Rispetta il pericolo: nessun colpo è innocuo.",
+      "domanda": "Ti alleni con il giusto rispetto per il compagno?"
+    },
+    {
+      "n": 16,
+      "giapponese": "Danshi mon o izureba hyakuman no teki ari",
+      "italiano": "Fuori dalla porta di casa ti aspettano molti avversari.",
+      "spiegazione": "Le difficoltà della vita richiedono la stessa attenzione del dojo.",
+      "domanda": "Qual è il tuo \"avversario\" di questa settimana?"
+    },
+    {
+      "n": 17,
+      "giapponese": "Kamae wa shoshinsha ni, ato wa shizentai",
+      "italiano": "Le posizioni sono per i principianti, poi si sta in modo naturale.",
+      "spiegazione": "Si studiano forme precise perché un giorno diventino spontanee.",
+      "domanda": "Quale tecnica ti viene già naturale?"
+    },
+    {
+      "n": 18,
+      "giapponese": "Kata wa tadashiku, jissen wa betsumono",
+      "italiano": "Esegui i kata correttamente; il combattimento reale è un'altra cosa.",
+      "spiegazione": "Il kata insegna principi, non risposte pronte.",
+      "domanda": "Quale principio di un kata ti sembra più utile?"
+    },
+    {
+      "n": 19,
+      "giapponese": "Chikara no kyōjaku, karada no shinshuku, waza no kankyū o wasuruna",
+      "italiano": "Non dimenticare forza e leggerezza, tensione e rilassamento, lentezza e velocità.",
+      "spiegazione": "Il karate vive di contrasti: senza rilassamento non c'è kime.",
+      "domanda": "Riesci a rilassarti tra una tecnica e l'altra?"
+    },
+    {
+      "n": 20,
+      "giapponese": "Tsune ni shinen kufū seyo",
+      "italiano": "Rifletti e cerca sempre di migliorare.",
+      "spiegazione": "Ripetere non basta: bisogna pensare a cosa cambiare.",
+      "domanda": "Qual è la prossima piccola cosa che vuoi correggere?"
+    }
+  ],
+  "significato_kata": {
+    "taikyoku1": {
+      "nome": "Taikyoku vuol dire \"grande principio\". Funakoshi lo creò come primo passo: con due sole tecniche insegna il tracciato a \"I\", le girate e il ritmo del kata.",
+      "insegna": "Insegna a girarsi guardando prima la nuova direzione e a mantenere la stessa altezza."
+    },
+    "heian1": {
+      "nome": "Heian vuol dire \"pace e tranquillità\". Chi conosce questi kata può affrontare un pericolo restando calmo. Shodan è il primo livello.",
+      "insegna": "Insegna a passare da zenkutsu a kokutsu e a unire parata e attacco."
+    },
+    "heian2": {
+      "nome": "Il secondo kata della pace. Introduce tecniche fatte insieme da braccia e gambe, come yoko-geri con uraken.",
+      "insegna": "Insegna l'equilibrio su una gamba e le parate in gyaku hanmi, con le anche ruotate dalla parte opposta."
+    }
+  },
+  "etichetta": [
+    {
+      "titolo": "Entrare nel dojo",
+      "punti": [
+        "Togli le scarpe prima di salire sul tatami.",
+        "Sulla soglia fai un inchino (rei) verso l'interno.",
+        "Arriva qualche minuto prima e in silenzio."
+      ]
+    },
+    {
+      "titolo": "Karategi e cintura",
+      "punti": [
+        "Il karategi è pulito e in ordine: è un segno di rispetto.",
+        "La cintura si annoda con i due capi della stessa lunghezza.",
+        "Unghie corte, niente anelli, orologi o catenine."
+      ]
+    },
+    {
+      "titolo": "Apertura della lezione",
+      "punti": [
+        "Ci si allinea in seiza, dal grado più alto al più basso.",
+        "Mokusō: qualche respiro a occhi chiusi per lasciare fuori il resto della giornata.",
+        "Shōmen ni rei, sensei ni rei, otagai ni rei: saluto al dojo, al maestro, ai compagni."
+      ]
+    },
+    {
+      "titolo": "Durante la lezione",
+      "punti": [
+        "Si risponde ai comandi con prontezza, spesso con \"osu\".",
+        "Prima e dopo ogni esercizio in coppia ci si saluta.",
+        "Se devi uscire o sistemarti il karategi, chiedi e girati verso il fondo."
+      ]
+    },
+    {
+      "titolo": "Perché ci si inchina",
+      "punti": [
+        "L'inchino non è sottomissione: dice \"ti rispetto e mi fido di te\".",
+        "Ricorda che il karate inizia e finisce con il saluto (primo principio di Funakoshi).",
+        "Con il saluto si promette di usare la tecnica con controllo."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2222 @@
+{
+  "versione": 4,
+  "stile": "shotokan",
+  "lingua": "it",
+  "categorie": [
+    {
+      "id": "dachi",
+      "nome_it": "Posizioni",
+      "nome_jp": "Dachi",
+      "tecniche": [
+        {
+          "id": "zenkutsu",
+          "nome_jp": "Zenkutsu-dachi",
+          "nome_it": "Posizione frontale",
+          "kyu": 9,
+          "descrizione": "Posizione lunga e bassa, la base di quasi tutte le tecniche in avanzamento. La gamba davanti è piegata, quella dietro è tesa e spinge.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Da hachiji-dachi fai un passo lungo in avanti",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Piega il ginocchio anteriore fino a coprire la punta del piede",
+              "t_anim": 0.6
+            },
+            {
+              "n": 3,
+              "testo": "Distendi la gamba dietro, tallone a terra",
+              "t_anim": 1.2
+            },
+            {
+              "n": 4,
+              "testo": "Ruota le anche: da frontale (shōmen) a 45° (hanmi) e ritorno",
+              "t_anim": 1.5
+            }
+          ],
+          "punti_chiave": [
+            "Circa 60% del peso sulla gamba anteriore",
+            "Anche orizzontali, alla stessa altezza",
+            "Busto eretto, glutei non sporgenti"
+          ],
+          "errori_comuni": [
+            "Ginocchio anteriore che rientra verso l'interno",
+            "Tallone posteriore sollevato"
+          ],
+          "animazione": {
+            "pose": "anim/zenkutsu.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "kokutsu",
+          "nome_jp": "Kokutsu-dachi",
+          "nome_it": "Posizione arretrata",
+          "kyu": 8,
+          "descrizione": "Posizione arretrata: circa il 70% del peso sulla gamba dietro, piedi a \"L\". Si usa soprattutto con shutō-uke.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Parti da hachiji-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Il piede sinistro avanza, il destro ruota di 90° in fuori",
+              "t_anim": 0.7
+            },
+            {
+              "n": 3,
+              "testo": "Piega forte la gamba dietro, ginocchio sopra la punta del piede",
+              "t_anim": 1.1
+            },
+            {
+              "n": 4,
+              "testo": "Busto di tre quarti (hanmi), anche basse",
+              "t_anim": 1.5
+            }
+          ],
+          "punti_chiave": [
+            "Talloni sulla stessa linea",
+            "Ginocchio dietro spinto in fuori",
+            "Gamba davanti appena piegata, piede leggero"
+          ],
+          "errori_comuni": [
+            "Peso che scivola in avanti",
+            "Ginocchio dietro che rientra"
+          ],
+          "animazione": {
+            "pose": "anim/kokutsu.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "kiba",
+          "nome_jp": "Kiba-dachi",
+          "nome_it": "Posizione del cavaliere",
+          "kyu": 7,
+          "descrizione": "Posizione del cavaliere: piedi larghi e paralleli, peso diviso a metà tra le gambe. Rinforza gambe e anche.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Parti da hachiji-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Allarga i piedi a circa due larghezze di spalle",
+              "t_anim": 0.8
+            },
+            {
+              "n": 3,
+              "testo": "Piedi paralleli, punte appena in dentro",
+              "t_anim": 1.2
+            },
+            {
+              "n": 4,
+              "testo": "Scendi piegando le ginocchia e spingile in fuori",
+              "t_anim": 1.6
+            }
+          ],
+          "punti_chiave": [
+            "Peso al centro, 50 e 50",
+            "Busto dritto, bacino in avanti",
+            "Ginocchia sopra le punte dei piedi"
+          ],
+          "errori_comuni": [
+            "Punte dei piedi aperte in fuori",
+            "Busto inclinato in avanti"
+          ],
+          "animazione": {
+            "pose": "anim/kiba.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "musubi",
+          "nome_jp": "Musubi-dachi",
+          "nome_it": "Posizione del saluto",
+          "kyu": 10,
+          "descrizione": "Posizione di attenzione e di saluto: talloni uniti, punte aperte, peso al centro. Da qui si esegue il rei, l'inchino.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Talloni uniti, punte aperte a circa 45°",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Mani aperte lungo i fianchi, sguardo avanti",
+              "t_anim": 0.5
+            },
+            {
+              "n": 3,
+              "testo": "Rei: inchino di circa 30°, schiena dritta",
+              "t_anim": 1
+            },
+            {
+              "n": 4,
+              "testo": "Torna eretto senza fretta",
+              "t_anim": 2.4
+            }
+          ],
+          "punti_chiave": [
+            "Peso al centro, 50 e 50",
+            "Ginocchia distese ma non bloccate",
+            "Durante il rei lo sguardo resta basso, non sul pavimento lontano"
+          ],
+          "errori_comuni": [
+            "Piedi paralleli invece che aperti",
+            "Inchinarsi piegando solo la testa"
+          ],
+          "animazione": {
+            "pose": "anim/musubi.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "heiko",
+          "nome_jp": "Heiko-dachi",
+          "nome_it": "Posizione naturale parallela",
+          "kyu": 10,
+          "descrizione": "Posizione naturale con i piedi paralleli alla larghezza delle spalle. È una posizione di prontezza rilassata (yoi).",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Parti da musubi-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Apri i piedi alla larghezza delle spalle",
+              "t_anim": 0.8
+            },
+            {
+              "n": 3,
+              "testo": "Piedi paralleli, punte in avanti",
+              "t_anim": 1.2
+            },
+            {
+              "n": 4,
+              "testo": "Pugni chiusi davanti alle cosce: yoi",
+              "t_anim": 1.5
+            }
+          ],
+          "punti_chiave": [
+            "Peso al centro",
+            "Spalle rilassate, respiro calmo",
+            "Pugni a circa un pugno dalle cosce"
+          ],
+          "errori_comuni": [
+            "Punte aperte come in hachiji-dachi",
+            "Ginocchia rigide"
+          ],
+          "animazione": {
+            "pose": "anim/heiko.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        }
+      ]
+    },
+    {
+      "id": "uke",
+      "nome_it": "Parate",
+      "nome_jp": "Uke",
+      "tecniche": [
+        {
+          "id": "gedan",
+          "nome_jp": "Gedan-barai",
+          "nome_it": "Parata bassa",
+          "kyu": 9,
+          "descrizione": "Spazza verso il basso un attacco al ventre o un calcio. È la prima tecnica di Heian Shodan.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Guardia in zenkutsu-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Porta il pugno che para vicino all'orecchio opposto, l'altro braccio teso in basso",
+              "t_anim": 0.6
+            },
+            {
+              "n": 3,
+              "testo": "Scendi in diagonale mentre l'altro braccio torna al fianco (hikite)",
+              "t_anim": 1.5
+            },
+            {
+              "n": 4,
+              "testo": "Fermati poco sopra il ginocchio anteriore: kime",
+              "t_anim": 1.85
+            }
+          ],
+          "punti_chiave": [
+            "I due braccia si muovono insieme, in senso opposto",
+            "Il colpo parte dalla rotazione delle anche",
+            "Polso dritto, avambraccio ruotato a fine corsa"
+          ],
+          "errori_comuni": [
+            "Fermare il braccio troppo in basso o troppo lontano dal corpo",
+            "Dimenticare l'hikite"
+          ],
+          "animazione": {
+            "pose": "anim/gedan.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "ageuke",
+          "nome_jp": "Jōdan age-uke",
+          "nome_it": "Parata alta",
+          "kyu": 9,
+          "descrizione": "Devia verso l'alto un attacco al viso. L'avambraccio sale davanti alla fronte e ruota a fine corsa.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Guardia in zenkutsu-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "L'avambraccio sale davanti al viso, incrociando l'altro braccio",
+              "t_anim": 0.6
+            },
+            {
+              "n": 3,
+              "testo": "Ruota l'avambraccio verso l'esterno e fermati sopra la fronte",
+              "t_anim": 1.2
+            },
+            {
+              "n": 4,
+              "testo": "L'altro braccio torna al fianco (hikite)",
+              "t_anim": 1.45
+            }
+          ],
+          "punti_chiave": [
+            "Circa un pugno di distanza tra polso e fronte",
+            "Pugno più alto del gomito",
+            "Spalle basse e rilassate"
+          ],
+          "errori_comuni": [
+            "Braccio troppo vicino alla testa",
+            "Gomito che si apre di lato"
+          ],
+          "animazione": {
+            "pose": "anim/ageuke.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "soto",
+          "nome_jp": "Soto-ude-uke",
+          "nome_it": "Parata dall'esterno",
+          "kyu": 8,
+          "descrizione": "L'avambraccio spazza da fuori verso il centro un attacco al busto. Nello Shotokan si chiama anche soto-uke.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Guardia in zenkutsu-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Il braccio che para sale dietro, all'altezza dell'orecchio; l'altro si allunga avanti",
+              "t_anim": 0.6
+            },
+            {
+              "n": 3,
+              "testo": "Spazza da fuori verso il centro ruotando le anche",
+              "t_anim": 1.1
+            },
+            {
+              "n": 4,
+              "testo": "Fermati con l'avambraccio verticale, pugno all'altezza della spalla",
+              "t_anim": 1.45
+            }
+          ],
+          "punti_chiave": [
+            "Gomito a circa un pugno dal busto",
+            "A fine corsa il palmo guarda verso di te",
+            "Le anche guidano il braccio"
+          ],
+          "errori_comuni": [
+            "Braccio che supera il centro del corpo",
+            "Gomito troppo aperto"
+          ],
+          "animazione": {
+            "pose": "anim/soto.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "uchiuke",
+          "nome_jp": "Uchi-uke",
+          "nome_it": "Parata dall'interno",
+          "kyu": 8,
+          "descrizione": "L'avambraccio parte da sotto l'ascella opposta e ruota verso l'esterno, spingendo via un attacco al busto.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Guardia in zenkutsu-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Il pugno che para scende vicino al fianco opposto, l'altro braccio si allunga avanti",
+              "t_anim": 0.6
+            },
+            {
+              "n": 3,
+              "testo": "L'avambraccio sale e ruota verso l'esterno",
+              "t_anim": 1.1
+            },
+            {
+              "n": 4,
+              "testo": "Fermati con il pugno all'altezza della spalla, gomito davanti al fianco",
+              "t_anim": 1.45
+            }
+          ],
+          "punti_chiave": [
+            "Gomito a circa un pugno dal busto",
+            "Rotazione dell'avambraccio solo a fine corsa",
+            "L'hikite parte insieme alla parata"
+          ],
+          "errori_comuni": [
+            "Pugno che esce oltre la spalla",
+            "Gomito che si stacca dal corpo"
+          ],
+          "animazione": {
+            "pose": "anim/uchi.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "shutouke",
+          "nome_jp": "Shutō-uke",
+          "nome_it": "Parata con il taglio della mano",
+          "kyu": 8,
+          "descrizione": "Parata a mani aperte in kokutsu-dachi: la mano avanti devia con il taglio, quella dietro protegge il plesso solare con il palmo in su.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Parti da hachiji-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Mentre avanzi, la mano che para sale vicino all'orecchio opposto",
+              "t_anim": 0.7
+            },
+            {
+              "n": 3,
+              "testo": "Il taglio della mano scende in diagonale verso l'avversario",
+              "t_anim": 1.1
+            },
+            {
+              "n": 4,
+              "testo": "Arrivi in kokutsu-dachi: mano dietro aperta davanti al plesso",
+              "t_anim": 1.5
+            }
+          ],
+          "punti_chiave": [
+            "Dita unite, pollice piegato",
+            "Mano avanti all'altezza della spalla",
+            "Busto di tre quarti (hanmi)"
+          ],
+          "errori_comuni": [
+            "Dita aperte",
+            "Mano dietro lontana dal corpo"
+          ],
+          "animazione": {
+            "pose": "anim/shutouke.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        }
+      ]
+    },
+    {
+      "id": "tsuki",
+      "nome_it": "Pugni",
+      "nome_jp": "Tsuki",
+      "tecniche": [
+        {
+          "id": "gyaku",
+          "nome_jp": "Gyaku-zuki",
+          "nome_it": "Pugno contrario",
+          "kyu": 9,
+          "descrizione": "Pugno con il braccio dalla parte della gamba posteriore. La potenza nasce dalla rotazione delle anche, \"come una molla che si scarica\".",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Guardia in zenkutsu-dachi, anche a 45° (hanmi)",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Ruota le anche in avanti, verso la posizione frontale",
+              "t_anim": 0.5
+            },
+            {
+              "n": 3,
+              "testo": "Il pugno parte dal fianco e ruota solo all'ultimo",
+              "t_anim": 0.9
+            },
+            {
+              "n": 4,
+              "testo": "L'altro braccio tira al fianco: kime",
+              "t_anim": 1.12
+            }
+          ],
+          "punti_chiave": [
+            "Prima le anche, poi il braccio",
+            "La gamba dietro spinge nel pavimento",
+            "Spalle allineate, nessuno sbilanciamento"
+          ],
+          "errori_comuni": [
+            "Colpire solo con il braccio",
+            "Alzare la spalla del pugno"
+          ],
+          "animazione": {
+            "pose": "anim/gyaku.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "oizuki",
+          "nome_jp": "Oi-zuki",
+          "nome_it": "Pugno in avanzamento",
+          "kyu": 9,
+          "descrizione": "Pugno portato avanzando di un passo: colpisce il braccio dalla parte della gamba che avanza, nello stesso istante in cui il piede arriva a terra.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Guardia in zenkutsu-dachi sinistra, braccio in gedan-barai",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Il piede dietro passa vicino a quello davanti, ginocchia piegate",
+              "t_anim": 0.6
+            },
+            {
+              "n": 3,
+              "testo": "Il pugno parte dal fianco mentre l'altro braccio si allunga avanti",
+              "t_anim": 1.05
+            },
+            {
+              "n": 4,
+              "testo": "Atterri in zenkutsu-dachi destra: pugno chūdan e hikite insieme",
+              "t_anim": 1.4
+            },
+            {
+              "n": 5,
+              "testo": "Torni indietro di un passo in gedan-barai",
+              "t_anim": 2.4
+            }
+          ],
+          "punti_chiave": [
+            "Testa e anche alla stessa altezza durante il passo",
+            "Il pugno arriva insieme al piede",
+            "Gamba dietro tesa a fine tecnica"
+          ],
+          "errori_comuni": [
+            "Alzarsi o saltellare durante il passo",
+            "Pugno che arriva dopo il piede"
+          ],
+          "animazione": {
+            "pose": "anim/oizuki.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "kizami",
+          "nome_jp": "Kizami-zuki",
+          "nome_it": "Pugno con il braccio avanti",
+          "kyu": 7,
+          "descrizione": "Pugno rapido con il braccio davanti, senza passo: la spalla si allunga e il busto spinge in avanti per un istante.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Guardia in zenkutsu-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Il piede avanti scivola appena in avanti",
+              "t_anim": 0.5
+            },
+            {
+              "n": 3,
+              "testo": "Le anche ruotano ancora di più di lato e il pugno avanti parte dritto",
+              "t_anim": 0.8
+            },
+            {
+              "n": 4,
+              "testo": "Colpisci e torna subito in guardia",
+              "t_anim": 0.95
+            }
+          ],
+          "punti_chiave": [
+            "Partenza senza preavviso",
+            "Spalla avanti, mento basso",
+            "Ritorno veloce quanto l'andata"
+          ],
+          "errori_comuni": [
+            "Caricare il pugno indietro prima di colpire",
+            "Sporgersi troppo con la testa"
+          ],
+          "animazione": {
+            "pose": "anim/kizami.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "urazuki",
+          "nome_jp": "Ura-zuki",
+          "nome_it": "Pugno corto rovesciato",
+          "kyu": 7,
+          "descrizione": "Pugno ravvicinato con il palmo rivolto verso l'alto, usato a corta distanza. Si trova all'inizio di Heian Nidan.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Guardia in zenkutsu-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Il pugno parte dal fianco con il palmo in su",
+              "t_anim": 0.5
+            },
+            {
+              "n": 3,
+              "testo": "Sale corto verso il bersaglio, senza distendere del tutto il braccio",
+              "t_anim": 0.85
+            },
+            {
+              "n": 4,
+              "testo": "Kime con il gomito vicino al busto",
+              "t_anim": 1
+            }
+          ],
+          "punti_chiave": [
+            "Il palmo resta in su per tutto il colpo",
+            "Gomito piegato a circa 90°",
+            "Distanza molto corta"
+          ],
+          "errori_comuni": [
+            "Ruotare il pugno come un pugno normale",
+            "Allargare il gomito"
+          ],
+          "animazione": {
+            "pose": "anim/ura.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        }
+      ]
+    },
+    {
+      "id": "uchi",
+      "nome_it": "Percosse",
+      "nome_jp": "Uchi",
+      "tecniche": [
+        {
+          "id": "shutouchi",
+          "nome_jp": "Shutō-uchi",
+          "nome_it": "Colpo con il taglio della mano",
+          "kyu": 7,
+          "descrizione": "Colpo circolare a mano aperta: il bordo esterno della mano colpisce di lato, per esempio collo o tempia.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Guardia in zenkutsu-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "La mano che colpisce sale vicino all'orecchio, palmo verso il viso",
+              "t_anim": 0.6
+            },
+            {
+              "n": 3,
+              "testo": "Le anche ruotano e la mano disegna un arco verso l'interno",
+              "t_anim": 1
+            },
+            {
+              "n": 4,
+              "testo": "All'impatto il palmo è in su",
+              "t_anim": 1.3
+            }
+          ],
+          "punti_chiave": [
+            "Dita tese e unite",
+            "Il polso non si piega",
+            "La forza viene dalla rotazione delle anche"
+          ],
+          "errori_comuni": [
+            "Colpire con le dita invece che con il taglio",
+            "Braccio rigido dall'inizio"
+          ],
+          "animazione": {
+            "pose": "anim/shutouchi.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "uraken",
+          "nome_jp": "Uraken-uchi",
+          "nome_it": "Colpo con il dorso del pugno",
+          "kyu": 7,
+          "descrizione": "Colpo a frusta di gomito e polso: il dorso delle nocche scatta in avanti o di lato e torna subito indietro.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Guardia in zenkutsu-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Il pugno si chiude davanti alla spalla opposta, gomito in avanti",
+              "t_anim": 0.6
+            },
+            {
+              "n": 3,
+              "testo": "Il braccio si distende di scatto: colpisce il dorso delle nocche",
+              "t_anim": 0.95
+            },
+            {
+              "n": 4,
+              "testo": "Richiama subito il pugno",
+              "t_anim": 1.15
+            }
+          ],
+          "punti_chiave": [
+            "Il gomito fa da perno",
+            "Lo scatto è breve e rilassato",
+            "Il ritorno è parte della tecnica"
+          ],
+          "errori_comuni": [
+            "Spingere invece di frustare",
+            "Lasciare il braccio fuori"
+          ],
+          "animazione": {
+            "pose": "anim/uraken.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "empi",
+          "nome_jp": "Empi-uchi",
+          "nome_it": "Colpo di gomito",
+          "kyu": 7,
+          "descrizione": "Colpo a corto raggio con il gomito. Qui è circolare (mawashi-empi): il gomito gira in orizzontale davanti al petto.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Guardia in zenkutsu-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Il pugno dietro parte dal fianco",
+              "t_anim": 0.5
+            },
+            {
+              "n": 3,
+              "testo": "Le anche ruotano in avanti e il gomito gira davanti al petto",
+              "t_anim": 0.8
+            },
+            {
+              "n": 4,
+              "testo": "Kime con il pugno vicino al petto, palmo in giù",
+              "t_anim": 1.1
+            }
+          ],
+          "punti_chiave": [
+            "Braccio ben piegato, pugno vicino al corpo",
+            "Le anche portano il gomito",
+            "L'altro braccio tira al fianco"
+          ],
+          "errori_comuni": [
+            "Aprire il braccio come uno schiaffo",
+            "Colpire con l'avambraccio"
+          ],
+          "animazione": {
+            "pose": "anim/empi.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "nukite",
+          "nome_jp": "Nukite",
+          "nome_it": "Colpo di punta delle dita",
+          "kyu": 7,
+          "descrizione": "La mano tesa colpisce di punta come una lancia, verso plesso o gola. L'altra mano sostiene sotto il gomito (osae-uke), come in Heian Nidan.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Guardia in zenkutsu-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "La mano avanti si apre e scende a premere, palmo in giù",
+              "t_anim": 0.6
+            },
+            {
+              "n": 3,
+              "testo": "La mano che colpisce parte dal fianco, dita tese",
+              "t_anim": 0.95
+            },
+            {
+              "n": 4,
+              "testo": "Colpisci di punta sopra la mano che preme",
+              "t_anim": 1.2
+            }
+          ],
+          "punti_chiave": [
+            "Dita unite e leggermente piegate",
+            "Mano di sostegno sotto il gomito",
+            "Polso dritto"
+          ],
+          "errori_comuni": [
+            "Dita aperte o molli",
+            "Polso piegato all'impatto"
+          ],
+          "animazione": {
+            "pose": "anim/nukite.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        }
+      ]
+    },
+    {
+      "id": "geri",
+      "nome_it": "Calci",
+      "nome_jp": "Geri",
+      "tecniche": [
+        {
+          "id": "maegeri",
+          "nome_jp": "Mae-geri",
+          "nome_it": "Calcio frontale",
+          "kyu": 9,
+          "descrizione": "Calcio frontale con l'avampiede (koshi). Prima sale il ginocchio, poi la gamba si distende e torna subito indietro.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Guardia in zenkutsu-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Solleva il ginocchio della gamba dietro all'altezza dell'anca",
+              "t_anim": 0.7
+            },
+            {
+              "n": 3,
+              "testo": "Distendi la gamba e colpisci con l'avampiede, dita tirate indietro",
+              "t_anim": 1.05
+            },
+            {
+              "n": 4,
+              "testo": "Richiama subito la gamba piegata",
+              "t_anim": 1.7
+            },
+            {
+              "n": 5,
+              "testo": "Riappoggia il piede dietro, in guardia",
+              "t_anim": 1.95
+            }
+          ],
+          "punti_chiave": [
+            "Gamba d'appoggio appena piegata, tallone a terra",
+            "Il ginocchio punta il bersaglio prima del calcio",
+            "Busto dritto, senza cadere indietro"
+          ],
+          "errori_comuni": [
+            "Colpire con la punta delle dita",
+            "Lasciar cadere la gamba senza richiamarla"
+          ],
+          "animazione": {
+            "pose": "anim/maegeri.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "keage",
+          "nome_jp": "Yoko-geri keage",
+          "nome_it": "Calcio laterale frustato",
+          "kyu": 7,
+          "descrizione": "Calcio laterale verso l'alto, a frusta: il ginocchio fa da perno e il taglio del piede (sokuto) sale sul bersaglio.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Parti da kiba-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Solleva il ginocchio della gamba che calcia vicino all'altro ginocchio",
+              "t_anim": 0.7
+            },
+            {
+              "n": 3,
+              "testo": "Frusta la gamba di lato e in alto",
+              "t_anim": 1.05
+            },
+            {
+              "n": 4,
+              "testo": "Richiama subito e torna in kiba-dachi",
+              "t_anim": 1.25
+            }
+          ],
+          "punti_chiave": [
+            "Sguardo verso il bersaglio",
+            "Il ginocchio sale prima del piede",
+            "Gamba d'appoggio piegata"
+          ],
+          "errori_comuni": [
+            "Calciare con la pianta",
+            "Non richiamare la gamba"
+          ],
+          "animazione": {
+            "pose": "anim/keage.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "kekomi",
+          "nome_jp": "Yoko-geri kekomi",
+          "nome_it": "Calcio laterale spinto",
+          "kyu": 7,
+          "descrizione": "Calcio laterale di potenza: la gamba si distende in linea retta e l'anca spinge dietro il colpo. Si colpisce con il taglio del piede.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Parti da kiba-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Carica il ginocchio in alto, verso il bersaglio",
+              "t_anim": 0.7
+            },
+            {
+              "n": 3,
+              "testo": "Spingi la gamba in linea retta con l'anca dietro",
+              "t_anim": 1.1
+            },
+            {
+              "n": 4,
+              "testo": "Richiama e torna in kiba-dachi",
+              "t_anim": 1.35
+            }
+          ],
+          "punti_chiave": [
+            "Tallone, anca e spalla in linea",
+            "Busto inclinato appena dalla parte opposta",
+            "Il piede d'appoggio non si alza"
+          ],
+          "errori_comuni": [
+            "Busto che cade all'indietro",
+            "Calcio che sale invece di spingere"
+          ],
+          "animazione": {
+            "pose": "anim/kekomi.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "mawashi",
+          "nome_jp": "Mawashi-geri",
+          "nome_it": "Calcio circolare",
+          "kyu": 6,
+          "descrizione": "Calcio ad arco dall'esterno verso l'interno. Si colpisce con il collo del piede (haisoku) o con l'avampiede (koshi).",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Guardia in zenkutsu-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Solleva il ginocchio di lato, all'altezza dell'anca",
+              "t_anim": 0.7
+            },
+            {
+              "n": 3,
+              "testo": "Ruota il piede d'appoggio e le anche, la gamba si distende ad arco",
+              "t_anim": 1.1
+            },
+            {
+              "n": 4,
+              "testo": "Richiama e appoggia dietro, in guardia",
+              "t_anim": 1.35
+            }
+          ],
+          "punti_chiave": [
+            "Ginocchio alto prima di distendere",
+            "Il piede d'appoggio ruota",
+            "Busto fermo, guardia alta"
+          ],
+          "errori_comuni": [
+            "Calciare senza ruotare il piede d'appoggio",
+            "Gamba tesa dall'inizio"
+          ],
+          "animazione": {
+            "pose": "anim/mawashi.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "ushiro",
+          "nome_jp": "Ushiro-geri",
+          "nome_it": "Calcio all'indietro",
+          "kyu": 6,
+          "descrizione": "Calcio diritto all'indietro: si ruota di schiena e si colpisce con il tallone (kakato), guardando il bersaglio da sopra la spalla.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Guardia in zenkutsu-dachi",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Ruota sul piede avanti e guarda dietro, sopra la spalla",
+              "t_anim": 0.7
+            },
+            {
+              "n": 3,
+              "testo": "Carica il ginocchio davanti al petto",
+              "t_anim": 1.05
+            },
+            {
+              "n": 4,
+              "testo": "Spingi il tallone dritto verso il bersaglio",
+              "t_anim": 1.6
+            },
+            {
+              "n": 5,
+              "testo": "Richiama e torna in guardia",
+              "t_anim": 2.3
+            }
+          ],
+          "punti_chiave": [
+            "Sguardo al bersaglio prima del calcio",
+            "Traiettoria dritta, non ad arco",
+            "Busto basso in avanti"
+          ],
+          "errori_comuni": [
+            "Calciare senza guardare",
+            "Aprire la gamba di lato"
+          ],
+          "animazione": {
+            "pose": "anim/ushiro.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        }
+      ]
+    },
+    {
+      "id": "combo",
+      "nome_it": "Combinazioni",
+      "nome_jp": null,
+      "tecniche": [
+        {
+          "id": "combo1",
+          "nome_jp": "Age-uke → Gyaku-zuki",
+          "nome_it": "Parata alta e contrattacco",
+          "kyu": 8,
+          "descrizione": "Combinazione base: si para con il braccio avanti e si contrattacca subito con il pugno contrario. La parata \"carica la molla\", il pugno la scarica.",
+          "passi": [
+            {
+              "n": 1,
+              "testo": "Kamae, guardia",
+              "t_anim": 0
+            },
+            {
+              "n": 2,
+              "testo": "Jōdan age-uke con il braccio avanti",
+              "t_anim": 0.8
+            },
+            {
+              "n": 3,
+              "testo": "Gyaku-zuki con il braccio dietro",
+              "t_anim": 2.3
+            },
+            {
+              "n": 4,
+              "testo": "Ritorno in guardia",
+              "t_anim": 3.6
+            }
+          ],
+          "punti_chiave": [
+            "Nessuna pausa tra parata e pugno",
+            "Anche: hanmi nella parata, shōmen nel pugno"
+          ],
+          "errori_comuni": [
+            "Contrattaccare prima di aver chiuso la parata"
+          ],
+          "animazione": {
+            "pose": "anim/combo.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "combo2",
+          "nome_jp": "Sanbon oi-zuki",
+          "nome_it": "Tre pugni avanti, tre parate indietro",
+          "kyu": 8,
+          "descrizione": "Tre oi-zuki avanzando, kiai sull'ultimo, poi tre gedan-barai arretrando fino al punto di partenza.",
+          "sequenza": [
+            {
+              "passo": "Kamae",
+              "tecnica": "Guardia",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 0
+            },
+            {
+              "passo": "1",
+              "tecnica": "Migi oi-zuki, avanti",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 2
+            },
+            {
+              "passo": "2",
+              "tecnica": "Hidari oi-zuki, avanti",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 3.6
+            },
+            {
+              "passo": "3",
+              "tecnica": "Migi oi-zuki, avanti",
+              "posizione": "zenkutsu",
+              "kiai": true,
+              "t_anim": 5.2
+            },
+            {
+              "passo": "4",
+              "tecnica": "Hidari gedan-barai, indietro",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 7.3
+            },
+            {
+              "passo": "5",
+              "tecnica": "Migi gedan-barai, indietro",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 8.9
+            },
+            {
+              "passo": "6",
+              "tecnica": "Hidari gedan-barai, indietro",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 10.5
+            }
+          ],
+          "punti_chiave": [
+            "Stessa altezza della testa a ogni passo",
+            "Nel passo indietro la parata arriva con il piede",
+            "Ritmo regolare: passo, tecnica, passo"
+          ],
+          "errori_comuni": [
+            "Accorciare i passi indietro",
+            "Guardare a terra mentre si arretra"
+          ],
+          "animazione": {
+            "pose": "anim/combo2.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "combo3",
+          "nome_jp": "Oi-zuki, age-uke e gyaku-zuki",
+          "nome_it": "Avanti e indietro",
+          "kyu": 8,
+          "descrizione": "Si attacca avanzando con oi-zuki, poi si arretra parando con age-uke e si contrattacca subito con gyaku-zuki.",
+          "sequenza": [
+            {
+              "passo": "Kamae",
+              "tecnica": "Guardia",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 0
+            },
+            {
+              "passo": "1",
+              "tecnica": "Migi oi-zuki, avanti",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 2
+            },
+            {
+              "passo": "2",
+              "tecnica": "Hidari age-uke, indietro",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 3.6
+            },
+            {
+              "passo": "3",
+              "tecnica": "Migi gyaku-zuki, sul posto",
+              "posizione": "zenkutsu",
+              "kiai": true,
+              "t_anim": 4.9
+            }
+          ],
+          "punti_chiave": [
+            "Il passo indietro dà spazio alla parata",
+            "Gyaku-zuki parte appena la parata è chiusa",
+            "Anche: hanmi nella parata, shōmen nel pugno"
+          ],
+          "errori_comuni": [
+            "Arretrare troppo poco",
+            "Pausa tra parata e pugno"
+          ],
+          "animazione": {
+            "pose": "anim/combo3.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "combo4",
+          "nome_jp": "Mae-geri e oi-zuki",
+          "nome_it": "Calcio e pugno avanzando",
+          "kyu": 8,
+          "descrizione": "Mae-geri con la gamba dietro, il piede atterra avanti e si prosegue con oi-zuki; poi due gedan-barai arretrando.",
+          "sequenza": [
+            {
+              "passo": "Kamae",
+              "tecnica": "Guardia",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 0
+            },
+            {
+              "passo": "1",
+              "tecnica": "Migi mae-geri, atterra avanti",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 1.7
+            },
+            {
+              "passo": "2",
+              "tecnica": "Hidari oi-zuki, avanti",
+              "posizione": "zenkutsu",
+              "kiai": true,
+              "t_anim": 4.3
+            },
+            {
+              "passo": "3",
+              "tecnica": "Migi gedan-barai, indietro",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 6.4
+            },
+            {
+              "passo": "4",
+              "tecnica": "Hidari gedan-barai, indietro",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 8
+            }
+          ],
+          "punti_chiave": [
+            "Il calcio atterra avanti, non torna indietro",
+            "Il pugno segue senza fermarsi",
+            "Busto dritto durante il calcio"
+          ],
+          "errori_comuni": [
+            "Far cadere la gamba dopo il calcio",
+            "Perdere la guardia durante il calcio"
+          ],
+          "animazione": {
+            "pose": "anim/combo4.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "combo5",
+          "nome_jp": "Soto-uke indietro e gyaku-zuki",
+          "nome_it": "Parata arretrando e contrattacco",
+          "kyu": 7,
+          "descrizione": "Si arretra con soto-uke, si contrattacca sul posto con gyaku-zuki e si chiude avanzando con oi-zuki.",
+          "sequenza": [
+            {
+              "passo": "Kamae",
+              "tecnica": "Guardia",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 0
+            },
+            {
+              "passo": "1",
+              "tecnica": "Migi soto-uke, indietro",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 2
+            },
+            {
+              "passo": "2",
+              "tecnica": "Hidari gyaku-zuki, sul posto",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 3.3
+            },
+            {
+              "passo": "3",
+              "tecnica": "Hidari oi-zuki, avanti",
+              "posizione": "zenkutsu",
+              "kiai": true,
+              "t_anim": 4.9
+            }
+          ],
+          "punti_chiave": [
+            "La parata arriva insieme al piede",
+            "Le anche ruotano per il gyaku-zuki",
+            "Oi-zuki finale con kiai"
+          ],
+          "errori_comuni": [
+            "Parare prima di aver arretrato",
+            "Spalle sollevate nella parata"
+          ],
+          "animazione": {
+            "pose": "anim/combo5.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "combo6",
+          "nome_jp": "Shutō-uke indietro, nukite avanti",
+          "nome_it": "Mani aperte in kokutsu e zenkutsu",
+          "kyu": 7,
+          "descrizione": "Due shutō-uke arretrando in kokutsu-dachi, poi due nukite avanzando in zenkutsu-dachi, con kiai sull'ultimo.",
+          "sequenza": [
+            {
+              "passo": "Kamae",
+              "tecnica": "Guardia",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 0
+            },
+            {
+              "passo": "1",
+              "tecnica": "Migi shutō-uke, indietro",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 2
+            },
+            {
+              "passo": "2",
+              "tecnica": "Hidari shutō-uke, indietro",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 3.6
+            },
+            {
+              "passo": "3",
+              "tecnica": "Migi nukite, avanti",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 5.2
+            },
+            {
+              "passo": "4",
+              "tecnica": "Hidari nukite, avanti",
+              "posizione": "zenkutsu",
+              "kiai": true,
+              "t_anim": 6.8
+            }
+          ],
+          "punti_chiave": [
+            "In kokutsu il peso resta dietro",
+            "Nel passaggio a zenkutsu il peso va avanti",
+            "Mano di sostegno sotto il gomito nel nukite"
+          ],
+          "errori_comuni": [
+            "Posizioni tutte uguali",
+            "Dita aperte"
+          ],
+          "animazione": {
+            "pose": "anim/combo6.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        },
+        {
+          "id": "combo7",
+          "nome_jp": "Kizami, gyaku e mae-geri",
+          "nome_it": "Combinazione da kumite",
+          "kyu": 7,
+          "descrizione": "Kizami-zuki e gyaku-zuki sul posto, mae-geri che atterra avanti, gyaku-zuki con kiai e ritorno indietro in gedan-barai.",
+          "sequenza": [
+            {
+              "passo": "Kamae",
+              "tecnica": "Guardia",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 0
+            },
+            {
+              "passo": "1",
+              "tecnica": "Hidari kizami-zuki, sul posto",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 1.7
+            },
+            {
+              "passo": "2",
+              "tecnica": "Migi gyaku-zuki, sul posto",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 3
+            },
+            {
+              "passo": "3",
+              "tecnica": "Migi mae-geri, atterra avanti",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 4.3
+            },
+            {
+              "passo": "4",
+              "tecnica": "Hidari gyaku-zuki, sul posto",
+              "posizione": "zenkutsu",
+              "kiai": true,
+              "t_anim": 6.6
+            },
+            {
+              "passo": "5",
+              "tecnica": "Hidari gedan-barai, indietro",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 8.7
+            }
+          ],
+          "punti_chiave": [
+            "Kizami veloce, gyaku potente",
+            "Il calcio parte dalla guardia, senza preavviso",
+            "Dopo il calcio la guardia è subito pronta"
+          ],
+          "errori_comuni": [
+            "Caricare il kizami",
+            "Abbassare le mani durante il calcio"
+          ],
+          "animazione": {
+            "pose": "anim/combo7.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": []
+        }
+      ]
+    },
+    {
+      "id": "kata",
+      "nome_it": "Kata",
+      "nome_jp": null,
+      "tecniche": [
+        {
+          "id": "taikyoku1",
+          "nome_jp": "Taikyoku Shodan",
+          "nome_it": "Primo kata propedeutico",
+          "kyu": 9,
+          "descrizione": "Kata propedeutico di 20 movimenti su un tracciato a \"I\": solo zenkutsu-dachi, gedan-barai e oi-zuki. È il primo kata da imparare.",
+          "sequenza": [
+            {
+              "passo": "Yoi",
+              "tecnica": "Pronti",
+              "posizione": "hachiji-dachi",
+              "kiai": false,
+              "t_anim": 0
+            },
+            {
+              "passo": "1",
+              "tecnica": "Hidari gedan-barai",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 2.4
+            },
+            {
+              "passo": "2",
+              "tecnica": "Migi chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 4
+            },
+            {
+              "passo": "3",
+              "tecnica": "Migi gedan-barai",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 5.6
+            },
+            {
+              "passo": "4",
+              "tecnica": "Hidari chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 7.2
+            },
+            {
+              "passo": "5",
+              "tecnica": "Hidari gedan-barai",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 8.8
+            },
+            {
+              "passo": "6",
+              "tecnica": "Migi chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 10.4
+            },
+            {
+              "passo": "7",
+              "tecnica": "Hidari chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 12
+            },
+            {
+              "passo": "8",
+              "tecnica": "Migi chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": true,
+              "t_anim": 13.6
+            },
+            {
+              "passo": "9",
+              "tecnica": "Hidari gedan-barai",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 15.7
+            },
+            {
+              "passo": "10",
+              "tecnica": "Migi chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 17.3
+            },
+            {
+              "passo": "11",
+              "tecnica": "Migi gedan-barai",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 18.9
+            },
+            {
+              "passo": "12",
+              "tecnica": "Hidari chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 20.5
+            },
+            {
+              "passo": "13",
+              "tecnica": "Hidari gedan-barai",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 22.1
+            },
+            {
+              "passo": "14",
+              "tecnica": "Migi chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 23.7
+            },
+            {
+              "passo": "15",
+              "tecnica": "Hidari chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 25.3
+            },
+            {
+              "passo": "16",
+              "tecnica": "Migi chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": true,
+              "t_anim": 26.9
+            },
+            {
+              "passo": "17",
+              "tecnica": "Hidari gedan-barai",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 29
+            },
+            {
+              "passo": "18",
+              "tecnica": "Migi chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 30.6
+            },
+            {
+              "passo": "19",
+              "tecnica": "Migi gedan-barai",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 32.2
+            },
+            {
+              "passo": "20",
+              "tecnica": "Hidari chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 33.8
+            },
+            {
+              "passo": "Yame",
+              "tecnica": "Fine",
+              "posizione": "hachiji-dachi",
+              "kiai": false,
+              "t_anim": 35.4
+            }
+          ],
+          "punti_chiave": [
+            "Ogni girata comincia con gedan-barai",
+            "Kiai al passo 8 e al passo 16",
+            "Stessa altezza della testa per tutto il kata"
+          ],
+          "errori_comuni": [
+            "Girarsi dal lato sbagliato",
+            "Passi più corti dopo le girate"
+          ],
+          "animazione": {
+            "pose": "anim/taikyoku1.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": [
+            "tracciato"
+          ]
+        },
+        {
+          "id": "heian1",
+          "nome_jp": "Heian Shodan",
+          "nome_it": "Mente in pace, livello 1",
+          "kyu": 8,
+          "descrizione": "Il primo kata della serie Heian: 21 movimenti su un tracciato a \"I\", con due kiai. Usa gedan-barai, oi-zuki, age-uke e shutō-uke.",
+          "sequenza": [
+            {
+              "passo": "Yoi",
+              "tecnica": "Pronti",
+              "posizione": "hachiji-dachi",
+              "kiai": false,
+              "t_anim": 0
+            },
+            {
+              "passo": "1",
+              "tecnica": "Hidari gedan-barai",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 2.4
+            },
+            {
+              "passo": "2",
+              "tecnica": "Migi chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 4
+            },
+            {
+              "passo": "3",
+              "tecnica": "Migi gedan-barai",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 5.6
+            },
+            {
+              "passo": "4",
+              "tecnica": "Migi tettsui-uchi",
+              "posizione": "da verificare",
+              "kiai": false,
+              "t_anim": 7.2
+            },
+            {
+              "passo": "5",
+              "tecnica": "Hidari chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 8.8
+            },
+            {
+              "passo": "6",
+              "tecnica": "Hidari gedan-barai",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 10.4
+            },
+            {
+              "passo": "7",
+              "tecnica": "Migi jōdan age-uke",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 12
+            },
+            {
+              "passo": "8",
+              "tecnica": "Hidari jōdan age-uke",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 13.6
+            },
+            {
+              "passo": "9",
+              "tecnica": "Migi jōdan age-uke",
+              "posizione": "zenkutsu",
+              "kiai": true,
+              "t_anim": 15.2
+            },
+            {
+              "passo": "10",
+              "tecnica": "Hidari gedan-barai",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 17.3
+            },
+            {
+              "passo": "11",
+              "tecnica": "Migi chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 18.9
+            },
+            {
+              "passo": "12",
+              "tecnica": "Migi gedan-barai",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 20.5
+            },
+            {
+              "passo": "13",
+              "tecnica": "Hidari chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 22.1
+            },
+            {
+              "passo": "14",
+              "tecnica": "Hidari gedan-barai",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 23.7
+            },
+            {
+              "passo": "15",
+              "tecnica": "Migi chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 25.3
+            },
+            {
+              "passo": "16",
+              "tecnica": "Hidari chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 26.9
+            },
+            {
+              "passo": "17",
+              "tecnica": "Migi chūdan oi-zuki",
+              "posizione": "zenkutsu",
+              "kiai": true,
+              "t_anim": 28.5
+            },
+            {
+              "passo": "18",
+              "tecnica": "Hidari chūdan shutō-uke",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 30.6
+            },
+            {
+              "passo": "19",
+              "tecnica": "Migi chūdan shutō-uke",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 32.2
+            },
+            {
+              "passo": "20",
+              "tecnica": "Migi chūdan shutō-uke",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 33.8
+            },
+            {
+              "passo": "21",
+              "tecnica": "Hidari chūdan shutō-uke",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 35.4
+            },
+            {
+              "passo": "Yame",
+              "tecnica": "Fine",
+              "posizione": "hachiji-dachi",
+              "kiai": false,
+              "t_anim": 37
+            }
+          ],
+          "punti_chiave": [
+            "Il kata inizia e finisce nello stesso punto",
+            "Kiai al passo 9 e al passo 17",
+            "Prima di girare, guarda nella nuova direzione"
+          ],
+          "errori_comuni": [
+            "Posizioni troppo corte",
+            "Girarsi senza guardare prima"
+          ],
+          "animazione": {
+            "pose": "anim/heian1.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Caprioli, Shotokan karate-do (UISP 2013)",
+            "Nakayama, Best Karate",
+            "Loftus, kata booklet v1.3.4"
+          ],
+          "da_verificare": [
+            "passo 4: posizione",
+            "tracciato"
+          ]
+        },
+        {
+          "id": "heian2",
+          "nome_jp": "Heian Nidan",
+          "nome_it": "Mente in pace, livello 2",
+          "kyu": 7,
+          "descrizione": "Il secondo kata Heian, circa 40 secondi su un tracciato a \"I\". Introduce la doppia parata alta, yoko-geri, nukite, morote-uke e le parate in gyaku hanmi, con molti cambi di direzione.",
+          "sequenza": [
+            {
+              "passo": "Yoi",
+              "tecnica": "Pronti",
+              "posizione": "hachiji-dachi",
+              "kiai": false,
+              "t_anim": 0
+            },
+            {
+              "passo": "1",
+              "tecnica": "Hidari jōdan haiwan-uke, migi age-uke",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 2.4
+            },
+            {
+              "passo": "2",
+              "tecnica": "Hidari soto-uke e migi ura-zuki",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 3.7
+            },
+            {
+              "passo": "3",
+              "tecnica": "Hidari tettsui-uchi",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 5
+            },
+            {
+              "passo": "4",
+              "tecnica": "Migi jōdan haiwan-uke, hidari age-uke",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 6.6
+            },
+            {
+              "passo": "5",
+              "tecnica": "Migi soto-uke e hidari ura-zuki",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 7.9
+            },
+            {
+              "passo": "6",
+              "tecnica": "Migi tettsui-uchi",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 9.2
+            },
+            {
+              "passo": "7a",
+              "tecnica": "Migi yoko-geri kekomi e uraken",
+              "posizione": "su una gamba",
+              "kiai": false,
+              "t_anim": 10.8
+            },
+            {
+              "passo": "7b",
+              "tecnica": "Hidari shutō-uke",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 12.8
+            },
+            {
+              "passo": "8",
+              "tecnica": "Migi shutō-uke",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 14.4
+            },
+            {
+              "passo": "9",
+              "tecnica": "Hidari shutō-uke",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 16
+            },
+            {
+              "passo": "10",
+              "tecnica": "Migi nukite",
+              "posizione": "zenkutsu",
+              "kiai": true,
+              "t_anim": 17.6
+            },
+            {
+              "passo": "11",
+              "tecnica": "Hidari shutō-uke",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 19.7
+            },
+            {
+              "passo": "12",
+              "tecnica": "Migi shutō-uke",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 21.3
+            },
+            {
+              "passo": "13",
+              "tecnica": "Migi shutō-uke",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 22.9
+            },
+            {
+              "passo": "14",
+              "tecnica": "Hidari shutō-uke",
+              "posizione": "kokutsu",
+              "kiai": false,
+              "t_anim": 24.5
+            },
+            {
+              "passo": "15",
+              "tecnica": "Migi uchi-uke (gyaku hanmi)",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 26.1
+            },
+            {
+              "passo": "16",
+              "tecnica": "Migi mae-geri",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 27.4
+            },
+            {
+              "passo": "17",
+              "tecnica": "Hidari gyaku-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 29.7
+            },
+            {
+              "passo": "18",
+              "tecnica": "Hidari uchi-uke (gyaku hanmi)",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 31
+            },
+            {
+              "passo": "19",
+              "tecnica": "Hidari mae-geri",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 32.3
+            },
+            {
+              "passo": "20",
+              "tecnica": "Migi gyaku-zuki",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 34.6
+            },
+            {
+              "passo": "21",
+              "tecnica": "Migi morote-uke",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 36.2
+            },
+            {
+              "passo": "22",
+              "tecnica": "Hidari gedan-barai",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 37.8
+            },
+            {
+              "passo": "23a",
+              "tecnica": "Hidari age-shutō-uke",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 39.4
+            },
+            {
+              "passo": "23b",
+              "tecnica": "Migi age-uke",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 41
+            },
+            {
+              "passo": "24",
+              "tecnica": "Migi gedan-barai",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 42.6
+            },
+            {
+              "passo": "25a",
+              "tecnica": "Migi age-shutō-uke",
+              "posizione": "zenkutsu",
+              "kiai": false,
+              "t_anim": 44.2
+            },
+            {
+              "passo": "25b",
+              "tecnica": "Hidari age-uke",
+              "posizione": "zenkutsu",
+              "kiai": true,
+              "t_anim": 45.8
+            },
+            {
+              "passo": "Yame",
+              "tecnica": "Fine",
+              "posizione": "hachiji-dachi",
+              "kiai": false,
+              "t_anim": 47.9
+            }
+          ],
+          "punti_chiave": [
+            "Nel passo 7 il piede dietro si avvicina prima del calcio laterale",
+            "Nelle parate gyaku hanmi le anche ruotano dalla parte opposta",
+            "Kiai al nukite (passo 10) e all'ultimo age-uke (passo 25)"
+          ],
+          "errori_comuni": [
+            "Yoko-geri senza richiamo della gamba",
+            "Shutō-uke con il peso in avanti"
+          ],
+          "animazione": {
+            "pose": "anim/heian2.json"
+          },
+          "stato": "animata",
+          "fonti": [
+            "Scheda Heian Nidan, dojoshotokan.it",
+            "Enciclopedia tecnica (Roberto, 2026)"
+          ],
+          "da_verificare": [
+            "passo 7: yoko-geri kekomi (PDF) o keage (enciclopedia)",
+            "tracciato"
+          ]
+        }
+      ]
+    }
+  ]
+}
