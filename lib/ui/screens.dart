@@ -1,43 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/catalog.dart';
 import '../engine/camera.dart';
 import '../services/voice.dart';
+import 'app_state.dart';
+import 'learn_screens.dart';
+import 'path_screens.dart';
+import 'profile_screens.dart';
 import 'tech_view.dart';
 import 'theme.dart';
+import 'train_screen.dart';
+import 'widgets.dart';
 
-/// Stato dell'app salvato sul telefono: preferiti e tecniche viste.
-class AppState extends ChangeNotifier {
-  final Catalog catalog;
-  final SharedPreferences prefs;
-  final Voice voice = Voice();
-  AppState(this.catalog, this.prefs) {
-    voice.enabled = prefs.getBool('voce') ?? true;
-  }
-
-  Set<String> get favs => (prefs.getStringList('preferiti') ?? const []).toSet();
-  Set<String> get seen => (prefs.getStringList('viste') ?? const []).toSet();
-
-  void toggleFav(String id) {
-    final f = favs;
-    f.contains(id) ? f.remove(id) : f.add(id);
-    prefs.setStringList('preferiti', f.toList());
-    notifyListeners();
-  }
-
-  void markSeen(String id) {
-    final s = seen..add(id);
-    prefs.setStringList('viste', s.toList());
-  }
-
-  void toggleVoice() {
-    voice.enabled = !voice.enabled;
-    prefs.setBool('voce', voice.enabled);
-    if (!voice.enabled) voice.stop();
-    notifyListeners();
-  }
-}
+export 'app_state.dart';
 
 class Shell extends StatefulWidget {
   final AppState app;
@@ -52,10 +27,9 @@ class _ShellState extends State<Shell> {
   @override
   Widget build(BuildContext context) {
     final app = widget.app;
-    final pages = [HomeScreen(app: app), const ComingSoon('Percorso', ['Lezioni da 5 minuti per cintura', 'Serie di giorni e obiettivo giornaliero', 'Esame simulato']), CatalogScreen(app: app),
-      const ComingSoon('Impara', ['Glossario parlante', 'Comandi e conteggio', 'Quiz, Dōjō kun e i 20 principi']), const ComingSoon('Profilo', ['Diario e promemoria', 'Il mio dojo', 'Preferiti'])];
+    final pages = [HomeScreen(app: app, goTab: (i) => setState(() => tab = i)), PathScreen(app: app), CatalogScreen(app: app), LearnScreen(app: app), ProfileScreen(app: app)];
     return Scaffold(
-      body: SafeArea(child: IndexedStack(index: tab, children: pages)),
+      body: SafeArea(child: ListenableBuilder(listenable: app, builder: (context, _) => IndexedStack(index: tab, children: pages))),
       bottomNavigationBar: NavigationBar(
         selectedIndex: tab,
         onDestinationSelected: (i) => setState(() => tab = i),
@@ -71,22 +45,38 @@ class _ShellState extends State<Shell> {
   }
 }
 
-void openTech(BuildContext context, AppState app, Technique t) {
-  app.markSeen(t.id);
-  Navigator.of(context).push(MaterialPageRoute(builder: (_) => DetailScreen(app: app, tech: t)));
-}
+void openTech(BuildContext context, AppState app, Technique t) => app.openTech(context, t);
 
 class HomeScreen extends StatelessWidget {
   final AppState app;
-  const HomeScreen({super.key, required this.app});
+  final void Function(int tab) goTab;
+  const HomeScreen({super.key, required this.app, required this.goTab});
 
   @override
   Widget build(BuildContext context) {
-    final t = app.catalog.byId('combo1') ?? app.catalog.all.first;
+    final p = app.progress, c = app.catalog, t = c.byId('combo1') ?? c.all.first;
+    final nl = p.nextLesson, due = p.dueList(app.seen), pr = app.learn.nijukun[dayIndex(p.now()) % app.learn.nijukun.length];
+    final task = p.tasks.where((x) => !x.complete).firstOrNull;
     return ListView(padding: const EdgeInsets.all(18), children: [
       const Eyebrow('Ciao'),
       Text('Oggi al dojo', style: K.hand.copyWith(fontSize: 34)),
       const SizedBox(height: 14),
+      GoalCard(app),
+      if (nl != null)
+        Card2(
+          eyebrow: 'Continua il percorso · verso il ${p.levels[nl.$1].kyu}° kyu',
+          title: 'Lezione ${nl.$2 + 1}: ${p.lessonName(p.levels[nl.$1].lessons[nl.$2])}',
+          text: '5 minuti, poi 3 domande. +10 punti.',
+          onTap: () => openLesson(context, app, nl.$1, nl.$2),
+        ),
+      Card2(eyebrow: 'Allenamento su misura', title: 'Allenati con me, da 5 a 30 minuti', text: 'Scegli tempo e obiettivo: kihon, calci, kata o il tuo esame. Cambia ogni volta.', onTap: () => openTraining(context, app)),
+      if (task != null) Card2(eyebrow: 'Dal tuo dojo', title: task.title, text: 'Compito dell\'istruttore da completare.', onTap: () => openDojo(context, app)),
+      if (due.isNotEmpty)
+        Card2(title: 'Da ripassare oggi', badge: '${due.length}', children: [
+          const SizedBox(height: 6),
+          Wrap(children: [for (final x in due.take(6)) Pill(x.nameJp, onTap: () => openTech(context, app, x))]),
+        ]),
+      Card2(eyebrow: 'Il principio di oggi', title: pr.it, text: pr.explain, onTap: () => goTab(3)),
       RoughBox(
         onTap: () => openTech(context, app, t),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -101,7 +91,7 @@ class HomeScreen extends StatelessWidget {
       const SizedBox(height: 16),
       Text('Ripassa', style: K.hand.copyWith(fontSize: 24)),
       const SizedBox(height: 8),
-      TechGrid(app: app, techs: [for (final id in ['gedan', 'gyaku', 'oizuki', 'maegeri']) ?app.catalog.byId(id)]),
+      TechGrid(app: app, techs: [for (final id in ['gedan', 'gyaku', 'oizuki', 'maegeri']) ?c.byId(id)]),
     ]);
   }
 }
@@ -243,7 +233,7 @@ class _DetailScreenState extends State<DetailScreen> {
             Wrap(children: [for (final v in views.values) HandButton(v.label, on: ctrl.view == v.id, onTap: () => ctrl.setView(v.id))]),
           ],
           const SizedBox(height: 8),
-          Text(t.description, style: const TextStyle(color: K.leadSoft)),
+          LinkText(app, t.description, style: const TextStyle(color: K.leadSoft)),
           const SizedBox(height: 12),
           Text(t.isSequence ? 'Sequenza' : 'Passi', style: K.hand.copyWith(fontSize: 24)),
           for (var i = 0; i < t.steps.length; i++)
@@ -269,13 +259,20 @@ class _DetailScreenState extends State<DetailScreen> {
                 ]),
               ),
             ),
+          if (app.learn.kataMeaning[t.id] case final m?) ...[
+            const Sec('Significato'),
+            LinkText(app, m.$1, style: const TextStyle(color: K.leadSoft)),
+            const SizedBox(height: 4),
+            LinkText(app, m.$2, style: const TextStyle(color: K.leadSoft)),
+          ],
           const SizedBox(height: 12),
           Text('Punti chiave', style: K.hand.copyWith(fontSize: 24)),
-          for (final p in t.keyPoints) Text('•  $p'),
+          for (final p in t.keyPoints) LinkText(app, '•  $p'),
           const SizedBox(height: 12),
           Text('Errori comuni', style: K.hand.copyWith(fontSize: 24)),
-          for (final p in t.commonErrors) Text('•  $p'),
+          for (final p in t.commonErrors) LinkText(app, '•  $p'),
           const SizedBox(height: 12),
+          ReviewCard(app: app, tech: t),
           if (t.toVerify.isNotEmpty) Text('Da verificare con un istruttore: ${t.toVerify.join('; ')}', style: const TextStyle(fontSize: 11, fontStyle: FontStyle.italic, color: K.leadSoft)),
           Text('Fonti: ${t.sources.join('; ')}. Testo riscritto.', style: const TextStyle(fontSize: 11, fontStyle: FontStyle.italic, color: K.leadSoft)),
         ]),
@@ -284,21 +281,30 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 }
 
-class ComingSoon extends StatelessWidget {
-  final String title;
-  final List<String> items;
-  const ComingSoon(this.title, this.items, {super.key});
+/// "Com'è andato il ripasso?": la tecnica torna dopo 1, 2, 4, 7 o 14 giorni.
+class ReviewCard extends StatelessWidget {
+  final AppState app;
+  final Technique tech;
+  const ReviewCard({super.key, required this.app, required this.tech});
 
   @override
-  Widget build(BuildContext context) => ListView(padding: const EdgeInsets.all(18), children: [
-        Text(title, style: K.hand.copyWith(fontSize: 34)),
-        const SizedBox(height: 12),
-        RoughBox(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('Nella prossima versione', style: K.hand.copyWith(fontSize: 26)),
-            const SizedBox(height: 6),
-            for (final i in items) Text('•  $i'),
-          ]),
-        ),
-      ]);
+  Widget build(BuildContext context) => ListenableBuilder(
+        listenable: app,
+        builder: (context, _) {
+          final due = app.progress.reviewDue(tech.id);
+          return Card2(
+            title: 'Com\'è andato il ripasso?',
+            text: due == null ? 'Segna come ti è venuta: l\'app te la riproporrà al momento giusto.' : 'Prossimo ripasso: ${due == app.progress.today ? 'oggi' : itDate(due)}',
+            children: [
+              Wrap(children: [
+                for (final (ok, l) in [(false, 'difficile'), (true, 'bene')])
+                  HandButton(l, outlined: true, onTap: () {
+                    app.progress.rate(tech.id, ok);
+                    app.changed();
+                  }),
+              ]),
+            ],
+          );
+        },
+      );
 }

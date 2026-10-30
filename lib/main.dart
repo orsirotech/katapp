@@ -3,14 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data/catalog.dart';
+import 'data/learn.dart';
 import 'ui/screens.dart';
 import 'ui/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final catalog = await Catalog.load(rootBundle);
+  final learn = await Learn.load(rootBundle);
   final prefs = await SharedPreferences.getInstance();
-  runApp(KatApp(app: AppState(catalog, prefs)));
+  runApp(KatApp(app: AppState(catalog, learn, prefs)));
 }
 
 class KatApp extends StatelessWidget {

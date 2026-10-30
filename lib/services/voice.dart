@@ -18,8 +18,9 @@ class Voice {
     return b.toString();
   }
 
-  Future<void> say(String text, {String lang = 'it-IT'}) async {
-    if (!enabled) return;
+  /// [force] parla anche con la voce spenta: per i pulsanti 🔊 del glossario.
+  Future<void> say(String text, {String lang = 'it-IT', bool force = false}) async {
+    if (!enabled && !force) return;
     await _tts.stop();
     await _tts.setLanguage(lang);
     await _tts.setSpeechRate(lang == 'ja-JP' ? .42 : .5);
