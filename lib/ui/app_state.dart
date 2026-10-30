@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../data/catalog.dart';
 import '../data/learn.dart';
 import '../data/progress.dart';
+import '../services/reminder.dart';
 import '../services/voice.dart';
 import 'screens.dart';
 
@@ -14,6 +15,7 @@ class AppState extends ChangeNotifier {
   final SharedPreferences prefs;
   final Progress progress;
   final Voice voice = Voice();
+  final Reminder reminder = Reminder();
   AppState(this.catalog, this.learn, this.prefs, {Progress? progress}) : progress = progress ?? Progress(prefs, catalog) {
     voice.enabled = prefs.getBool('voce') ?? true;
   }
@@ -40,8 +42,16 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Da chiamare dopo ogni modifica ai progressi, per aggiornare le schermate.
-  void changed() => notifyListeners();
+  /// Da chiamare dopo ogni modifica ai progressi: aggiorna le schermate e il promemoria.
+  void changed() {
+    notifyListeners();
+    syncReminder();
+  }
+
+  Future<void> syncReminder() {
+    final p = progress;
+    return reminder.sync(on: p.remindOn, at: p.remindAt, trainedToday: p.xpOn(p.today) > 0, body: p.streak > 0 ? 'Non rompere la serie: ${p.streak} giorni di fila.' : 'Pochi minuti di kihon per iniziare la serie.');
+  }
 
   void openTech(BuildContext context, Technique t) {
     markSeen(t.id);

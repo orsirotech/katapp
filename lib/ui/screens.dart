@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../data/catalog.dart';
 import '../engine/camera.dart';
+import '../posture/stance.dart';
 import '../services/voice.dart';
 import 'app_state.dart';
 import 'learn_screens.dart';
 import 'path_screens.dart';
+import 'posture_screen.dart';
 import 'profile_screens.dart';
 import 'tech_view.dart';
 import 'theme.dart';
@@ -265,6 +267,7 @@ class _DetailScreenState extends State<DetailScreen> {
             const SizedBox(height: 4),
             LinkText(app, m.$2, style: const TextStyle(color: K.leadSoft)),
           ],
+          if (postureInfo.containsKey(t.id)) ...[const SizedBox(height: 12), PostureCard(app: app, tech: t)],
           const SizedBox(height: 12),
           Text('Punti chiave', style: K.hand.copyWith(fontSize: 24)),
           for (final p in t.keyPoints) LinkText(app, '•  $p'),

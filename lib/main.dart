@@ -12,7 +12,9 @@ Future<void> main() async {
   final catalog = await Catalog.load(rootBundle);
   final learn = await Learn.load(rootBundle);
   final prefs = await SharedPreferences.getInstance();
-  runApp(KatApp(app: AppState(catalog, learn, prefs)));
+  final app = AppState(catalog, learn, prefs);
+  runApp(KatApp(app: app));
+  app.syncReminder();
 }
 
 class KatApp extends StatelessWidget {

@@ -97,15 +97,24 @@ class _DiaryScreenState extends State<DiaryScreen> {
       const SizedBox(height: 12),
       Card2(title: 'Promemoria', children: [
         Wrap(crossAxisAlignment: WrapCrossAlignment.center, children: [
-          HandButton(p.remindOn ? 'attivo' : 'spento', outlined: true, on: p.remindOn, onTap: () => setState(() => p.setRemind(!p.remindOn, p.remindAt))),
+          HandButton(p.remindOn ? 'attivo' : 'spento', outlined: true, on: p.remindOn, onTap: () async {
+            if (!p.remindOn && app.reminder.supported && !await app.reminder.askPermission()) {
+              if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Per il promemoria serve il permesso per le notifiche.')));
+              return;
+            }
+            setState(() => p.setRemind(!p.remindOn, p.remindAt));
+            app.changed();
+          }),
           HandButton('alle ${p.remindAt}', onTap: () async {
             final parts = p.remindAt.split(':');
             final t = await showTimePicker(context: context, initialTime: TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1])));
-            if (t != null) setState(() => p.setRemind(p.remindOn, '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}'));
+            if (t == null) return;
+            setState(() => p.setRemind(p.remindOn, '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}'));
+            app.changed();
           }),
         ]),
         Muted(p.remindOn ? 'Ogni giorno alle ${p.remindAt}, se non ti sei ancora allenato.' : 'Un avviso al giorno per non rompere la serie.'),
-        const Note('Le notifiche sul telefono arrivano con la prossima versione: per ora l\'orario viene solo salvato.'),
+        if (!app.reminder.supported) const Note('Le notifiche funzionano nell\'app sul telefono.'),
       ]),
     ]);
   }
