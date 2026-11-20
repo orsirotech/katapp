@@ -44,6 +44,25 @@ class Principle {
   const Principle(this.jp, this.it, this.explain, [this.ask = '']);
 }
 
+/// Regole di gara (WKF) ed esami: sezioni con titolo e punti, più i comandi dell'arbitro.
+class Rules {
+  final String note, updated;
+  final List<String> sources;
+  final List<(String, List<(String, List<String>)>)> groups;
+  final List<Said> referee;
+  const Rules({required this.note, required this.updated, required this.sources, required this.groups, required this.referee});
+
+  static List<(String, List<String>)> _sec(Object? l) => [for (final e in (l as List? ?? const [])) (e['titolo'] as String, [for (final p in e['punti'] as List) p as String])];
+
+  factory Rules.fromJson(Map<String, dynamic> j) => Rules(
+        note: j['nota'] as String? ?? '',
+        updated: j['aggiornate'] as String? ?? '',
+        sources: [for (final f in (j['fonti'] as List? ?? const [])) f as String],
+        groups: [('Kumite', _sec(j['kumite'])), ('Kata', _sec(j['kata'])), ('Esami di cintura', _sec(j['esami']))],
+        referee: [for (final c in (j['comandi_arbitro'] as List? ?? const [])) Said(c['romaji'] as String, c['kana'] as String, c['significato'] as String)],
+      );
+}
+
 /// Contenuti di Impara: glossario, comandi, conteggio, filosofia, etichetta.
 class Learn {
   final List<Term> glossary;
@@ -51,9 +70,10 @@ class Learn {
   final List<Principle> dojoKun, nijukun;
   final Map<String, (String, String)> kataMeaning;
   final List<(String, List<String>)> etiquette;
+  final Rules? rules;
   final Map<String, Term> _byWord = {};
 
-  Learn({required this.glossary, required this.commands, required this.count, required this.dojoKun, required this.nijukun, required this.kataMeaning, required this.etiquette}) {
+  Learn({required this.glossary, required this.commands, required this.count, required this.dojoKun, required this.nijukun, required this.kataMeaning, required this.etiquette, this.rules}) {
     for (final g in glossary) {
       _byWord[plain(g.romaji)] = g;
       for (final a in g.alias) {
@@ -93,6 +113,7 @@ class Learn {
         nijukun: [for (final d in j['nijukun'] as List) Principle(d['giapponese'] as String, d['italiano'] as String, d['spiegazione'] as String, d['domanda'] as String? ?? '')],
         kataMeaning: {for (final e in (j['significato_kata'] as Map).entries) e.key as String: (e.value['nome'] as String, e.value['insegna'] as String)},
         etiquette: [for (final e in j['etichetta'] as List) (e['titolo'] as String, [for (final p in e['punti'] as List) p as String])],
+        rules: j['regole'] is Map ? Rules.fromJson(j['regole'] as Map<String, dynamic>) : null,
       );
 
   static Future<Learn> load(AssetBundle bundle) async => Learn.fromJson(jsonDecode(await bundle.loadString('assets/contenuti/impara.json')) as Map<String, dynamic>);

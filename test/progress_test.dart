@@ -63,7 +63,7 @@ void main() {
 
   test('percorso: lezioni, sblocco ed esame', () async {
     final p = await fresh(DateTime.now);
-    expect(p.levels.map((x) => x.kyu), [9, 8, 7, 6]);
+    expect(p.levels.map((x) => x.kyu), [9, 8, 7, 6, 5, 4, 3, 2, 1]);
     expect(p.levels.first.lessons.first, ['musubi', 'heiko']);
     for (final L in p.levels) {
       for (final ls in L.lessons) {
@@ -86,7 +86,7 @@ void main() {
   test('quiz: ogni domanda ha 4 risposte e quella giusta', () async {
     final q = QuizMaker(c, l, Random(3));
     for (var n = 0; n < 20; n++) {
-      for (final k in [9, 8, 7, 6]) {
+      for (final k in [for (final l in buildLevels(c)) l.kyu]) {
         final qs = q.forKyu(k);
         expect(qs.length, 8);
         for (final x in qs) {

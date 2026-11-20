@@ -23,6 +23,7 @@ class LearnScreen extends StatelessWidget {
       ('Quiz per il prossimo kyu', 'Riconosci le tecniche, le parole e i passi dei kata', () => QuizPickScreen(app: app)),
       ('Filosofia', 'Dōjō kun e i 20 principi di Funakoshi', () => PhilosophyScreen(app: app)),
       ('Etichetta del dojo', 'Come si entra, si saluta e ci si comporta', () => EtiquetteScreen(app: app)),
+      if (l.rules != null) ('Regole di gara', 'Kumite e kata WKF, comandi dell\'arbitro, esami di cintura', () => RulesScreen(app: app)),
     ];
     return Paper(title: 'Impara', children: [
       Card2(eyebrow: 'Il principio di oggi · ${i + 1} di ${l.nijukun.length}', title: n.it, text: n.explain, children: [if (n.ask.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 6), child: Text(n.ask, style: K.hand.copyWith(fontSize: 19, color: K.red)))]),
@@ -156,6 +157,34 @@ class EtiquetteScreen extends StatelessWidget {
       ]);
 }
 
+class RulesScreen extends StatelessWidget {
+  final AppState app;
+  const RulesScreen({super.key, required this.app});
+
+  @override
+  Widget build(BuildContext context) {
+    final r = app.learn.rules!;
+    return Paper(back: 'Impara', title: 'Regole di gara', subtitle: 'Riassunto aggiornato al ${r.updated}. ${r.note}', children: [
+      for (final (g, secs) in r.groups) ...[
+        Sec(g),
+        for (final (t, pts) in secs) Card2(title: t, children: [for (final p in pts) LinkText(app, '•  $p')]),
+        if (g == 'Kata' && r.referee.isNotEmpty) ...[
+          const Sec('Comandi dell\'arbitro'),
+          for (final c in r.referee)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(c.romaji, style: const TextStyle(fontWeight: FontWeight.w700)),
+              subtitle: Text(c.meaning, style: const TextStyle(color: K.leadSoft)),
+              trailing: SayButton(app, c.kana),
+              onTap: () => app.voice.say(c.kana, lang: 'ja-JP', force: true),
+            ),
+        ],
+      ],
+      Note('Fonti: ${r.sources.join('; ')}.'),
+    ]);
+  }
+}
+
 class QuizPickScreen extends StatelessWidget {
   final AppState app;
   const QuizPickScreen({super.key, required this.app});
@@ -164,7 +193,7 @@ class QuizPickScreen extends StatelessWidget {
   Widget build(BuildContext context) => ListenableBuilder(
         listenable: app,
         builder: (context, _) => Paper(back: 'Impara', title: 'Quiz per il prossimo kyu', subtitle: '8 domande sul programma fino al grado che scegli.', children: [
-          for (final k in [9, 8, 7, 6])
+          for (final k in [for (final l in app.progress.levels) l.kyu])
             Card2(
               title: 'Verso il $k° kyu',
               badge: app.progress.quizBest(k) != null ? 'migliore ${app.progress.quizBest(k)}/8' : 'da fare',

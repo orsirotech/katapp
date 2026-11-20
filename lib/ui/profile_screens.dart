@@ -29,7 +29,7 @@ class ProfileScreen extends StatelessWidget {
       ]),
       Card2(title: 'Preferiti', badge: '${app.favs.length} ☆', onTap: () => _push(context, FavoritesScreen(app: app))),
       const Sec('Programma per cintura'),
-      for (final (k, belt, ids) in beltProgram)
+      for (final (k, belt, ids) in beltProgramOf(app.catalog))
         Card2(title: k, badge: belt, children: [
           for (final id in ids)
             if (app.catalog.byId(id) case final t?)

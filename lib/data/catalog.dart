@@ -31,6 +31,12 @@ class Technique {
   });
 
   bool get isKata => categoryId == 'kata';
+
+  /// Combinazioni e forme di kumite: sequenze brevi da ripetere.
+  bool get isCombo => categoryId == 'combo' || categoryId == 'kumite';
+
+  /// Grado del programma: kyu, oppure dan per i kata da cintura nera (kyu 0).
+  String get grade => kyu > 0 ? '$kyu° kyu' : '1° dan';
   bool get isSequence => steps.isNotEmpty && steps.first.isSequence;
 
   factory Technique.fromJson(String cat, Map<String, dynamic> j) {

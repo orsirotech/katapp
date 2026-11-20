@@ -1,0 +1,1714 @@
+<title>KatApp prototipo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* Layout: telefono al centro su desktop con note a lato; a tutta larghezza su telefono. Look unico "carta e grafite", scelto di proposito (niente tema scuro). */
+:root{
+  --desk:#dedad0; --paper:#f2eee4; --paper-2:#e9e4d7; --lead:#2a292c; --lead-soft:#6b675f; --hatch:#b9b3a5; --red:#a3372c;
+  --hand:"Caveat", "Comic Sans MS", cursive;
+  --body:"Zen Kaku Gothic New", "Hiragino Sans", system-ui, sans-serif;
+  color-scheme: light;
+}
+body{background:var(--desk);color:var(--lead);font-family:var(--body);font-size:15px;line-height:1.5}
+.page{max-width:1100px;margin:0 auto;padding-block:24px 40px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));display:flex;gap:40px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
+.side{flex:1 1 280px;max-width:380px;min-width:0;display:flex;flex-direction:column;gap:14px;padding-top:24px}
+.side h1{font-family:var(--hand);font-size:44px;line-height:1;margin:0}
+.side p{margin:0;color:var(--lead-soft)}
+.side ol{margin:0;padding-left:20px;color:var(--lead-soft);display:flex;flex-direction:column;gap:6px}
+.side b{color:var(--lead)}
+.phone{flex:0 1 390px;width:100%;max-width:390px;height:min(800px, calc(100vh - 48px));min-height:640px;background:var(--paper);border-radius:34px;box-shadow:0 0 0 10px #1f1e1c,0 24px 50px rgba(0,0,0,.28);overflow:hidden;display:flex;flex-direction:column;position:relative}
+@media (max-width:520px){.page{padding-block:0;padding-left:0;padding-right:0;gap:0}.phone{border-radius:0;box-shadow:none;max-width:none;flex-basis:100%;height:100vh;height:100dvh;min-height:0}.side{order:2;padding:20px max(16px, env(safe-area-inset-left, 0px)) 32px}}
+.paper-tex{display:none}
+.scr{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;padding:18px 18px 24px;display:flex;flex-direction:column;gap:16px}
+.scr > *{flex-shrink:0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.top h2{font-family:var(--hand);font-weight:700;font-size:34px;line-height:1;margin:0}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--lead-soft)}
+.rough{position:relative;border-radius:10px}
+.rough::before{content:"";position:absolute;inset:0;border:1.6px solid var(--lead);border-radius:11px 8px 12px 9px / 9px 12px 8px 11px;pointer-events:none;opacity:.8}
+.rough::after{content:"";position:absolute;inset:1px -1px -1px 1px;border:.8px solid var(--lead);border-radius:9px 12px 8px 11px / 12px 8px 11px 9px;pointer-events:none;opacity:.25}
+.card{padding:14px;display:flex;flex-direction:column;gap:8px;background:rgba(255,255,255,.25)}
+.card h3{font-family:var(--hand);font-size:26px;font-weight:700;line-height:1.05;margin:0}
+.jp{font-size:12px;color:var(--lead-soft);letter-spacing:.04em}
+.muted{color:var(--lead-soft);font-size:14px;margin:0}
+canvas{display:block;width:100%;aspect-ratio:4/3;border-radius:8px}
+canvas.tall{aspect-ratio:480/540}
+.thumb canvas{aspect-ratio:1/1}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0;text-align:left}
+button:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:6px}
+.btn{font-family:var(--hand);font-size:21px;font-weight:700;padding:4px 14px;display:inline-flex;align-items:center;gap:6px}
+.btn.on{color:var(--red)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 6px;scrollbar-width:none}
+.chip{flex:none;font-family:var(--hand);font-size:20px;font-weight:700;padding:2px 14px}
+.chip.on{color:var(--paper);background:var(--lead);border-radius:10px}
+.chip.on::before{opacity:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{display:flex;flex-direction:column;gap:6px;padding:8px;min-width:0}
+.tile .name{font-family:var(--hand);font-size:21px;font-weight:700;line-height:1}
+.soon{aspect-ratio:1/1;display:grid;place-items:center;font-family:var(--hand);font-size:19px;color:var(--lead-soft);border-radius:8px;background:repeating-linear-gradient(135deg,transparent 0 7px,rgba(80,70,50,.09) 7px 8px)}
+.kyu{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--lead-soft)}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.steps button{display:flex;gap:10px;width:100%;padding:7px 8px;border-radius:8px;align-items:baseline}
+.steps .n{font-family:var(--hand);font-size:22px;font-weight:700;min-width:18px;color:var(--lead-soft)}
+.steps .on{background:rgba(163,55,44,.08)}
+.steps .on .n{color:var(--red)}
+.ctrl{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.ctrl .btn{font-size:19px;padding:2px 10px}
+.list{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.sec{font-family:var(--hand);font-size:24px;font-weight:700;margin:0}
+.back{font-family:var(--hand);font-size:22px;font-weight:700}
+.star{font-size:26px;line-height:1;color:var(--lead)}
+.star[aria-pressed="true"]{color:var(--red)}
+.belt{height:14px;border-radius:3px;background:#f7f4ea;box-shadow:inset 0 0 0 1.5px var(--lead)}
+.bar{height:8px;border-radius:4px;background:var(--paper-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--lead);border-radius:4px}
+.kata td{padding:5px 6px;border-bottom:1px dashed var(--hatch);vertical-align:top;font-size:13px}
+.kata td:first-child{font-family:var(--hand);font-size:19px;font-weight:700;color:var(--lead-soft)}
+.steps .kiai,.kata .kiai{color:var(--red);font-weight:700}
+.tab{display:flex;justify-content:space-around;padding:8px 6px calc(10px + env(safe-area-inset-bottom, 0px));border-top:1.5px solid rgba(42,41,44,.5);background:var(--paper);position:relative}
+.tab button{display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--hand);font-size:17px;font-weight:700;color:var(--lead-soft);padding:2px 8px}
+.tab button[aria-current="page"]{color:var(--lead)}
+.tab svg{width:26px;height:26px}
+.example{font-size:11px;color:var(--lead-soft);font-style:italic}
+.term{display:inline;font:inherit;color:inherit;text-decoration:underline dotted var(--red);text-underline-offset:3px;text-decoration-thickness:1.5px}
+.say{font-size:18px;padding:4px 6px;line-height:1}
+.search{width:100%;font:inherit;padding:8px 12px;background:rgba(255,255,255,.35);border:0;color:var(--lead)}
+.glist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.glist li{display:flex;align-items:center;gap:6px;border-bottom:1px dashed var(--hatch)}
+.glist li > button:first-child{flex:1;display:flex;gap:12px;align-items:center;padding:8px 2px;min-width:0}
+.gk{font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;font-size:22px;min-width:66px;text-align:center;white-space:nowrap}
+.gk.big{font-size:56px;text-align:left;line-height:1.1}
+.count{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.count button{display:flex;flex-direction:column;align-items:center;padding:6px 2px;border-radius:8px;background:rgba(255,255,255,.3);font-size:12px}
+.count b{font-family:var(--hand);font-size:26px;line-height:1}
+.sheet-bg{position:absolute;inset:0;background:rgba(30,28,25,.35);z-index:5}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:6;background:var(--paper);border-radius:18px 18px 0 0;padding:16px 18px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px;max-height:80%;overflow-y:auto;box-shadow:0 -10px 30px rgba(0,0,0,.18)}
+.parts{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.part{display:flex;flex-direction:column;padding:6px 10px;font-size:13px}
+.part b{font-size:15px}
+.plus{font-family:var(--hand);font-size:22px;color:var(--lead-soft)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{padding:10px 12px;font-size:15px}
+.opt.good{background:rgba(70,120,60,.16)}
+.opt.bad{background:rgba(163,55,44,.14)}
+.phil{display:flex;gap:10px;padding:6px 8px;border-radius:8px}
+.phil p{margin:4px 0 0}
+.phil.today{background:rgba(163,55,44,.08)}
+.ask{margin:0;font-family:var(--hand);font-size:21px;line-height:1.15;color:var(--red)}
+.mirror{padding:8px;display:flex;flex-direction:column;gap:6px}
+.mirror video{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;transform:scaleX(-1);background:var(--paper-2)}
+.big-count{font-family:var(--hand);font-size:44px;font-weight:700;text-align:center;margin:0;min-height:50px;color:var(--red)}
+.trow{display:flex;gap:10px;padding:7px 8px;border-radius:8px}
+.trow.on{background:rgba(163,55,44,.08)}
+.trow.on .n{color:var(--red)}
+
+.lvl{display:flex;flex-direction:column;gap:4px}
+.path{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.path li{display:flex;padding-left:8%}
+.path li.r{padding-left:38%}
+.node{display:flex;align-items:center;gap:10px;padding:4px;max-width:100%}
+.node .dot{flex:none;width:52px;height:52px;display:grid;place-items:center;font-family:var(--hand);font-size:26px;font-weight:700;background:rgba(255,255,255,.35)}
+.node .nl{font-family:var(--hand);font-size:19px;font-weight:700;line-height:1.05}
+.node.done .dot{background:var(--lead);color:var(--paper)}
+.node.cur .dot{background:rgba(163,55,44,.14);color:var(--red)}
+.node[disabled]{opacity:.45;cursor:default}
+.node.exam .dot{border-radius:50%}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:13px}
+.cal b{font-size:11px;color:var(--lead-soft);font-weight:400}
+.cal span{aspect-ratio:1;display:grid;place-items:center;border-radius:50%}
+.cal .some{background:repeating-linear-gradient(135deg,rgba(42,41,44,.25) 0 2px,transparent 2px 5px)}
+.cal .full{background:var(--lead);color:var(--paper)}
+.cal .now{box-shadow:0 0 0 1.5px var(--red)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stats .card{align-items:flex-start;gap:0}
+.stats b{font-family:var(--hand);font-size:34px;line-height:1}
+.stats span{font-size:12px;color:var(--lead-soft)}
+.code{padding:10px;font-size:13px;word-break:break-all;background:rgba(255,255,255,.4)}
+.tips{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.tips .no{color:var(--red)}
+.tips .ok{color:var(--lead-soft)}
+#pose-out{display:flex;flex-direction:column;gap:8px}
+#pose-out canvas{aspect-ratio:auto}
+#pose-out canvas.tall{aspect-ratio:480/540}
+input.search{box-sizing:border-box}
+.btn[disabled]{opacity:.4}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="pencil" x="-6%" y="-6%" width="112%" height="112%"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="2.4"/></filter>
+</svg>
+
+<div class="page">
+  <div class="phone" id="phone">
+    <canvas class="paper-tex" id="tex" aria-hidden="true"></canvas>
+    <main class="scr" id="scr"></main>
+    <nav class="tab" id="tab" aria-label="Sezioni"></nav>
+    <div id="sheet"></div>
+  </div>
+  <aside class="side">
+    <div class="eyebrow">Prototipo cliccabile · stile matita</div>
+    <h1>KatApp</h1>
+    <p>Anteprima delle schermate principali con contenuti di esempio Shotokan. Le animazioni sono disegnate dal codice, come faranno nell'app vera.</p>
+    <ol>
+      <li><b>Home</b>: tocca la tecnica del giorno.</li>
+      <li><b>Dettaglio</b>: rallenta a 0,25×, cambia vista (3/4, lato, fronte, dall'alto), tocca un passo per saltarci. Sotto l'animazione: pianta dei piedi e orientamento dei pugni.</li>
+      <li><b>Catalogo</b>: filtra per categoria, salva con la stella.</li>
+      <li><b>Impara</b>: glossario parlante, comandi e conteggio, quiz per il kyu, filosofia ed etichetta.</li>
+      <li><b>Allenamento guidato</b> (dalla Home): 10 o 20 minuti con la voce che conta in giapponese.</li>
+      <li>Nelle schede le parole sottolineate si toccano; c'è lo <b>specchio</b> con la fotocamera e il <b>ripasso</b> a intervalli.</li>
+      <li><b>Profilo</b>: il programma della prossima cintura.</li>
+    </ol>
+    <p class="example">Testi riscritti a partire dalle fonti (Caprioli, Nakayama, Loftus). Da rivedere con un istruttore.</p>
+  </aside>
+</div>
+
+<script>
+(() => {
+/* ---------- Contenuti di esempio ---------- */
+const CATS = [
+  { id: 'tutte', it: 'Tutte' }, { id: 'dachi', it: 'Posizioni', jp: 'Dachi' }, { id: 'uke', it: 'Parate', jp: 'Uke' },
+  { id: 'tsuki', it: 'Pugni', jp: 'Tsuki' }, { id: 'uchi', it: 'Percosse', jp: 'Uchi' }, { id: 'geri', it: 'Calci', jp: 'Geri' }, { id: 'combo', it: 'Combinazioni' }, { id: 'kata', it: 'Kata' }
+];
+const TECH = [
+  { id: 'zenkutsu', cat: 'dachi', jp: 'Zenkutsu-dachi', it: 'Posizione frontale', kyu: '9° kyu', anim: 'zenkutsu',
+    desc: 'Posizione lunga e bassa, la base di quasi tutte le tecniche in avanzamento. La gamba davanti è piegata, quella dietro è tesa e spinge.',
+    steps: ['Da hachiji-dachi fai un passo lungo in avanti', 'Piega il ginocchio anteriore fino a coprire la punta del piede', 'Distendi la gamba dietro, tallone a terra', 'Ruota le anche: da frontale (shōmen) a 45° (hanmi) e ritorno'],
+    points: ['Circa 60% del peso sulla gamba anteriore', 'Anche orizzontali, alla stessa altezza', 'Busto eretto, glutei non sporgenti'],
+    errors: ['Ginocchio anteriore che rientra verso l\'interno', 'Tallone posteriore sollevato'] },
+  { id: 'gedan', cat: 'uke', jp: 'Gedan-barai', it: 'Parata bassa', kyu: '9° kyu', anim: 'gedan',
+    desc: 'Spazza verso il basso un attacco al ventre o un calcio. È la prima tecnica di Heian Shodan.',
+    steps: ['Guardia in zenkutsu-dachi', 'Porta il pugno che para vicino all\'orecchio opposto, l\'altro braccio teso in basso', 'Scendi in diagonale mentre l\'altro braccio torna al fianco (hikite)', 'Fermati poco sopra il ginocchio anteriore: kime'],
+    points: ['I due braccia si muovono insieme, in senso opposto', 'Il colpo parte dalla rotazione delle anche', 'Polso dritto, avambraccio ruotato a fine corsa'],
+    errors: ['Fermare il braccio troppo in basso o troppo lontano dal corpo', 'Dimenticare l\'hikite'] },
+  { id: 'ageuke', cat: 'uke', jp: 'Jōdan age-uke', it: 'Parata alta', kyu: '9° kyu', anim: 'ageuke',
+    desc: 'Devia verso l\'alto un attacco al viso. L\'avambraccio sale davanti alla fronte e ruota a fine corsa.',
+    steps: ['Guardia in zenkutsu-dachi', 'L\'avambraccio sale davanti al viso, incrociando l\'altro braccio', 'Ruota l\'avambraccio verso l\'esterno e fermati sopra la fronte', 'L\'altro braccio torna al fianco (hikite)'],
+    points: ['Circa un pugno di distanza tra polso e fronte', 'Pugno più alto del gomito', 'Spalle basse e rilassate'],
+    errors: ['Braccio troppo vicino alla testa', 'Gomito che si apre di lato'] },
+  { id: 'gyaku', cat: 'tsuki', jp: 'Gyaku-zuki', it: 'Pugno contrario', kyu: '9° kyu', anim: 'gyaku',
+    desc: 'Pugno con il braccio dalla parte della gamba posteriore. La potenza nasce dalla rotazione delle anche, "come una molla che si scarica".',
+    steps: ['Guardia in zenkutsu-dachi, anche a 45° (hanmi)', 'Ruota le anche in avanti, verso la posizione frontale', 'Il pugno parte dal fianco e ruota solo all\'ultimo', 'L\'altro braccio tira al fianco: kime'],
+    points: ['Prima le anche, poi il braccio', 'La gamba dietro spinge nel pavimento', 'Spalle allineate, nessuno sbilanciamento'],
+    errors: ['Colpire solo con il braccio', 'Alzare la spalla del pugno'] },
+  { id: 'combo1', cat: 'combo', jp: 'Age-uke → Gyaku-zuki', it: 'Parata alta e contrattacco', kyu: '8° kyu', anim: 'combo', call: ['Kamae', 'Jōdan age-uke', 'Gyaku-zuki'],
+    desc: 'Combinazione base: si para con il braccio avanti e si contrattacca subito con il pugno contrario. La parata "carica la molla", il pugno la scarica.',
+    steps: ['Kamae, guardia', 'Jōdan age-uke con il braccio avanti', 'Gyaku-zuki con il braccio dietro', 'Ritorno in guardia'],
+    points: ['Nessuna pausa tra parata e pugno', 'Anche: hanmi nella parata, shōmen nel pugno'],
+    errors: ['Contrattaccare prima di aver chiuso la parata'] },
+  { id: 'combo2', cat: 'combo', jp: 'Sanbon oi-zuki', it: 'Tre pugni avanti, tre parate indietro', kyu: '8° kyu', anim: 'combo2',
+    desc: 'Tre oi-zuki avanzando, kiai sull\'ultimo, poi tre gedan-barai arretrando fino al punto di partenza.',
+    points: ['Stessa altezza della testa a ogni passo', 'Nel passo indietro la parata arriva con il piede', 'Ritmo regolare: passo, tecnica, passo'],
+    errors: ['Accorciare i passi indietro', 'Guardare a terra mentre si arretra'] },
+  { id: 'combo3', cat: 'combo', jp: 'Oi-zuki, age-uke e gyaku-zuki', it: 'Avanti e indietro', kyu: '8° kyu', anim: 'combo3',
+    desc: 'Si attacca avanzando con oi-zuki, poi si arretra parando con age-uke e si contrattacca subito con gyaku-zuki.',
+    points: ['Il passo indietro dà spazio alla parata', 'Gyaku-zuki parte appena la parata è chiusa', 'Anche: hanmi nella parata, shōmen nel pugno'],
+    errors: ['Arretrare troppo poco', 'Pausa tra parata e pugno'] },
+  { id: 'combo4', cat: 'combo', jp: 'Mae-geri e oi-zuki', it: 'Calcio e pugno avanzando', kyu: '8° kyu', anim: 'combo4',
+    desc: 'Mae-geri con la gamba dietro, il piede atterra avanti e si prosegue con oi-zuki; poi due gedan-barai arretrando.',
+    points: ['Il calcio atterra avanti, non torna indietro', 'Il pugno segue senza fermarsi', 'Busto dritto durante il calcio'],
+    errors: ['Far cadere la gamba dopo il calcio', 'Perdere la guardia durante il calcio'] },
+  { id: 'combo5', cat: 'combo', jp: 'Soto-uke indietro e gyaku-zuki', it: 'Parata arretrando e contrattacco', kyu: '7° kyu', anim: 'combo5',
+    desc: 'Si arretra con soto-uke, si contrattacca sul posto con gyaku-zuki e si chiude avanzando con oi-zuki.',
+    points: ['La parata arriva insieme al piede', 'Le anche ruotano per il gyaku-zuki', 'Oi-zuki finale con kiai'],
+    errors: ['Parare prima di aver arretrato', 'Spalle sollevate nella parata'] },
+  { id: 'combo6', cat: 'combo', jp: 'Shutō-uke indietro, nukite avanti', it: 'Mani aperte in kokutsu e zenkutsu', kyu: '7° kyu', anim: 'combo6',
+    desc: 'Due shutō-uke arretrando in kokutsu-dachi, poi due nukite avanzando in zenkutsu-dachi, con kiai sull\'ultimo.',
+    points: ['In kokutsu il peso resta dietro', 'Nel passaggio a zenkutsu il peso va avanti', 'Mano di sostegno sotto il gomito nel nukite'],
+    errors: ['Posizioni tutte uguali', 'Dita aperte'] },
+  { id: 'combo7', cat: 'combo', jp: 'Kizami, gyaku e mae-geri', it: 'Combinazione da kumite', kyu: '7° kyu', anim: 'combo7',
+    desc: 'Kizami-zuki e gyaku-zuki sul posto, mae-geri che atterra avanti, gyaku-zuki con kiai e ritorno indietro in gedan-barai.',
+    points: ['Kizami veloce, gyaku potente', 'Il calcio parte dalla guardia, senza preavviso', 'Dopo il calcio la guardia è subito pronta'],
+    errors: ['Caricare il kizami', 'Abbassare le mani durante il calcio'] },
+  { id: 'oizuki', cat: 'tsuki', jp: 'Oi-zuki', it: 'Pugno in avanzamento', kyu: '9° kyu', anim: 'oizuki',
+    desc: 'Pugno portato avanzando di un passo: colpisce il braccio dalla parte della gamba che avanza, nello stesso istante in cui il piede arriva a terra.',
+    steps: ['Guardia in zenkutsu-dachi sinistra, braccio in gedan-barai', 'Il piede dietro passa vicino a quello davanti, ginocchia piegate', 'Il pugno parte dal fianco mentre l\'altro braccio si allunga avanti', 'Atterri in zenkutsu-dachi destra: pugno chūdan e hikite insieme', 'Torni indietro di un passo in gedan-barai'],
+    points: ['Testa e anche alla stessa altezza durante il passo', 'Il pugno arriva insieme al piede', 'Gamba dietro tesa a fine tecnica'],
+    errors: ['Alzarsi o saltellare durante il passo', 'Pugno che arriva dopo il piede'] },
+  { id: 'kokutsu', cat: 'dachi', jp: 'Kokutsu-dachi', it: 'Posizione arretrata', kyu: '8° kyu', anim: 'kokutsu',
+    desc: 'Posizione arretrata: circa il 70% del peso sulla gamba dietro, piedi a "L". Si usa soprattutto con shutō-uke.',
+    steps: ['Parti da hachiji-dachi', 'Il piede sinistro avanza, il destro ruota di 90° in fuori', 'Piega forte la gamba dietro, ginocchio sopra la punta del piede', 'Busto di tre quarti (hanmi), anche basse'],
+    points: ['Talloni sulla stessa linea', 'Ginocchio dietro spinto in fuori', 'Gamba davanti appena piegata, piede leggero'],
+    errors: ['Peso che scivola in avanti', 'Ginocchio dietro che rientra'] },
+  { id: 'kiba', cat: 'dachi', jp: 'Kiba-dachi', it: 'Posizione del cavaliere', kyu: '7° kyu', anim: 'kiba',
+    desc: 'Posizione del cavaliere: piedi larghi e paralleli, peso diviso a metà tra le gambe. Rinforza gambe e anche.',
+    steps: ['Parti da hachiji-dachi', 'Allarga i piedi a circa due larghezze di spalle', 'Piedi paralleli, punte appena in dentro', 'Scendi piegando le ginocchia e spingile in fuori'],
+    points: ['Peso al centro, 50 e 50', 'Busto dritto, bacino in avanti', 'Ginocchia sopra le punte dei piedi'],
+    errors: ['Punte dei piedi aperte in fuori', 'Busto inclinato in avanti'] },
+  { id: 'soto', cat: 'uke', jp: 'Soto-ude-uke', it: 'Parata dall\'esterno', kyu: '8° kyu', anim: 'soto',
+    desc: 'L\'avambraccio spazza da fuori verso il centro un attacco al busto. Nello Shotokan si chiama anche soto-uke.',
+    steps: ['Guardia in zenkutsu-dachi', 'Il braccio che para sale dietro, all\'altezza dell\'orecchio; l\'altro si allunga avanti', 'Spazza da fuori verso il centro ruotando le anche', 'Fermati con l\'avambraccio verticale, pugno all\'altezza della spalla'],
+    points: ['Gomito a circa un pugno dal busto', 'A fine corsa il palmo guarda verso di te', 'Le anche guidano il braccio'],
+    errors: ['Braccio che supera il centro del corpo', 'Gomito troppo aperto'] },
+  { id: 'maegeri', cat: 'geri', jp: 'Mae-geri', it: 'Calcio frontale', kyu: '9° kyu', anim: 'maegeri',
+    desc: 'Calcio frontale con l\'avampiede (koshi). Prima sale il ginocchio, poi la gamba si distende e torna subito indietro.',
+    steps: ['Guardia in zenkutsu-dachi', 'Solleva il ginocchio della gamba dietro all\'altezza dell\'anca', 'Distendi la gamba e colpisci con l\'avampiede, dita tirate indietro', 'Richiama subito la gamba piegata', 'Riappoggia il piede dietro, in guardia'],
+    points: ['Gamba d\'appoggio appena piegata, tallone a terra', 'Il ginocchio punta il bersaglio prima del calcio', 'Busto dritto, senza cadere indietro'],
+    errors: ['Colpire con la punta delle dita', 'Lasciar cadere la gamba senza richiamarla'] },
+  { id: 'musubi', cat: 'dachi', jp: 'Musubi-dachi', it: 'Posizione del saluto', kyu: '10° kyu', anim: 'musubi',
+    desc: 'Posizione di attenzione e di saluto: talloni uniti, punte aperte, peso al centro. Da qui si esegue il rei, l\'inchino.',
+    steps: ['Talloni uniti, punte aperte a circa 45°', 'Mani aperte lungo i fianchi, sguardo avanti', 'Rei: inchino di circa 30°, schiena dritta', 'Torna eretto senza fretta'],
+    points: ['Peso al centro, 50 e 50', 'Ginocchia distese ma non bloccate', 'Durante il rei lo sguardo resta basso, non sul pavimento lontano'],
+    errors: ['Piedi paralleli invece che aperti', 'Inchinarsi piegando solo la testa'] },
+  { id: 'heiko', cat: 'dachi', jp: 'Heiko-dachi', it: 'Posizione naturale parallela', kyu: '10° kyu', anim: 'heiko',
+    desc: 'Posizione naturale con i piedi paralleli alla larghezza delle spalle. È una posizione di prontezza rilassata (yoi).',
+    steps: ['Parti da musubi-dachi', 'Apri i piedi alla larghezza delle spalle', 'Piedi paralleli, punte in avanti', 'Pugni chiusi davanti alle cosce: yoi'],
+    points: ['Peso al centro', 'Spalle rilassate, respiro calmo', 'Pugni a circa un pugno dalle cosce'],
+    errors: ['Punte aperte come in hachiji-dachi', 'Ginocchia rigide'] },
+  { id: 'uchiuke', cat: 'uke', jp: 'Uchi-uke', it: 'Parata dall\'interno', kyu: '8° kyu', anim: 'uchi',
+    desc: 'L\'avambraccio parte da sotto l\'ascella opposta e ruota verso l\'esterno, spingendo via un attacco al busto.',
+    steps: ['Guardia in zenkutsu-dachi', 'Il pugno che para scende vicino al fianco opposto, l\'altro braccio si allunga avanti', 'L\'avambraccio sale e ruota verso l\'esterno', 'Fermati con il pugno all\'altezza della spalla, gomito davanti al fianco'],
+    points: ['Gomito a circa un pugno dal busto', 'Rotazione dell\'avambraccio solo a fine corsa', 'L\'hikite parte insieme alla parata'],
+    errors: ['Pugno che esce oltre la spalla', 'Gomito che si stacca dal corpo'] },
+  { id: 'shutouke', cat: 'uke', jp: 'Shutō-uke', it: 'Parata con il taglio della mano', kyu: '8° kyu', anim: 'shutouke',
+    desc: 'Parata a mani aperte in kokutsu-dachi: la mano avanti devia con il taglio, quella dietro protegge il plesso solare con il palmo in su.',
+    steps: ['Parti da hachiji-dachi', 'Mentre avanzi, la mano che para sale vicino all\'orecchio opposto', 'Il taglio della mano scende in diagonale verso l\'avversario', 'Arrivi in kokutsu-dachi: mano dietro aperta davanti al plesso'],
+    points: ['Dita unite, pollice piegato', 'Mano avanti all\'altezza della spalla', 'Busto di tre quarti (hanmi)'],
+    errors: ['Dita aperte', 'Mano dietro lontana dal corpo'] },
+  { id: 'kizami', cat: 'tsuki', jp: 'Kizami-zuki', it: 'Pugno con il braccio avanti', kyu: '7° kyu', anim: 'kizami',
+    desc: 'Pugno rapido con il braccio davanti, senza passo: la spalla si allunga e il busto spinge in avanti per un istante.',
+    steps: ['Guardia in zenkutsu-dachi', 'Il piede avanti scivola appena in avanti', 'Le anche ruotano ancora di più di lato e il pugno avanti parte dritto', 'Colpisci e torna subito in guardia'],
+    points: ['Partenza senza preavviso', 'Spalla avanti, mento basso', 'Ritorno veloce quanto l\'andata'],
+    errors: ['Caricare il pugno indietro prima di colpire', 'Sporgersi troppo con la testa'] },
+  { id: 'urazuki', cat: 'tsuki', jp: 'Ura-zuki', it: 'Pugno corto rovesciato', kyu: '7° kyu', anim: 'ura',
+    desc: 'Pugno ravvicinato con il palmo rivolto verso l\'alto, usato a corta distanza. Si trova all\'inizio di Heian Nidan.',
+    steps: ['Guardia in zenkutsu-dachi', 'Il pugno parte dal fianco con il palmo in su', 'Sale corto verso il bersaglio, senza distendere del tutto il braccio', 'Kime con il gomito vicino al busto'],
+    points: ['Il palmo resta in su per tutto il colpo', 'Gomito piegato a circa 90°', 'Distanza molto corta'],
+    errors: ['Ruotare il pugno come un pugno normale', 'Allargare il gomito'] },
+  { id: 'shutouchi', cat: 'uchi', jp: 'Shutō-uchi', it: 'Colpo con il taglio della mano', kyu: '7° kyu', anim: 'shutouchi',
+    desc: 'Colpo circolare a mano aperta: il bordo esterno della mano colpisce di lato, per esempio collo o tempia.',
+    steps: ['Guardia in zenkutsu-dachi', 'La mano che colpisce sale vicino all\'orecchio, palmo verso il viso', 'Le anche ruotano e la mano disegna un arco verso l\'interno', 'All\'impatto il palmo è in su'],
+    points: ['Dita tese e unite', 'Il polso non si piega', 'La forza viene dalla rotazione delle anche'],
+    errors: ['Colpire con le dita invece che con il taglio', 'Braccio rigido dall\'inizio'] },
+  { id: 'uraken', cat: 'uchi', jp: 'Uraken-uchi', it: 'Colpo con il dorso del pugno', kyu: '7° kyu', anim: 'uraken',
+    desc: 'Colpo a frusta di gomito e polso: il dorso delle nocche scatta in avanti o di lato e torna subito indietro.',
+    steps: ['Guardia in zenkutsu-dachi', 'Il pugno si chiude davanti alla spalla opposta, gomito in avanti', 'Il braccio si distende di scatto: colpisce il dorso delle nocche', 'Richiama subito il pugno'],
+    points: ['Il gomito fa da perno', 'Lo scatto è breve e rilassato', 'Il ritorno è parte della tecnica'],
+    errors: ['Spingere invece di frustare', 'Lasciare il braccio fuori'] },
+  { id: 'empi', cat: 'uchi', jp: 'Empi-uchi', it: 'Colpo di gomito', kyu: '7° kyu', anim: 'empi',
+    desc: 'Colpo a corto raggio con il gomito. Qui è circolare (mawashi-empi): il gomito gira in orizzontale davanti al petto.',
+    steps: ['Guardia in zenkutsu-dachi', 'Il pugno dietro parte dal fianco', 'Le anche ruotano in avanti e il gomito gira davanti al petto', 'Kime con il pugno vicino al petto, palmo in giù'],
+    points: ['Braccio ben piegato, pugno vicino al corpo', 'Le anche portano il gomito', 'L\'altro braccio tira al fianco'],
+    errors: ['Aprire il braccio come uno schiaffo', 'Colpire con l\'avambraccio'] },
+  { id: 'nukite', cat: 'uchi', jp: 'Nukite', it: 'Colpo di punta delle dita', kyu: '7° kyu', anim: 'nukite',
+    desc: 'La mano tesa colpisce di punta come una lancia, verso plesso o gola. L\'altra mano sostiene sotto il gomito (osae-uke), come in Heian Nidan.',
+    steps: ['Guardia in zenkutsu-dachi', 'La mano avanti si apre e scende a premere, palmo in giù', 'La mano che colpisce parte dal fianco, dita tese', 'Colpisci di punta sopra la mano che preme'],
+    points: ['Dita unite e leggermente piegate', 'Mano di sostegno sotto il gomito', 'Polso dritto'],
+    errors: ['Dita aperte o molli', 'Polso piegato all\'impatto'] },
+  { id: 'keage', cat: 'geri', jp: 'Yoko-geri keage', it: 'Calcio laterale frustato', kyu: '7° kyu', anim: 'keage',
+    desc: 'Calcio laterale verso l\'alto, a frusta: il ginocchio fa da perno e il taglio del piede (sokuto) sale sul bersaglio.',
+    steps: ['Parti da kiba-dachi', 'Solleva il ginocchio della gamba che calcia vicino all\'altro ginocchio', 'Frusta la gamba di lato e in alto', 'Richiama subito e torna in kiba-dachi'],
+    points: ['Sguardo verso il bersaglio', 'Il ginocchio sale prima del piede', 'Gamba d\'appoggio piegata'],
+    errors: ['Calciare con la pianta', 'Non richiamare la gamba'] },
+  { id: 'kekomi', cat: 'geri', jp: 'Yoko-geri kekomi', it: 'Calcio laterale spinto', kyu: '7° kyu', anim: 'kekomi',
+    desc: 'Calcio laterale di potenza: la gamba si distende in linea retta e l\'anca spinge dietro il colpo. Si colpisce con il taglio del piede.',
+    steps: ['Parti da kiba-dachi', 'Carica il ginocchio in alto, verso il bersaglio', 'Spingi la gamba in linea retta con l\'anca dietro', 'Richiama e torna in kiba-dachi'],
+    points: ['Tallone, anca e spalla in linea', 'Busto inclinato appena dalla parte opposta', 'Il piede d\'appoggio non si alza'],
+    errors: ['Busto che cade all\'indietro', 'Calcio che sale invece di spingere'] },
+  { id: 'mawashi', cat: 'geri', jp: 'Mawashi-geri', it: 'Calcio circolare', kyu: '6° kyu', anim: 'mawashi',
+    desc: 'Calcio ad arco dall\'esterno verso l\'interno. Si colpisce con il collo del piede (haisoku) o con l\'avampiede (koshi).',
+    steps: ['Guardia in zenkutsu-dachi', 'Solleva il ginocchio di lato, all\'altezza dell\'anca', 'Ruota il piede d\'appoggio e le anche, la gamba si distende ad arco', 'Richiama e appoggia dietro, in guardia'],
+    points: ['Ginocchio alto prima di distendere', 'Il piede d\'appoggio ruota', 'Busto fermo, guardia alta'],
+    errors: ['Calciare senza ruotare il piede d\'appoggio', 'Gamba tesa dall\'inizio'] },
+  { id: 'ushiro', cat: 'geri', jp: 'Ushiro-geri', it: 'Calcio all\'indietro', kyu: '6° kyu', anim: 'ushiro',
+    desc: 'Calcio diritto all\'indietro: si ruota di schiena e si colpisce con il tallone (kakato), guardando il bersaglio da sopra la spalla.',
+    steps: ['Guardia in zenkutsu-dachi', 'Ruota sul piede avanti e guarda dietro, sopra la spalla', 'Carica il ginocchio davanti al petto', 'Spingi il tallone dritto verso il bersaglio', 'Richiama e torna in guardia'],
+    points: ['Sguardo al bersaglio prima del calcio', 'Traiettoria dritta, non ad arco', 'Busto basso in avanti'],
+    errors: ['Calciare senza guardare', 'Aprire la gamba di lato'] },
+  { id: 'taikyoku1', cat: 'kata', jp: 'Taikyoku Shodan', it: 'Primo kata propedeutico', kyu: '9° kyu', kata: true, anim: 'taikyoku1',
+    desc: 'Kata propedeutico di 20 movimenti su un tracciato a "I": solo zenkutsu-dachi, gedan-barai e oi-zuki. È il primo kata da imparare.',
+    points: ['Ogni girata comincia con gedan-barai', 'Kiai al passo 8 e al passo 16', 'Stessa altezza della testa per tutto il kata'],
+    errors: ['Girarsi dal lato sbagliato', 'Passi più corti dopo le girate'] },
+  { id: 'heian1', cat: 'kata', jp: 'Heian Shodan', it: 'Mente in pace, livello 1', kyu: '8° kyu', kata: true, anim: 'heian1',
+    desc: 'Il primo kata della serie Heian: 21 movimenti su un tracciato a "I", con due kiai. Usa gedan-barai, oi-zuki, age-uke e shutō-uke.',
+    points: ['Il kata inizia e finisce nello stesso punto', 'Kiai al passo 9 e al passo 17', 'Prima di girare, guarda nella nuova direzione'],
+    errors: ['Posizioni troppo corte', 'Girarsi senza guardare prima'] },
+  { id: 'heian2', cat: 'kata', jp: 'Heian Nidan', it: 'Mente in pace, livello 2', kyu: '7° kyu', kata: true, anim: 'heian2',
+    desc: 'Il secondo kata Heian, circa 40 secondi su un tracciato a "I". Introduce la doppia parata alta, yoko-geri, nukite, morote-uke e le parate in gyaku hanmi, con molti cambi di direzione.',
+    points: ['Nel passo 7 il piede dietro si avvicina prima del calcio laterale', 'Nelle parate gyaku hanmi le anche ruotano dalla parte opposta', 'Kiai al nukite (passo 10) e all\'ultimo age-uke (passo 25)'],
+    errors: ['Yoko-geri senza richiamo della gamba', 'Shutō-uke con il peso in avanti'] }
+];
+const HEIAN = [
+  ['Yoi', 'Pronti', 'hachiji-dachi'], ['1', 'Hidari gedan-barai', 'zenkutsu'], ['2', 'Migi chūdan oi-zuki', 'zenkutsu'], ['3', 'Migi gedan-barai', 'zenkutsu'],
+  ['4', 'Migi tettsui-uchi', 'da verificare'], ['5', 'Hidari chūdan oi-zuki', 'zenkutsu'], ['6', 'Hidari gedan-barai', 'zenkutsu'], ['7', 'Migi jōdan age-uke', 'zenkutsu'],
+  ['8', 'Hidari jōdan age-uke', 'zenkutsu'], ['9', 'Migi jōdan age-uke', 'zenkutsu', 1], ['10', 'Hidari gedan-barai', 'zenkutsu'], ['11', 'Migi chūdan oi-zuki', 'zenkutsu'],
+  ['12', 'Migi gedan-barai', 'zenkutsu'], ['13', 'Hidari chūdan oi-zuki', 'zenkutsu'], ['14', 'Hidari gedan-barai', 'zenkutsu'], ['15', 'Migi chūdan oi-zuki', 'zenkutsu'],
+  ['16', 'Hidari chūdan oi-zuki', 'zenkutsu'], ['17', 'Migi chūdan oi-zuki', 'zenkutsu', 1], ['18', 'Hidari chūdan shutō-uke', 'kokutsu'], ['19', 'Migi chūdan shutō-uke', 'kokutsu'],
+  ['20', 'Migi chūdan shutō-uke', 'kokutsu'], ['21', 'Hidari chūdan shutō-uke', 'kokutsu'], ['Yame', 'Fine', 'hachiji-dachi']
+];
+
+/* ---------- Vettori ---------- */
+const V = (x, y, z) => [x, y, z];
+const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]], sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+const mul = (a, k) => [a[0] * k, a[1] * k, a[2] * k], dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+const len = a => Math.hypot(a[0], a[1], a[2]), norm = a => { const l = len(a) || 1; return mul(a, 1 / l); };
+const rad = d => d * Math.PI / 180;
+const ry = (v, deg) => { const c = Math.cos(rad(deg)), s = Math.sin(rad(deg)); return [v[0] * c + v[2] * s, v[1], -v[0] * s + v[2] * c]; };
+function ik(A, T, l1, l2, pole) {
+  const d = sub(T, A), dist = Math.min(Math.max(len(d), 1), l1 + l2 - .01), n = norm(d);
+  const ca = (l1 * l1 + dist * dist - l2 * l2) / (2 * l1 * dist), a = Math.acos(Math.max(-1, Math.min(1, ca)));
+  const pp = norm(sub(pole, mul(n, dot(pole, n))));
+  return { mid: add(add(A, mul(n, l1 * Math.cos(a))), mul(pp, l1 * Math.sin(a))), end: add(A, mul(n, dist)) };
+}
+
+/* ---------- Pose (cm, x = avanti, y = su, z = lato destro; braccia relative al bacino) ---------- */
+const HIK_L = { w: [4, 90, -17], p: [0, 1, 0], pole: [-1, -.4, -.3] }, HIK_R = { w: [4, 90, 17], p: [0, 1, 0], pole: [-1, -.4, .3] };
+const mz = v => [v[0], v[1], -v[2]], mArm = a => ({ ...a, w: mz(a.w), p: mz(a.p), pole: mz(a.pole) }), mArms = s => ({ L: mArm(s.R), R: mArm(s.L) });
+const ARMS = {
+  hikite: { L: HIK_L, R: HIK_R },
+  yoi: { L: { w: [16, 84, -15], p: [-1, 0, .2], pole: [-.3, -.5, -1] }, R: { w: [16, 84, 15], p: [-1, 0, -.2], pole: [-.3, -.5, 1] } },
+  gedan: { L: { w: [40, 60, -16], p: [0, -.6, .8], pole: [.3, -.2, -1] }, R: HIK_R },
+  gbPrep: { L: { w: [8, 140, 12], p: [0, 0, -1], pole: [.3, -.3, -1] }, R: { w: [44, 72, 2], p: [0, -1, 0], pole: [0, -1, .5] } },
+  ukePrep: { L: { w: [28, 116, 4], p: [-.3, 0, 1], pole: [0, -1, -.3] }, R: { w: [38, 104, 2], p: [0, -1, 0], pole: [-.2, -1, .4] } },
+  uke: { L: { w: [24, 152, 2], p: [1, .3, -.2], pole: [.2, -.4, -1] }, R: HIK_R },
+  zukiMid: { L: { w: [12, 102, -15], p: [.5, .7, 0], pole: [-1, -.5, -.3] }, R: { w: [32, 104, 7], p: [0, .7, -.7], pole: [-.5, -1, .5] } },
+  zuki: { L: HIK_L, R: { w: [60, 112, 0], p: [0, -1, 0], pole: [0, -1, .6] } },
+  zukiPrep: { L: { w: [46, 104, -3], p: [0, -1, 0], pole: [0, -1, -.5] }, R: HIK_R },
+  guardG: { L: { w: [42, 108, -6], p: [0, -.6, .8], pole: [0, -1, -.4] }, R: HIK_R },
+  sotoPrep: { L: { w: [-4, 140, -32], p: [1, 0, 0], pole: [-.2, -1, -.8] }, R: { w: [44, 104, 4], p: [0, -1, 0], pole: [0, -1, .5] } },
+  soto: { L: { w: [36, 122, -2], p: [-.85, 0, .3], pole: [0, -1, -.2] }, R: HIK_R },
+  tetPrep: { L: { w: [40, 100, -4], p: [0, -1, 0], pole: [0, -1, -.5] }, R: { w: [-4, 166, 12], p: [0, 0, -1], pole: [-1, .3, .5] } },
+  tettsui: { L: HIK_L, R: { w: [50, 108, 4], p: [0, 0, -1], pole: [0, -1, .6] } },
+  shutoPrep: { L: { w: [8, 138, 16], p: [0, 0, -1], pole: [.2, -1, -.4], h: 'o' }, R: { w: [46, 108, 2], p: [0, -1, 0], pole: [0, -1, .5], h: 'o' } },
+  shuto: { L: { w: [42, 124, -8], p: [.5, -.2, -.85], pole: [0, -1, -.6], h: 'o' }, R: { w: [16, 102, 2], p: [0, 1, 0], pole: [-1, -.4, .4], h: 'o' } }
+};
+// posizioni con il piede sinistro avanti; a = caviglia, f = direzione del piede (gradi), kp = verso del ginocchio
+const STANCE = {
+  zen: { aL: [45, 8, -13], aR: [-62, 8, 15], fL: -4.6, fR: -30.5, Cy: 78, wt: 60, kpL: [1, 0, -.1], kpR: [1, 0, .2], stance: 'zenkutsu-dachi' },
+  kok: { aL: [60, 8, -6], aR: [-22, 8, 8], fL: 0, fR: -90, Cy: 72, wt: 30, kpL: [1, 0, -.1], kpR: [.3, 0, 1], stance: 'kokutsu-dachi' },
+  kiba: { aL: [-2, 8, -40], aR: [-2, 8, 40], fL: -6, fR: 6, Cy: 70, wt: 50, kpL: [.5, 0, -1], kpR: [.5, 0, 1], stance: 'kiba-dachi' },
+  hachi: { aL: [0, 8, -20], aR: [0, 8, 20], fL: 15, fR: -15, Cy: 94, wt: 50, kpL: [1, 0, -.2], kpR: [1, 0, .2], stance: 'hachiji-dachi' }
+};
+function legs(type, lead, face, O) {
+  let s = STANCE[type];
+  if (lead === 'R') s = { ...s, aL: mz(s.aR), aR: mz(s.aL), fL: -s.fR, fR: -s.fL, kpL: mz(s.kpR), kpR: mz(s.kpL), wt: 100 - s.wt };
+  const W3 = a => add(V(O[0], 0, O[1]), ry(a, face));
+  return { face, C: [O[0], s.Cy, O[1]], aL: W3(s.aL), aR: W3(s.aR), fL: face + s.fL, fR: face + s.fR, kpL: s.kpL, kpR: s.kpR, wt: s.wt, stance: s.stance, pL: 0, pR: 0 };
+}
+function placed(type, lead, face, side, at) { // il piede "side" resta dov'è
+  const l = legs(type, lead, face, [0, 0]), a = l['a' + side];
+  return legs(type, lead, face, [at[0] - a[0], at[2] - a[2]]);
+}
+const DEF = { yaw: 0, lean: 0, ...legs('zen', 'L', 0, [0, 0]), ...ARMS.hikite };
+const P = (yaw, arms, extra) => ({ ...DEF, yaw, ...arms, ...extra });
+const POSES = {
+  gedan: P(-45, ARMS.gedan), ukePrep: P(-40, ARMS.ukePrep), uke: P(-45, ARMS.uke, { lean: -2 }),
+  zukiMid: P(-22, ARMS.zukiMid, { lean: 2 }), zuki: P(0, ARMS.zuki, { lean: 6 }),
+  hipsA: P(0, ARMS.hikite), hipsB: P(-45, ARMS.hikite), gbPrep: P(-15, ARMS.gbPrep), guardG: P(-45, ARMS.guardG),
+  sotoPrep: P(-55, ARMS.sotoPrep), soto: P(-35, ARMS.soto),
+  mgChamber: P(-10, ARMS.gedan, { C: [12, 80, 0], lean: -4, aR: [30, 52, 10], fR: 0, pR: -55, kpR: [1, .8, .1], wt: 100 }),
+  mgKick: P(-5, ARMS.gedan, { C: [14, 80, 0], lean: -8, aR: [86, 95, 8], fR: 0, pR: 12, kpR: [0, 1, .1], wt: 100 })
+};
+const eIO = x => x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2, eOut = x => 1 - Math.pow(1 - x, 3), eIn = x => x * x;
+const lerp = (a, b, k) => {
+  if (a === undefined || b === undefined) { const d = a ?? b; return typeof d === 'string' ? (k < .5 ? a ?? '' : b ?? '') : d; }
+  if (typeof a === 'number') return a + (b - a) * k; if (typeof a === 'string') return k < .5 ? a : b;
+  if (Array.isArray(a)) return a.map((v, i) => lerp(v, b[i], k));
+  const o = {}; for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) o[key] = lerp(a[key], b[key], k); return o;
+};
+// passo: il piede che si muove passa vicino a quello d'appoggio, un po' sollevato
+function stepMid(A, B, arms, yaw) {
+  const m = len(sub(A.aL, B.aL)) > len(sub(A.aR, B.aR)) ? 'L' : 'R', s = m === 'L' ? 'R' : 'L', sp = B['a' + s];
+  let mid = lerp(lerp(A['a' + m], B['a' + m], .5), sp, .55);
+  mid = add(mid, mul(ry(V(0, 0, m === 'R' ? 1 : -1), (A.face + B.face) / 2), 7)); mid[1] = 9.5;
+  const c = lerp(A.C, B.C, .5);
+  return { ...lerp(A, B, .5), C: [lerp(c[0], sp[0], .3), c[1] + 1, lerp(c[2], sp[2], .3)], ['a' + m]: mid, ['p' + m]: -3, yaw, L: arms.L, R: arms.R, wt: s === 'L' ? 100 : 0 };
+}
+const HACHI = { ...P(0, ARMS.hikite), ...legs('hachi', 'L', 0, [0, 0]) }, KIBA = { ...P(0, ARMS.hikite), ...legs('kiba', 'L', 0, [0, 0]) };
+const KOK = { ...P(-65, ARMS.hikite), ...placed('kok', 'L', 0, 'R', HACHI.aR) }, KOKMID = stepMid(HACHI, KOK, ARMS.hikite, -30);
+const OZ_A = { ...P(-45, ARMS.gedan), ...legs('zen', 'L', 0, [-45, 0]) };
+const OZ_B = { ...P(10, ARMS.zuki, { lean: 4 }), ...placed('zen', 'R', 0, 'L', OZ_A.aL) };
+const OZ_M1 = stepMid(OZ_A, OZ_B, ARMS.zukiPrep, 0), OZ_M2 = stepMid(OZ_B, OZ_A, ARMS.gbPrep, -15);
+
+function buildKata() {
+  const keys = [], marks = [], kiai = []; let t = 0;
+  let cur = { ...P(0, ARMS.yoi), ...legs('hachi', 'L', 0, [0, 0]) };
+  keys.push([0, cur]); marks.push(0); t = 1.4; keys.push([t, cur]);
+  const g = ARMS.gedan, gp = ARMS.gbPrep, z = ARMS.zuki, zp = ARMS.zukiPrep, u = ARMS.uke, up = ARMS.ukePrep, sh = ARMS.shuto, shp = ARMS.shutoPrep;
+  const M = [ // posizione, piede avanti, direzione, braccia, preparazione, rotazione anche
+    ['zen', 'L', 90, g, gp, -45], ['zen', 'R', 90, z, zp, 10], ['zen', 'R', -90, mArms(g), mArms(gp), 45], ['zen', 'R', -90, ARMS.tettsui, ARMS.tetPrep, 45],
+    ['zen', 'L', -90, mArms(z), mArms(zp), -10], ['zen', 'L', 0, g, gp, -45], ['zen', 'R', 0, mArms(u), mArms(up), 45], ['zen', 'L', 0, u, up, -45],
+    ['zen', 'R', 0, mArms(u), mArms(up), 45, 1], ['zen', 'L', 270, g, gp, -45], ['zen', 'R', 270, z, zp, 10], ['zen', 'R', 90, mArms(g), mArms(gp), 45],
+    ['zen', 'L', 90, mArms(z), mArms(zp), -10], ['zen', 'L', 180, g, gp, -45], ['zen', 'R', 180, z, zp, 10], ['zen', 'L', 180, mArms(z), mArms(zp), -10],
+    ['zen', 'R', 180, z, zp, 10, 1], ['kok', 'L', 450, sh, shp, -65], ['kok', 'R', 405, mArms(sh), mArms(shp), 65], ['kok', 'R', 270, mArms(sh), mArms(shp), 65],
+    ['kok', 'L', 315, sh, shp, -65], ['hachi', 'L', 360, ARMS.yoi, ARMS.hikite, 0]
+  ];
+  for (const [type, lead, face, arms, prep, yaw, k] of M) {
+    const sup = type === 'hachi' ? 'R' : lead === 'L' ? 'R' : 'L';
+    const nx = { ...P(yaw, arms, { lean: Math.abs(yaw) === 10 ? 3 : 0 }), ...placed(type, lead, face, sup, cur['a' + sup]) };
+    marks.push(t);
+    keys.push([t + .6, stepMid(cur, nx, prep, yaw * .4), eIO]); keys.push([t + 1, nx, eOut]);
+    if (k) kiai.push([t + 1, t + 1.9]);
+    t += k ? 2.1 : 1.6; keys.push([t, nx]); cur = nx;
+  }
+  t += 1.2; keys.push([t, cur]);
+  return { D: t, keys, marks, hit: marks.map((m, i) => i ? m + 1 : 0), kiai, rows: HEIAN, follow: 1, thumb: marks[9] + 1.2 };
+}
+
+const HEIAN2 = [
+  ['Yoi', 'Pronti', 'hachiji-dachi'], ['1', 'Hidari jōdan haiwan-uke, migi age-uke', 'kokutsu'], ['2', 'Hidari soto-uke e migi ura-zuki', 'kokutsu'], ['3', 'Hidari tettsui-uchi', 'kokutsu'],
+  ['4', 'Migi jōdan haiwan-uke, hidari age-uke', 'kokutsu'], ['5', 'Migi soto-uke e hidari ura-zuki', 'kokutsu'], ['6', 'Migi tettsui-uchi', 'kokutsu'],
+  ['7a', 'Migi yoko-geri kekomi e uraken', 'su una gamba'], ['7b', 'Hidari shutō-uke', 'kokutsu'], ['8', 'Migi shutō-uke', 'kokutsu'], ['9', 'Hidari shutō-uke', 'kokutsu'],
+  ['10', 'Migi nukite', 'zenkutsu', 1], ['11', 'Hidari shutō-uke', 'kokutsu'], ['12', 'Migi shutō-uke', 'kokutsu'], ['13', 'Migi shutō-uke', 'kokutsu'], ['14', 'Hidari shutō-uke', 'kokutsu'],
+  ['15', 'Migi uchi-uke (gyaku hanmi)', 'zenkutsu'], ['16', 'Migi mae-geri', 'zenkutsu'], ['17', 'Hidari gyaku-zuki', 'zenkutsu'], ['18', 'Hidari uchi-uke (gyaku hanmi)', 'zenkutsu'],
+  ['19', 'Hidari mae-geri', 'zenkutsu'], ['20', 'Migi gyaku-zuki', 'zenkutsu'], ['21', 'Migi morote-uke', 'zenkutsu'], ['22', 'Hidari gedan-barai', 'zenkutsu'],
+  ['23a', 'Hidari age-shutō-uke', 'zenkutsu'], ['23b', 'Migi age-uke', 'zenkutsu'], ['24', 'Migi gedan-barai', 'zenkutsu'], ['25a', 'Migi age-shutō-uke', 'zenkutsu'], ['25b', 'Hidari age-uke', 'zenkutsu', 1],
+  ['Yame', 'Fine', 'hachiji-dachi']
+];
+Object.assign(ARMS, {
+  haiwanPrep: { L: { w: [6, 96, 26], p: [0, -1, 0], pole: [0, -1, -.5] }, R: { w: [-12, 100, 30], p: [0, -1, 0], pole: [-.5, -1, .5] } },
+  haiwan: { L: { w: [34, 146, -22], p: [-.7, 0, .5], pole: [0, -1, -.6] }, R: { w: [14, 162, 0], p: [.8, .4, 0], pole: [-.2, -.4, 1] } },
+  ura: { L: { w: [36, 122, -2], p: [-.85, 0, .3], pole: [0, -1, -.2] }, R: { w: [42, 104, 2], p: [0, 1, 0], pole: [0, -1, .6] } },
+  tetL: { L: { w: [52, 116, -16], p: [0, 0, 1], pole: [0, -1, -.6] }, R: HIK_R },
+  tetLPrep: { L: { w: [12, 128, 14], p: [0, -1, 0], pole: [0, -1, -.6] }, R: HIK_R },
+  nukite: { L: { w: [32, 102, 2], p: [0, -1, 0], pole: [-.2, -1, -.6], h: 'o' }, R: { w: [64, 118, 0], p: [0, 0, -1], pole: [0, -1, .5], h: 'o' } },
+  nukitePrep: { L: { w: [46, 110, -2], p: [0, -1, 0], pole: [0, -1, -.5], h: 'o' }, R: { ...HIK_R, h: 'o' } },
+  uchiR: { L: HIK_L, R: { w: [36, 122, 2], p: [-.85, 0, -.3], pole: [0, -1, .2] } },
+  uchiRPrep: { L: { w: [44, 104, -4], p: [0, -1, 0], pole: [0, -1, -.5] }, R: { w: [18, 86, -12], p: [0, -1, 0], pole: [0, -1, .6] } },
+  morote: { L: { w: [22, 104, 2], p: [0, 1, 0], pole: [-1, -.4, -.3] }, R: { w: [36, 124, 2], p: [-.85, 0, -.3], pole: [0, -1, .2] } },
+  morotePrep: { L: { w: [-2, 88, -16], p: [0, -1, 0], pole: [-1, -.4, -.3] }, R: { w: [6, 88, -14], p: [0, -1, 0], pole: [-1, -.4, .3] } },
+  ageShuto: { L: { ...ARMS.uke.L, h: 'o' }, R: HIK_R }
+});
+function buildNidan() {
+  const keys = [], marks = [], hit = [], kiai = []; let t = 0;
+  let cur = { ...P(0, ARMS.yoi), ...legs('hachi', 'L', 0, [0, 0]) };
+  keys.push([0, cur]); marks.push(0); hit.push(0); t = 1.4; keys.push([t, cur]);
+  const A = ARMS, M = mArms, W3 = (C, face, v) => add(V(C[0], 0, C[2]), ry(v, face));
+  const step = (type, lead, face, arms, prep, yaw, o = {}) => {
+    const sup = o.sup || (lead === 'L' ? 'R' : 'L');
+    const nx = { ...P(yaw, arms, { lean: o.lean || 0 }), ...placed(type, lead, face, sup, cur['a' + sup]) };
+    marks.push(t); hit.push(t + 1);
+    keys.push([t + .6, stepMid(cur, nx, prep, yaw * .4), eIO]); keys.push([t + 1, nx, eOut]);
+    if (o.kiai) kiai.push([t + 1, t + 1.9]);
+    t += o.kiai ? 2.1 : 1.6; keys.push([t, nx]); cur = nx;
+  };
+  const inPlace = (arms, prep, yaw, o = {}) => { // tecnica sul posto
+    const nx = { ...cur, ...P(yaw, arms, { lean: o.lean || 0 }), aL: cur.aL, aR: cur.aR, C: cur.C, face: cur.face, fL: cur.fL, fR: cur.fR, kpL: cur.kpL, kpR: cur.kpR, wt: cur.wt, stance: cur.stance };
+    marks.push(t); hit.push(t + .7);
+    keys.push([t + .4, { ...nx, ...prep, yaw: (cur.yaw + yaw) / 2 }, eIO]); keys.push([t + .7, nx, eOut]);
+    t += 1.3; keys.push([t, nx]); cur = nx;
+  };
+  const mae = (lead, face, arms, yaw) => { // il piede dietro calcia e atterra avanti
+    const m = lead, s = m === 'L' ? 'R' : 'L', S = cur['a' + s], g = m === 'R' ? 1 : -1;
+    const C = W3(S, face, [-6, 0, 12 * g]); C[1] = 80;
+    const base = { ...cur, C, face, yaw: -10 * g, wt: s === 'L' ? 100 : 0, stance: 'mae-geri' };
+    const ch = { ...base, ['a' + m]: add(W3(C, face, [20, 0, 8 * g]), V(0, 52, 0)), ['f' + m]: face, ['p' + m]: -55, ['kp' + m]: [1, .8, .1 * g], lean: -4 };
+    const kk = { ...base, ['a' + m]: add(W3(C, face, [76, 0, 6 * g]), V(0, 95, 0)), ['f' + m]: face, ['p' + m]: 12, ['kp' + m]: [0, 1, .1 * g], lean: -8 };
+    const nx = { ...P(yaw, arms), ...placed('zen', lead, face, s, S) };
+    marks.push(t); hit.push(t + .7);
+    keys.push([t + .45, ch, eIO]); keys.push([t + .7, kk, eOut]); keys.push([t + 1, kk]); keys.push([t + 1.25, ch, eIO]); keys.push([t + 1.7, nx, eOut]);
+    t += 2.3; keys.push([t, nx]); cur = nx;
+  };
+  const yoko = () => { // 7a: piede dietro a metà, yoko-geri destro verso est con uraken
+    const fk = cur.face, S = [lerp(cur.aL[0], cur.aR[0], .45), 8, lerp(cur.aL[2], cur.aR[2], .45)];
+    const C = W3(S, fk, [6, 0, 0]); C[1] = 80;
+    const arms = { L: { w: [-12, 90, -4], p: [0, 1, 0], pole: [-.3, -.4, 1] }, R: { w: [58, 138, -4], p: [-1, 0, 0], pole: [0, -1, 0] } };
+    const base = { ...cur, aL: S, C, yaw: 80, wt: 100, stance: 'yoko-geri' };
+    const draw = { ...base, C: [lerp(cur.C[0], C[0], .5), 82, lerp(cur.C[2], C[2], .5)], ...ARMS.tetLPrep, R: { w: [8, 130, -12], p: [0, -1, 0], pole: [0, -1, .6] } };
+    const ch = { ...base, ...arms, R: { w: [14, 132, -8], p: [0, -1, 0], pole: [0, -1, .6] }, aR: add(W3(C, fk, [16, 0, 4]), V(0, 50, 0)), fR: fk + 80, pR: -30, kpR: [1, .6, 0], lean: -6 };
+    const kk = { ...base, ...arms, aR: add(W3(C, fk, [80, 0, 4]), V(0, 94, 0)), fR: fk + 80, pR: -10, kpR: [0, 1, 0], lean: -14 };
+    marks.push(t); hit.push(t + 1);
+    keys.push([t + .4, draw, eIO]); keys.push([t + .75, ch, eIO]); keys.push([t + 1, kk, eOut]); keys.push([t + 1.4, kk]); keys.push([t + 1.65, { ...ch, lean: -4 }, eIO]);
+    const land = { ...ch, aR: W3(S, fk, [30, 8, 0]), pR: 0, fR: fk, wt: 50 }; land.aR[1] = 8;
+    t += 2; keys.push([t, land, eIO]); cur = land;
+  };
+  const sh = A.shuto, shp = A.shutoPrep;
+  step('kok', 'L', 90, A.haiwan, A.haiwanPrep, -65);       // 1
+  inPlace(A.ura, A.ura, -30);                               // 2
+  inPlace(A.tetL, A.tetLPrep, -60);                         // 3
+  step('kok', 'R', -90, M(A.haiwan), M(A.haiwanPrep), 65, { sup: 'L' }); // 4 (rotazione sul posto)
+  inPlace(M(A.ura), M(A.ura), 30);                          // 5
+  inPlace(M(A.tetL), M(A.tetLPrep), 60);                    // 6
+  yoko();                                                   // 7a
+  step('kok', 'L', 0, sh, shp, -65);                        // 7b
+  step('kok', 'R', 0, M(sh), M(shp), 65);                   // 8
+  step('kok', 'L', 0, sh, shp, -65);                        // 9
+  step('zen', 'R', 0, A.nukite, A.nukitePrep, 20, { kiai: 1 }); // 10
+  step('kok', 'L', 270, sh, shp, -65);                      // 11
+  step('kok', 'R', 225, M(sh), M(shp), 65);                 // 12
+  step('kok', 'R', 90, M(sh), M(shp), 65);                  // 13
+  step('kok', 'L', 135, sh, shp, -65);                      // 14
+  step('zen', 'L', 180, A.uchiR, A.uchiRPrep, 30);          // 15
+  mae('R', 180, A.uchiR, 30);                               // 16
+  inPlace(M(A.zuki), M(A.zukiMid), 0, { lean: 3 });         // 17
+  inPlace(M(A.uchiR), M(A.uchiRPrep), -30);                 // 18
+  mae('L', 180, M(A.uchiR), -30);                           // 19
+  inPlace(A.zuki, A.zukiMid, 0, { lean: 3 });               // 20
+  step('zen', 'R', 180, A.morote, A.morotePrep, 40);        // 21
+  step('zen', 'L', 450, A.gedan, A.gbPrep, -45);            // 22
+  step('zen', 'L', 405, A.ageShuto, A.ukePrep, -45);        // 23a
+  step('zen', 'R', 405, M(A.uke), M(A.ukePrep), 45);        // 23b
+  step('zen', 'R', 270, M(A.gedan), M(A.gbPrep), 45);       // 24
+  step('zen', 'R', 315, M(A.ageShuto), M(A.ukePrep), 45, { sup: 'L' }); // 25a
+  step('zen', 'L', 315, A.uke, A.ukePrep, -45, { kiai: 1 }); // 25b
+  step('hachi', 'L', 360, A.yoi, A.hikite, 0, { sup: 'L' }); // yame
+  t += 1.2; keys.push([t, cur]);
+  return { D: t, keys, marks, hit, kiai, rows: HEIAN2, follow: 1, thumb: hit[11] + .3 };
+}
+
+const rA = (a, d) => ({ ...a, w: ry(a.w, d), p: ry(a.p, d), pole: ry(a.pole, d) }), rArms = (s, d) => ({ L: rA(s.L, d), R: rA(s.R, d) });
+Object.assign(STANCE, {
+  musubi: { aL: [0, 8, -5], aR: [0, 8, 5], fL: 22, fR: -22, Cy: 95, wt: 50, kpL: [1, 0, -.2], kpR: [1, 0, .2], stance: 'musubi-dachi' },
+  heiko: { aL: [0, 8, -18], aR: [0, 8, 18], fL: 0, fR: 0, Cy: 94, wt: 50, kpL: [1, 0, 0], kpR: [1, 0, 0], stance: 'heiko-dachi' }
+});
+ARMS.open = { L: { w: [4, 66, -20], p: [0, 0, 1], pole: [-1, 0, -.3], h: 'o' }, R: { w: [4, 66, 20], p: [0, 0, -1], pole: [-1, 0, .3], h: 'o' } };
+const MUSU = { ...P(0, ARMS.open), ...legs('musubi', 'L', 0, [0, 0]) }, REI = { ...MUSU, lean: 28 }, HEIKO = { ...P(0, ARMS.yoi), ...legs('heiko', 'L', 0, [0, 0]) };
+const GL = ARMS.guardG.L;
+Object.assign(POSES, {
+  uchiPrep: P(-15, mArms(ARMS.uchiRPrep)), uchi: P(-45, mArms(ARMS.uchiR)),
+  kizami: P(-62, { L: { w: [64, 114, -2], p: [0, -1, 0], pole: [0, -1, -.6] }, R: HIK_R }, { lean: 8, C: [6, 78, 0], aL: [55, 8, -13] }),
+  uraZ: P(-5, { L: HIK_L, R: { w: [42, 102, 2], p: [0, 1, 0], pole: [0, -1, .6] } }, { lean: 3 }),
+  uraMid: P(-25, { L: GL, R: { w: [20, 94, 10], p: [0, 1, 0], pole: [-.4, -1, .5] } }),
+  suPrep: P(-55, { L: { ...GL, h: 'o' }, R: { w: [-4, 146, 24], p: [0, 0, -1], pole: [-.4, -.2, 1], h: 'o' } }),
+  su: P(5, { L: HIK_L, R: { w: [52, 134, -6], p: [0, 1, 0], pole: [0, -1, .6], h: 'o' } }, { lean: 3 }),
+  urPrep: P(-30, { L: { w: [14, 128, 10], p: [0, -1, 0], pole: [.6, -.4, -.4] }, R: HIK_R }),
+  ur: P(-65, { L: { w: [56, 140, -10], p: [-1, 0, 0], pole: [0, -.3, -1] }, R: HIK_R }),
+  em: P(20, { L: HIK_L, R: { w: [16, 118, -14], p: [0, -1, 0], pole: [1, 0, .3] } }, { lean: 4 }),
+  nkPrep: P(-30, ARMS.nukitePrep), nk: P(0, ARMS.nukite, { lean: 5 }),
+  mwCh: P(30, ARMS.guardG, { C: [8, 80, 0], lean: -6, aR: [-10, 84, 60], fR: 30, pR: -30, kpR: [.7, .1, .7], fL: 40, wt: 100 }),
+  mwKick: P(70, ARMS.guardG, { C: [10, 80, 0], lean: -10, aR: [88, 110, -10], fR: 90, pR: 0, kpR: [0, 1, -.3], fL: 70, wt: 100 }),
+  usPivot: P(90, rArms(ARMS.hikite, 90), { fL: 60, C: [4, 78, 0] }),
+  usCh: P(160, rArms(ARMS.hikite, 160), { C: [8, 82, -6], aR: [-6, 52, 4], fR: 180, pR: -50, kpR: [-1, .8, 0], fL: 150, wt: 100, lean: -10 }),
+  usKick: P(160, rArms(ARMS.hikite, 160), { C: [12, 82, -6], aR: [86, 96, -4], fR: 180, pR: -20, kpR: [0, -1, 0], fL: 150, wt: 100, lean: -18 })
+});
+const KIBAY = { ...P(90, rArms(ARMS.hikite, 90)), ...legs('kiba', 'L', 0, [0, 0]), face: -90, yaw: 90, stance: 'kiba-dachi' };
+const YK_CH = { ...KIBAY, C: [0, 82, -12], lean: -6, aR: [4, 48, 4], fR: 0, pR: -20, kpR: [1, .6, 0], wt: 100, stance: 'yoko-geri' };
+const YK_UP = { ...YK_CH, aR: [6, 112, 70], pR: 0, kpR: [0, 1, 0], lean: -14 };
+const YK_CH2 = { ...YK_CH, aR: [4, 78, 14], kpR: [1, .9, 0] }, YK_KE = { ...YK_CH2, aR: [2, 96, 84], kpR: [0, 1, 0], lean: -16 };
+const SHK = { ...KOK, ...ARMS.shuto }, SHKMID = { ...KOKMID, ...ARMS.shutoPrep };
+const TAIKYOKU = [['Yoi', 'Pronti', 'hachiji-dachi']];
+function buildTaikyoku() {
+  const keys = [], marks = [], hit = [], kiai = []; let t = 0;
+  let cur = { ...P(0, ARMS.yoi), ...legs('hachi', 'L', 0, [0, 0]) };
+  keys.push([0, cur]); marks.push(0); hit.push(0); t = 1.4; keys.push([t, cur]);
+  const g = ARMS.gedan, gp = ARMS.gbPrep, z = ARMS.zuki, zp = ARMS.zukiPrep;
+  const M = [[90, 'L', 'g'], [90, 'R', 'z'], [-90, 'R', 'g'], [-90, 'L', 'z'], [0, 'L', 'g'], [0, 'R', 'z'], [0, 'L', 'z'], [0, 'R', 'z', 1],
+    [270, 'L', 'g'], [270, 'R', 'z'], [90, 'R', 'g'], [90, 'L', 'z'], [180, 'L', 'g'], [180, 'R', 'z'], [180, 'L', 'z'], [180, 'R', 'z', 1],
+    [450, 'L', 'g'], [450, 'R', 'z'], [270, 'R', 'g'], [270, 'L', 'z']];
+  const hand = { L: 'Hidari', R: 'Migi' };
+  M.forEach(([face, lead, k, ki], i) => {
+    const gd = k === 'g', arms = gd ? (lead === 'L' ? g : mArms(g)) : (lead === 'R' ? z : mArms(z)), prep = gd ? (lead === 'L' ? gp : mArms(gp)) : (lead === 'R' ? zp : mArms(zp));
+    const yaw = gd ? (lead === 'L' ? -45 : 45) : (lead === 'R' ? 10 : -10), sup = lead === 'L' ? 'R' : 'L';
+    TAIKYOKU.push([String(i + 1), hand[lead] + (gd ? ' gedan-barai' : ' chūdan oi-zuki'), 'zenkutsu', ki]);
+    const nx = { ...P(yaw, arms, { lean: gd ? 0 : 3 }), ...placed('zen', lead, face, sup, cur['a' + sup]) };
+    marks.push(t); hit.push(t + 1);
+    keys.push([t + .6, stepMid(cur, nx, prep, yaw * .4), eIO]); keys.push([t + 1, nx, eOut]);
+    if (ki) kiai.push([t + 1, t + 1.9]);
+    t += ki ? 2.1 : 1.6; keys.push([t, nx]); cur = nx;
+  });
+  TAIKYOKU.push(['Yame', 'Fine', 'hachiji-dachi']);
+  const nx = { ...P(0, ARMS.yoi), ...placed('hachi', 'L', 360, 'R', cur.aR) };
+  marks.push(t); hit.push(t + 1); keys.push([t + .6, stepMid(cur, nx, ARMS.hikite, 0), eIO]); keys.push([t + 1, nx, eOut]); t += 2.8; keys.push([t, nx]);
+  return { D: t, keys, marks, hit, kiai, rows: TAIKYOKU, follow: 1, thumb: hit[8] + .3 };
+}
+
+// combinazioni con spostamenti: f = passo avanti, b = passo indietro, s = sul posto, k = mae-geri che atterra avanti
+function buildCombo(list) {
+  const A = ARMS, T = {
+    oi: { a: mArms(A.zuki), p: mArms(A.zukiPrep), y: -10, l: 3, n: 'oi-zuki' }, gyaku: { a: A.zuki, p: A.zukiMid, y: 0, l: 4, n: 'gyaku-zuki' },
+    age: { a: A.uke, p: A.ukePrep, y: -45, n: 'age-uke' }, gedan: { a: A.gedan, p: A.gbPrep, y: -45, n: 'gedan-barai' },
+    soto: { a: A.soto, p: A.sotoPrep, y: -40, n: 'soto-uke' }, shuto: { a: A.shuto, p: A.shutoPrep, y: -65, n: 'shutō-uke' },
+    nukite: { a: mArms(A.nukite), p: mArms(A.nukitePrep), y: -10, l: 5, n: 'nukite' },
+    kizami: { a: { L: POSES.kizami.L, R: POSES.kizami.R }, p: A.guardG, y: -62, l: 8, n: 'kizami-zuki' }, mae: { a: A.guardG, p: A.guardG, y: -45, n: 'mae-geri' }
+  };
+  const get = (name, lead) => { const x = T[name]; return lead === 'L' ? x : { ...x, a: mArms(x.a), p: mArms(x.p), y: -x.y }; };
+  const side = { L: 'Hidari', R: 'Migi' }, keys = [], marks = [], hit = [], kiai = [], rows = [['Kamae', 'Guardia', 'zenkutsu']];
+  let t = 0, lead = 'L', cur = { ...P(-45, A.gedan), ...legs('zen', 'L', 0, [0, 0]) };
+  keys.push([0, cur]); marks.push(0); hit.push(0); t = 1; keys.push([t, cur]);
+  for (const [k, name, ki, type = 'zen'] of list) {
+    let nx;
+    if (k === 'f' || k === 'b') {
+      const nl = lead === 'L' ? 'R' : 'L', sup = k === 'f' ? lead : nl, x = get(name, nl);
+      nx = { ...P(x.y, x.a, { lean: x.l || 0 }), ...placed(type, nl, 0, sup, cur['a' + sup]) };
+      marks.push(t); hit.push(t + 1);
+      keys.push([t + .6, stepMid(cur, nx, x.p, x.y * .4), eIO]); keys.push([t + 1, nx, eOut]);
+      rows.push([String(rows.length), side[name === 'gyaku' ? lead : nl] + ' ' + x.n + (k === 'f' ? ', avanti' : ', indietro'), type === 'kok' ? 'kokutsu' : 'zenkutsu', ki]);
+      lead = nl;
+    } else if (k === 's') {
+      const x = get(name, lead);
+      nx = { ...cur, ...P(x.y, x.a, { lean: x.l || 0 }), aL: cur.aL, aR: cur.aR, C: cur.C, face: 0, fL: cur.fL, fR: cur.fR, kpL: cur.kpL, kpR: cur.kpR, wt: cur.wt, stance: cur.stance };
+      marks.push(t); hit.push(t + .7);
+      keys.push([t + .4, { ...nx, ...x.p, yaw: (cur.yaw + x.y) / 2 }, eIO]); keys.push([t + .7, nx, eOut]);
+      const hand = name === 'gyaku' ? (lead === 'L' ? 'R' : 'L') : lead;
+      rows.push([String(rows.length), side[hand] + ' ' + x.n + ', sul posto', cur.stance.split('-')[0], ki]);
+      t -= .3;
+    } else { // mae-geri con la gamba dietro, atterra avanti
+      const m = lead === 'L' ? 'R' : 'L', s = lead, S = cur['a' + s], g = m === 'R' ? 1 : -1, W3 = (C, v) => add(V(C[0], 0, C[2]), v);
+      const C = W3(S, [-6, 0, 12 * g]); C[1] = 80;
+      const base = { ...cur, ...A.guardG, ...(m === 'L' ? mArms(A.guardG) : {}), C, yaw: -10 * g, wt: s === 'L' ? 100 : 0, stance: 'mae-geri' };
+      const ch = { ...base, ['a' + m]: add(W3(C, [20, 0, 8 * g]), V(0, 52, 0)), ['f' + m]: 0, ['p' + m]: -55, ['kp' + m]: [1, .8, .1 * g], lean: -4 };
+      const kk = { ...base, ['a' + m]: add(W3(C, [76, 0, 6 * g]), V(0, 95, 0)), ['f' + m]: 0, ['p' + m]: 12, ['kp' + m]: [0, 1, .1 * g], lean: -8 };
+      const x = get('mae', m);
+      nx = { ...P(x.y, x.a), ...placed('zen', m, 0, s, S) };
+      marks.push(t); hit.push(t + .7);
+      keys.push([t + .45, ch, eIO]); keys.push([t + .7, kk, eOut]); keys.push([t + 1, kk]); keys.push([t + 1.25, ch, eIO]); keys.push([t + 1.7, nx, eOut]);
+      rows.push([String(rows.length), side[m] + ' mae-geri, atterra avanti', 'zenkutsu', ki]);
+      lead = m; t += .7;
+    }
+    if (ki) kiai.push([hit.at(-1), hit.at(-1) + .9]);
+    t += ki ? 2.1 : 1.6; keys.push([t, nx]); cur = nx;
+  }
+  t += 1; keys.push([t, cur]);
+  return { D: t, keys, marks, hit, kiai, rows, follow: 1, thumb: hit[1] + .2 };
+}
+
+const ANIM = {
+  zenkutsu: { D: 3.4, keys: [[0, 'hipsA'], [.9, 'hipsA'], [1.5, 'hipsB', eIO], [2.5, 'hipsB'], [3.1, 'hipsA', eIO], [3.4, 'hipsA']], marks: [0, .6, 1.2, 1.5], thumb: 2, note: 'piede dietro ruotato ~30° in fuori' },
+  gedan: { D: 3.6, keys: [[0, 'gedan'], [.6, 'gedan'], [1.2, 'gbPrep', eIO], [1.5, 'gbPrep'], [1.85, 'gedan', eOut], [3, 'gedan'], [3.6, 'gedan']], marks: [0, .6, 1.5, 1.85], thumb: 2.2 },
+  ageuke: { D: 3.4, keys: [[0, 'gedan'], [.6, 'gedan'], [1.05, 'ukePrep', eIO], [1.45, 'uke', eOut], [2.7, 'uke'], [3.4, 'gedan', eIO]], marks: [0, .6, 1.2, 1.45], thumb: 2 },
+  gyaku: { D: 3, keys: [[0, 'guardG'], [.8, 'guardG'], [.98, 'zukiMid', eIn], [1.12, 'zuki', eOut], [2.2, 'zuki'], [3, 'guardG', eIO]], marks: [0, .5, .9, 1.12], thumb: 1.6 },
+  combo: { D: 4.4, keys: [[0, 'gedan'], [.8, 'gedan'], [1.15, 'ukePrep', eIO], [1.5, 'uke', eOut], [2.3, 'uke'], [2.48, 'zukiMid', eIn], [2.62, 'zuki', eOut], [3.6, 'zuki'], [4.4, 'gedan', eIO]], marks: [0, .8, 2.3, 3.6], thumb: 3 },
+  oizuki: { D: 4.4, keys: [[0, OZ_A], [.6, OZ_A], [1.05, OZ_M1, eIO], [1.4, OZ_B, eOut], [2.4, OZ_B], [2.9, OZ_M2, eIO], [3.4, OZ_A, eOut], [4.4, OZ_A]], marks: [0, .6, 1.05, 1.4, 2.4], thumb: 1.7, thumbX: 45, note: 'il piede passa vicino all\'altro' },
+  kokutsu: { D: 3.8, keys: [[0, HACHI], [.7, HACHI], [1.1, KOKMID, eIO], [1.5, KOK, eOut], [2.8, KOK], [3.2, KOKMID, eIO], [3.6, HACHI, eOut], [3.8, HACHI]], marks: [0, .7, 1.1, 1.5], thumb: 2.2, note: 'piedi a L, talloni sulla stessa linea' },
+  kiba: { D: 3.6, keys: [[0, HACHI], [.8, HACHI], [1.6, KIBA, eIO], [2.8, KIBA], [3.4, HACHI, eIO], [3.6, HACHI]], marks: [0, .8, 1.2, 1.6], thumb: 2.2, note: 'piedi paralleli, ginocchia in fuori' },
+  soto: { D: 3.4, keys: [[0, 'gedan'], [.6, 'gedan'], [1.1, 'sotoPrep', eIO], [1.45, 'soto', eOut], [2.7, 'soto'], [3.4, 'gedan', eIO]], marks: [0, .6, 1.1, 1.45], thumb: 2 },
+  maegeri: { D: 3.6, keys: [[0, 'gedan'], [.7, 'gedan'], [1.05, 'mgChamber', eIO], [1.3, 'mgKick', eOut], [1.7, 'mgKick'], [1.95, 'mgChamber', eIO], [2.4, 'gedan', eIO], [3.6, 'gedan']], marks: [0, .7, 1.05, 1.7, 1.95], thumb: 1.45, note: 'si colpisce con l\'avampiede' },
+  musubi: { D: 3.8, keys: [[0, MUSU], [1, MUSU], [1.6, REI, eIO], [2.4, REI], [3, MUSU, eIO], [3.8, MUSU]], marks: [0, .5, 1, 2.4], thumb: .5, note: 'talloni uniti, punte aperte a 45°' },
+  heiko: { D: 4, keys: [[0, MUSU], [.8, MUSU], [1.5, HEIKO, eIO], [3, HEIKO], [3.6, MUSU, eIO], [4, MUSU]], marks: [0, .8, 1.2, 1.5], thumb: 2, note: 'piedi paralleli, larghi come le spalle' },
+  uchi: { D: 3.4, keys: [[0, 'gedan'], [.6, 'gedan'], [1.1, 'uchiPrep', eIO], [1.45, 'uchi', eOut], [2.7, 'uchi'], [3.4, 'gedan', eIO]], marks: [0, .6, 1.1, 1.45], thumb: 2 },
+  shutouke: { D: 3.8, keys: [[0, HACHI], [.7, HACHI], [1.1, SHKMID, eIO], [1.5, SHK, eOut], [2.8, SHK], [3.2, KOKMID, eIO], [3.6, HACHI, eOut], [3.8, HACHI]], marks: [0, .7, 1.1, 1.5], thumb: 2.2 },
+  kizami: { D: 2.8, keys: [[0, 'guardG'], [.7, 'guardG'], [.95, 'kizami', eOut], [1.9, 'kizami'], [2.6, 'guardG', eIO], [2.8, 'guardG']], marks: [0, .5, .8, .95], thumb: 1.4 },
+  ura: { D: 2.8, keys: [[0, 'guardG'], [.7, 'guardG'], [.85, 'uraMid', eIn], [1, 'uraZ', eOut], [2, 'uraZ'], [2.8, 'guardG', eIO]], marks: [0, .5, .85, 1], thumb: 1.5 },
+  shutouchi: { D: 3.2, keys: [[0, 'guardG'], [.6, 'guardG'], [1, 'suPrep', eIO], [1.3, 'su', eOut], [2.4, 'su'], [3.2, 'guardG', eIO]], marks: [0, .6, 1, 1.3], thumb: 1.9 },
+  uraken: { D: 3, keys: [[0, 'guardG'], [.6, 'guardG'], [.95, 'urPrep', eIO], [1.15, 'ur', eOut], [1.35, 'ur'], [1.7, 'urPrep', eIO], [2.3, 'guardG', eIO], [3, 'guardG']], marks: [0, .6, .95, 1.15, 1.35], thumb: 1.2 },
+  empi: { D: 2.8, keys: [[0, 'guardG'], [.8, 'guardG'], [1.1, 'em', eOut], [2, 'em'], [2.8, 'guardG', eIO]], marks: [0, .5, .8, 1.1], thumb: 1.5 },
+  nukite: { D: 3, keys: [[0, 'guardG'], [.6, 'guardG'], [.95, 'nkPrep', eIO], [1.2, 'nk', eOut], [2.2, 'nk'], [3, 'guardG', eIO]], marks: [0, .6, .95, 1.2], thumb: 1.6 },
+  keage: { D: 3.4, keys: [[0, KIBAY], [.7, KIBAY], [1.05, YK_CH, eIO], [1.25, YK_UP, eOut], [1.45, YK_CH, eIO], [2, KIBAY, eIO], [3.4, KIBAY]], marks: [0, .7, 1.05, 1.25, 1.45], thumb: 1.25, view: 'fronte', note: 'si colpisce con il taglio del piede (sokuto)' },
+  kekomi: { D: 3.6, keys: [[0, KIBAY], [.7, KIBAY], [1.1, YK_CH2, eIO], [1.35, YK_KE, eOut], [1.75, YK_KE], [2, YK_CH2, eIO], [2.5, KIBAY, eIO], [3.6, KIBAY]], marks: [0, .7, 1.1, 1.35, 2], thumb: 1.5, view: 'fronte', note: 'l\'anca spinge dietro il calcio' },
+  mawashi: { D: 3.6, keys: [[0, 'guardG'], [.7, 'guardG'], [1.1, 'mwCh', eIO], [1.35, 'mwKick', eOut], [1.65, 'mwKick'], [1.95, 'mwCh', eIO], [2.5, 'guardG', eIO], [3.6, 'guardG']], marks: [0, .7, 1.1, 1.35, 1.95], thumb: 1.5, note: 'il piede d\'appoggio ruota con le anche' },
+  ushiro: { D: 4, keys: [[0, 'guardG'], [.7, 'guardG'], [1.05, 'usPivot', eIO], [1.35, 'usCh', eIO], [1.6, 'usKick', eOut], [2, 'usKick'], [2.3, 'usCh', eIO], [2.7, 'usPivot', eIO], [3.1, 'guardG', eIO], [4, 'guardG']], marks: [0, .7, 1.05, 1.6, 2.3], thumb: 1.7, note: 'si colpisce con il tallone (kakato)' },
+  taikyoku1: buildTaikyoku(),
+  combo2: buildCombo([['f', 'oi'], ['f', 'oi'], ['f', 'oi', 1], ['b', 'gedan'], ['b', 'gedan'], ['b', 'gedan']]),
+  combo3: buildCombo([['f', 'oi'], ['b', 'age'], ['s', 'gyaku', 1]]),
+  combo4: buildCombo([['k', 'mae'], ['f', 'oi', 1], ['b', 'gedan'], ['b', 'gedan']]),
+  combo5: buildCombo([['b', 'soto'], ['s', 'gyaku'], ['f', 'oi', 1]]),
+  combo6: buildCombo([['b', 'shuto', 0, 'kok'], ['b', 'shuto', 0, 'kok'], ['f', 'nukite'], ['f', 'nukite', 1]]),
+  combo7: buildCombo([['s', 'kizami'], ['s', 'gyaku'], ['k', 'mae'], ['s', 'gyaku', 1], ['b', 'gedan']]),
+  heian1: buildKata(), heian2: buildNidan()
+};
+let D = 4.4, KEYS = [], AC = ANIM.combo;
+function poseAt(t) {
+  t = ((t % D) + D) % D;
+  const get = x => typeof x === 'string' ? POSES[x] : x;
+  for (let i = 0; i < KEYS.length - 1; i++) { const [ta, a] = KEYS[i], [tb, b, e] = KEYS[i + 1]; if (t >= ta && t <= tb) return lerp(get(a), get(b), (e || (x => x))((t - ta) / (tb - ta || 1))); }
+  return get(KEYS[0][1]);
+}
+function body(p) {
+  const R = v => ry(v, p.face), yw = p.face + p.yaw, C = V(...p.C), dy = p.C[1] - 78;
+  const up = norm(R(V(Math.sin(rad(p.lean)), Math.cos(rad(p.lean)), 0))), fw = ry(V(1, 0, 0), yw), sd = ry(V(0, 0, 1), yw);
+  const at = h => add(C, mul(up, h));
+  const hipL = add(C, mul(sd, -12)), hipR = add(C, mul(sd, 12));
+  const shL = add(at(46), mul(sd, -18)), shR = add(at(46), mul(sd, 18));
+  const legL = ik(hipL, p.aL, 44, 44, R(p.kpL)), legR = ik(hipR, p.aR, 44, 44, R(p.kpR));
+  const foot = (yaw, pitch) => { const d = ry(V(1, 0, 0), yaw); return norm(add(mul(d, Math.cos(rad(pitch))), V(0, Math.sin(rad(pitch)), 0))); };
+  const arm = (sh, a, side) => { const r = ik(sh, add(V(C[0], dy, C[2]), R(a.w)), 30, 27, R(a.pole)), f = norm(sub(r.end, r.mid)); let Pv = R(a.p); if (len(Pv) < .3) Pv = add(Pv, V(0, 0, .5 * side)); const pn = norm(sub(Pv, mul(f, dot(Pv, f)))); return { sh, el: r.mid, wr: r.end, f, p: pn, side, open: a.h === 'o' }; };
+  return { C, up, fw, sd, at, hipL, hipR, shL, shR, kneeL: legL.mid, kneeR: legR.mid, ankL: legL.end, ankR: legR.end, footL: foot(p.fL, p.pL), footR: foot(p.fR, p.pR),
+    L: arm(shL, p.L, -1), R: arm(shR, p.R, 1), head: at(64), F: R(V(1, 0, 0)), SDH: R(V(0, 0, 1)), face: p.face, wt: p.wt, stance: p.stance, yw };
+}
+
+/* ---------- Camera ---------- */
+const VIEWS = { '34': { phi: 35, eps: 10, oy: 338 }, lato: { phi: 0, eps: 4, oy: 338 }, fronte: { phi: 90, eps: 6, oy: 338 }, alto: { phi: 0, eps: 68, oy: 232 } };
+const SC = 1.75, OX = 236;
+let CAM = VIEWS['34'], CT = [0, 0];
+function proj(p) {
+  const c = Math.cos(rad(CAM.phi)), s = Math.sin(rad(CAM.phi)), px = p[0] - CT[0], pz = p[2] - CT[1], X = px * c - pz * s, Z = px * s + pz * c, ce = Math.cos(rad(CAM.eps)), se = Math.sin(rad(CAM.eps));
+  return { x: OX + X * SC, y: CAM.oy - p[1] * ce * SC + Z * se * SC, d: Z * ce + p[1] * se };
+}
+const viewDir = () => { const c = Math.cos(rad(CAM.phi)), s = Math.sin(rad(CAM.phi)); return norm(V(s * Math.cos(rad(CAM.eps)), Math.sin(rad(CAM.eps)), c * Math.cos(rad(CAM.eps)))); }; // verso la camera
+
+/* ---------- Geometria 2D ---------- */
+function hull(pts) {
+  const P = pts.slice().sort((a, b) => a.x - b.x || a.y - b.y), cr = (o, a, b) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x), lo = [], hi = [];
+  for (const p of P) { while (lo.length >= 2 && cr(lo.at(-2), lo.at(-1), p) <= 0) lo.pop(); lo.push(p); }
+  for (const p of P.slice().reverse()) { while (hi.length >= 2 && cr(hi.at(-2), hi.at(-1), p) <= 0) hi.pop(); hi.push(p); }
+  return lo.slice(0, -1).concat(hi.slice(0, -1));
+}
+function resample(pts, step) { const out = []; for (let i = 0; i < pts.length; i++) { const a = pts[i], b = pts[(i + 1) % pts.length]; out.push(a); const d = Math.hypot(b.x - a.x, b.y - a.y), n = Math.floor(d / step); for (let k = 1; k < n; k++) out.push({ x: a.x + (b.x - a.x) * k / n, y: a.y + (b.y - a.y) * k / n }); } return out; }
+function capsule(a, b, ra, rb) {
+  const g = Math.atan2(b.y - a.y, b.x - a.x), pts = [];
+  for (let i = 0; i <= 8; i++) { const t = g - Math.PI / 2 + Math.PI * i / 8; pts.push({ x: b.x + Math.cos(t) * rb, y: b.y + Math.sin(t) * rb }); }
+  for (let i = 0; i <= 8; i++) { const t = g + Math.PI / 2 + Math.PI * i / 8; pts.push({ x: a.x + Math.cos(t) * ra, y: a.y + Math.sin(t) * ra }); }
+  return pts;
+}
+let SEED = 1;
+const rnd = i => { const x = Math.sin(i * 12.9898 + SEED * 78.233) * 43758.5453; return x - Math.floor(x); };
+function path(ctx, pts, closed, jit, salt) {
+  ctx.beginPath(); const Q = pts.map((p, k) => ({ x: p.x + (rnd(salt + k * 3.1) - .5) * 2 * jit, y: p.y + (rnd(salt + k * 7.7 + 1) - .5) * 2 * jit })), n = Q.length;
+  if (n < 3) { ctx.moveTo(Q[0].x, Q[0].y); for (const q of Q.slice(1)) ctx.lineTo(q.x, q.y); return; }
+  ctx.moveTo((Q[0].x + Q[1].x) / 2, (Q[0].y + Q[1].y) / 2);
+  for (let k = 1; k < (closed ? n + 1 : n - 1); k++) { const a = Q[k % n], b = Q[(k + 1) % n]; ctx.quadraticCurveTo(a.x, a.y, (a.x + b.x) / 2, (a.y + b.y) / 2); }
+  if (!closed) ctx.lineTo(Q.at(-1).x, Q.at(-1).y);
+}
+const seg = (a, b, n = 5) => Array.from({ length: n + 1 }, (_, i) => ({ x: a.x + (b.x - a.x) * i / n, y: a.y + (b.y - a.y) * i / n }));
+const LIGHT = { x: -.55, y: -.83 };
+// livelli a matita precalcolati (uno per variante del tremolio): evitano centinaia di tratti per fotogramma
+const LAYER = {};
+function layer(key, w, h, fn) { const k = key + SEED; if (!LAYER[k]) { const c = document.createElement('canvas'); c.width = w * 2; c.height = h * 2; const x = c.getContext('2d'); x.scale(2, 2); x.lineCap = 'round'; x.lineJoin = 'round'; x.strokeStyle = 'rgb(36,34,38)'; fn(x); LAYER[k] = c; } return LAYER[k]; }
+// copia solo il rettangolo che contiene la forma
+function blit(ctx, L, pts) { let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9; for (const p of pts) { if (p.x < x0) x0 = p.x; if (p.x > x1) x1 = p.x; if (p.y < y0) y0 = p.y; if (p.y > y1) y1 = p.y; }
+  x0 = Math.max(0, Math.floor(x0 - 2)); y0 = Math.max(0, Math.floor(y0 - 2)); x1 = Math.min(480, Math.ceil(x1 + 2)); y1 = Math.min(540, Math.ceil(y1 + 2)); if (x1 <= x0 || y1 <= y0) return;
+  ctx.drawImage(L, x0 * 2, y0 * 2, (x1 - x0) * 2, (y1 - y0) * 2, x0, y0, x1 - x0, y1 - y0); }
+const hatchL = () => layer('hatch', 480, 540, x => { x.lineWidth = .75; for (let k = -70; k < 70; k++) { const x0 = 240 + k * 4.2; path(x, seg({ x: x0 - 160, y: 470 }, { x: x0 + 160, y: -10 }, 3), false, .5, 70 + k); x.stroke(); } });
+const shadowL = () => layer('shadow', 480, 540, x => { x.lineWidth = .8; for (let k = -40; k < 40; k++) { path(x, seg({ x: 240 + k * 4, y: 360 }, { x: 260 + k * 4, y: 300 }, 2), false, .4, 40 + k); x.stroke(); } });
+const hairL = () => layer('hair', 200, 70, x => { x.lineWidth = .8; for (let k = -30; k < 30; k++) { path(x, seg({ x: 100 + k * 2.2 - 30, y: 65 }, { x: 100 + k * 2.2 + 10, y: 5 }, 2), false, .4, 800 + k); x.stroke(); } });
+
+/* ---------- Stili ---------- */
+function makePaper(w, h) { const c = document.createElement('canvas'); c.width = w * 2; c.height = h * 2; const x = c.getContext('2d'); x.scale(2, 2); x.fillStyle = '#f2eee4'; x.fillRect(0, 0, w, h); for (let i = 0; i < 12000; i++) { x.fillStyle = `rgba(90,80,60,${Math.random() * .16})`; x.fillRect(Math.random() * w, Math.random() * h, Math.random() * 1.5, Math.random() * 1.5); } return c; }
+function makeTone() { const c = document.createElement('canvas'); c.width = c.height = 6; const x = c.getContext('2d'); x.fillStyle = '#1a1a1a'; x.beginPath(); x.arc(1.5, 1.5, 1.05, 0, 7); x.fill(); x.beginPath(); x.arc(4.5, 4.5, 1.05, 0, 7); x.fill(); return c; }
+const W = 480, H = 540, MAINH = 360;
+const PAPER = makePaper(W, H), TONE = makeTone();
+// la carta come sfondo CSS dei canvas animati: ogni fotogramma parte da un clearRect invece di ricopiare la grana
+let PAPER_URL = null, NOBG = false; PAPER.toBlob(b => { PAPER_URL = URL.createObjectURL(b); document.querySelectorAll('canvas[data-live],canvas[data-train]').forEach(paperBg); });
+const paperBg = el => { if (PAPER_URL) { el.style.background = `url(${PAPER_URL}) 0 0 / 100% 100%`; el._paper = 1; } };
+const INS = new WeakMap();
+const PENCIL = {
+  ink: a => `rgba(36,34,38,${a})`, fill: '#f2eee4', skin: '#efe6d6',
+  bg(ctx) { ctx.drawImage(PAPER, 0, 0, W, H); },
+  shape(ctx, pts, o) {
+    const near = o.near;
+    ctx.save(); path(ctx, pts, true, 0, 0); ctx.closePath(); ctx.fillStyle = o.skin ? this.skin : this.fill; ctx.fill();
+    if (o.shade) { ctx.clip(); halfClip(ctx, o.shade); ctx.globalAlpha = .26 + (1 - near) * .12; blit(ctx, hatchL(), pts); ctx.globalAlpha = 1; }
+    ctx.restore();
+    for (let pass = 0; pass < (near > .4 ? 2 : 1); pass++) { ctx.strokeStyle = this.ink((pass ? .45 : .82) * (.65 + .35 * near)); ctx.lineWidth = pass ? .9 : 1.35; path(ctx, resample(pts, 8), true, .9, 100 + pass * 300 + pts.length); ctx.stroke(); }
+  },
+  stroke(ctx, pts, w = 1.2, a = .8, closed = false) { ctx.strokeStyle = this.ink(a); ctx.lineWidth = w; path(ctx, pts, closed, .6, 500 + pts.length); ctx.stroke(); },
+  belt: 'rgba(40,38,42,.85)', font: '700 23px Caveat, "Comic Sans MS", cursive', small: '700 19px Caveat, "Comic Sans MS", cursive'
+};
+const MANGA = {
+  ink: a => `rgba(14,14,16,${Math.min(1, a + .2)})`, fill: '#ffffff', skin: '#ffffff',
+  bg(ctx) { ctx.fillStyle = '#fbfbf9'; ctx.fillRect(0, 0, W, H); },
+  shape(ctx, pts, o) {
+    ctx.save(); path(ctx, pts, true, 0, 0); ctx.closePath(); ctx.fillStyle = '#fff'; ctx.fill();
+    if (o.shade) { ctx.clip(); halfClip(ctx, o.shade); ctx.fillStyle = ctx.createPattern(TONE, 'repeat'); ctx.fillRect(0, 0, W, H); }
+    ctx.restore();
+    ctx.strokeStyle = '#111'; ctx.lineWidth = 1.6 + o.near * 1.2; ctx.lineJoin = 'round'; path(ctx, resample(pts, 8), true, .15, 9); ctx.stroke();
+  },
+  stroke(ctx, pts, w = 1.2, a = .9, closed = false) { ctx.strokeStyle = '#111'; ctx.lineWidth = w * 1.25; path(ctx, pts, closed, .1, 7); ctx.stroke(); },
+  belt: '#111', font: '700 15px "Zen Kaku Gothic New", system-ui, sans-serif', small: '700 13px "Zen Kaku Gothic New", system-ui, sans-serif'
+};
+function halfClip(ctx, sh) {
+  const n = sh.n, a = sh.a, dir = { x: -n.y, y: n.x }, o = { x: a.x + n.x * sh.off, y: a.y + n.y * sh.off };
+  ctx.beginPath(); ctx.moveTo(o.x - dir.x * 900, o.y - dir.y * 900); ctx.lineTo(o.x + dir.x * 900, o.y + dir.y * 900);
+  ctx.lineTo(o.x + dir.x * 900 + n.x * 900, o.y + dir.y * 900 + n.y * 900); ctx.lineTo(o.x - dir.x * 900 + n.x * 900, o.y - dir.y * 900 + n.y * 900); ctx.closePath(); ctx.clip();
+}
+function limbShade(a, b, r) { let n = { x: -(b.y - a.y), y: b.x - a.x }; const l = Math.hypot(n.x, n.y) || 1; n = { x: n.x / l, y: n.y / l }; if (n.x * LIGHT.x + n.y * LIGHT.y > 0) n = { x: -n.x, y: -n.y }; return { a, n, off: r * .2 }; }
+
+/* ---------- Parti del corpo ---------- */
+function limb(st, A3, B3, ra, rb, opt = {}) {
+  const a = proj(A3), b = proj(B3);
+  return { d: (a.d + b.d) / 2 + (opt.bias || 0), draw(ctx, near) { st.shape(ctx, capsule(a, b, ra * SC, rb * SC), { near, skin: opt.skin, shade: limbShade(a, b, ra * SC) }); if (opt.cuff) { const n = { x: -(b.y - a.y), y: b.x - a.x }, l = Math.hypot(n.x, n.y) || 1; st.stroke(ctx, [{ x: b.x + n.x / l * rb * SC, y: b.y + n.y / l * rb * SC }, { x: b.x - n.x / l * rb * SC, y: b.y - n.y / l * rb * SC }], .9, .6); } } };
+}
+function footPart(st, ank, f, side) {
+  let sdv = cross(V(0, 1, 0), f); sdv = len(sdv) < .2 ? V(0, 0, -1) : norm(sdv); const uf = norm(cross(f, sdv)), w = 4.6; // sdv punta verso sinistra del piede
+  const sole = [[-6, -w * .8], [-3, -w], [8, -w * 1.05], [15, -w * .95], [19, -w * .3], [19.5, w * .35], [17, w * .9], [8, w], [-3, w * .9], [-6, w * .6]];
+  const P3 = (u, v, h) => add(add(add(ank, mul(f, u)), mul(sdv, v)), mul(uf, h - 8));
+  const pts = []; sole.forEach(([u, v]) => { pts.push(proj(P3(u, v, 0))); pts.push(proj(P3(u, v, u < 6 ? 8 : u < 14 ? 5.5 : 3))); });
+  const d = proj(ank).d;
+  return { d: d - 3, sole: sole.map(([u, v]) => P3(u, v, 0)), draw(ctx, near) { const hp = hull(pts); st.shape(ctx, hp, { near, skin: 1, shade: { a: proj(P3(6, 0, 4)), n: { x: .55, y: .83 }, off: 2 } }); st.stroke(ctx, [proj(P3(15.5, -w * .9, 2.5)), proj(P3(16.5, 0, 3.2)), proj(P3(15, w * .85, 2.5))], .8, .5); st.stroke(ctx, [proj(P3(-1, -w * .7, 7)), proj(P3(-1, w * .6, 7))], .7, .35); } };
+}
+function fistPart(st, arm) {
+  const f = arm.f, p = arm.p, w = cross(f, p), op = arm.open, c = add(arm.wr, mul(f, op ? 8 : 4.5)), thumbSide = arm.side > 0 ? 1 : -1;
+  const corner = (a, b, e) => add(add(add(c, mul(f, a * (op ? 8.5 : 4.6))), mul(w, b * (op ? 4.2 : 4.4))), mul(p, e * (op ? 1.3 : 3.3)));
+  const pts = []; for (const a of [-1, 1]) for (const b of [-1, 1]) for (const e of [-1, 1]) pts.push(proj(corner(a, b, e)));
+  const vd = viewDir(), palmVis = dot(p, vd) > .1, backVis = dot(p, vd) < -.1;
+  return { d: proj(c).d + .5, arm, draw(ctx, near) {
+    st.shape(ctx, hull(pts), { near, skin: 1, shade: { a: proj(c), n: { x: .55, y: .83 }, off: 2 } });
+    if (op) { for (let i = 1; i < 4; i++) { const b = -1 + i * .5; st.stroke(ctx, [proj(add(add(c, mul(f, 1)), mul(w, b * 4.2))), proj(add(add(c, mul(f, 8)), mul(w, b * 4.2)))], .7, .5); } st.stroke(ctx, [proj(add(add(c, mul(f, -6)), mul(w, thumbSide * 4.4))), proj(add(add(c, mul(f, 0)), mul(w, thumbSide * 4.6)))], 1.6, .7); return; }
+    for (let i = 0; i < 4; i++) { const b = -.75 + i * .5, k = proj(add(add(add(c, mul(f, 4.6)), mul(w, b * 4.4)), mul(p, -1.6))); ctx.beginPath(); ctx.arc(k.x, k.y, 1.55 * SC * .72, 0, 7); ctx.strokeStyle = st.ink(.75); ctx.lineWidth = .9; ctx.stroke(); }
+    if (palmVis) { for (let i = 1; i < 4; i++) { const b = -1 + i * .5; st.stroke(ctx, [proj(add(add(add(c, mul(f, 4.4)), mul(w, b * 4.4)), mul(p, 3.3))), proj(add(add(c, mul(w, b * 4.4)), mul(p, 3.4)))], .7, .55); }
+      st.stroke(ctx, [proj(add(add(add(c, mul(f, -2.5)), mul(w, thumbSide * 4.6)), mul(p, 3.4))), proj(add(add(add(c, mul(f, 2.5)), mul(w, thumbSide * 1)), mul(p, 3.8)))], 2.2, .75); }
+    else if (!backVis) { st.stroke(ctx, [proj(add(add(add(c, mul(f, -3)), mul(w, thumbSide * 4.7)), mul(p, 2))), proj(add(add(add(c, mul(f, 2.5)), mul(w, thumbSide * 4.7)), mul(p, 3.5)))], 2, .7); }
+  } };
+}
+function torsoPart(st, B) {
+  const { at, fw, sd, C } = B;
+  const P = [add(B.shL, mul(sd, -4)), add(B.shR, mul(sd, 4)), add(add(B.shL, V(0, 4, 0)), mul(fw, 3)), add(add(B.shR, V(0, 4, 0)), mul(fw, 3)),
+    add(at(32), mul(fw, 12)), add(at(32), mul(fw, -11)), add(add(at(8), mul(fw, 12)), mul(sd, -15)), add(add(at(8), mul(fw, 12)), mul(sd, 15)), add(add(at(8), mul(fw, -11)), mul(sd, -15)), add(add(at(8), mul(fw, -11)), mul(sd, 15)),
+    add(add(at(-14), mul(sd, -16)), mul(fw, 9)), add(add(at(-14), mul(sd, 16)), mul(fw, 9)), add(add(at(-14), mul(sd, -16)), mul(fw, -9)), add(add(at(-14), mul(sd, 16)), mul(fw, -9)), at(52)];
+  const pts = P.map(proj), c2 = proj(at(20)), vd = viewDir(), frontVis = dot(fw, vd) > -.25;
+  return { d: proj(C).d, draw(ctx, near) {
+    st.shape(ctx, hull(pts), { near, shade: { a: c2, n: { x: .55, y: .83 }, off: 6 } });
+    if (frontVis) { // risvolti del gi
+      st.stroke(ctx, [proj(add(add(at(50), mul(fw, 5)), mul(sd, 5))), proj(add(add(at(30), mul(fw, 12)), mul(sd, -2))), proj(add(add(at(6), mul(fw, 12)), mul(sd, -6)))], 1, .65);
+      st.stroke(ctx, [proj(add(add(at(50), mul(fw, 5)), mul(sd, -5))), proj(add(add(at(36), mul(fw, 11)), mul(sd, 1)))], .9, .5);
+      st.stroke(ctx, [proj(add(add(at(-2), mul(fw, 10)), mul(sd, -6))), proj(add(add(at(-14), mul(fw, 9)), mul(sd, -8)))], .8, .45);
+    }
+    // cintura
+    const ring = []; for (let i = 0; i < 28; i++) { const a = i / 28 * Math.PI * 2, q = add(add(at(6), mul(fw, Math.cos(a) * 12.5)), mul(sd, Math.sin(a) * 15.5)); ring.push({ q, s: proj(q) }); }
+    const dc = proj(at(6)).d, front = ring.filter(r => r.s.d >= dc - 1).sort((a, b) => Math.atan2(a.q[2] - C[2], a.q[0] - C[0]) - Math.atan2(b.q[2] - C[2], b.q[0] - C[0]));
+    ctx.strokeStyle = st.belt; ctx.lineWidth = 4.2 * SC * .8; ctx.lineCap = 'butt'; path(ctx, front.map(r => r.s), false, .3, 950); ctx.stroke(); ctx.lineCap = 'round';
+    if (frontVis) { const k = add(add(at(6), mul(fw, 13)), mul(sd, -3)), ks = proj(k); ctx.fillStyle = st.belt; ctx.fillRect(ks.x - 4, ks.y - 4, 8, 8);
+      ctx.lineWidth = 3; ctx.strokeStyle = st.belt; path(ctx, [ks, proj(add(add(k, V(0, -16, 0)), mul(sd, -3)))], false, .3, 960); ctx.stroke(); path(ctx, [ks, proj(add(add(k, V(0, -14, 0)), mul(sd, 3)))], false, .3, 961); ctx.stroke(); }
+  } };
+}
+function headPart(st, B, manga) {
+  const h = B.head, c = proj(h), r = 10.5 * SC, F = B.F, vd = viewDir(), sdh = B.SDH;
+  return { d: c.d + 1, draw(ctx, near) {
+    const pts = []; for (let i = 0; i < 20; i++) { const a = i / 20 * Math.PI * 2; pts.push({ x: c.x + Math.cos(a) * r * .9, y: c.y + Math.sin(a) * r * (Math.sin(a) > 0 ? 1.12 : 1) }); }
+    st.shape(ctx, pts, { near, skin: 1, shade: { a: c, n: { x: .55, y: .83 }, off: r * .25 } });
+    // capelli: calotta sul lato opposto al viso
+    const hair = []; for (let i = 0; i <= 16; i++) { const a = Math.PI * (i / 16); for (const ph of [-.9, -.4, 0, .4, .9]) { const dirv = norm(add(add(mul(V(0, 1, 0), Math.sin(a) * .9 + .2), mul(F, Math.cos(a) * Math.cos(ph) - .45)), mul(sdh, Math.sin(ph) * Math.cos(a) * .9 + Math.sin(ph) * .3))); if (dot(dirv, F) < .35) hair.push(proj(add(h, mul(dirv, manga && i % 2 ? 12.5 : 11)))); } }
+    if (hair.length > 2) { const hp = hull(hair); if (manga) { ctx.fillStyle = '#111'; path(ctx, hp, true, 0, 0); ctx.fill(); } else { ctx.save(); path(ctx, hp, true, 0, 0); ctx.clip(); ctx.globalAlpha = .5; ctx.drawImage(hairL(), c.x - 100, c.y - 35, 200, 70); ctx.restore(); st.stroke(ctx, hp, 1.1, .7, true); } }
+    // viso
+    if (dot(F, vd) > -.35) {
+      const nose = proj(add(h, mul(F, 10.8))), eyeL = proj(add(add(add(h, mul(F, 9.3)), V(0, 1.5, 0)), mul(sdh, -3.6))), eyeR = proj(add(add(add(h, mul(F, 9.3)), V(0, 1.5, 0)), mul(sdh, 3.6))), mouth = proj(add(add(h, mul(F, 9.6)), V(0, -5, 0)));
+      const hd = c.d; for (const e of [eyeL, eyeR].filter(e => e.d > hd + 2)) { if (manga) { ctx.strokeStyle = '#111'; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(e.x - 2.6, e.y - 1.4); ctx.lineTo(e.x + 2.6, e.y + .6); ctx.stroke(); ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(e.x + .4, e.y + 2, 1.1, 0, 7); ctx.fill(); } else { st.stroke(ctx, [{ x: e.x - 2.2, y: e.y }, { x: e.x + 2.2, y: e.y + .3 }], 1, .7); } }
+      st.stroke(ctx, [{ x: nose.x - 1, y: nose.y - 2 }, nose, { x: nose.x - 1.5, y: nose.y + 1.5 }], .9, .6);
+      st.stroke(ctx, [{ x: mouth.x - 2.5, y: mouth.y }, { x: mouth.x + 2.5, y: mouth.y }], .9, .55);
+    }
+  } };
+}
+function build(st, B, manga) {
+  const parts = [], tD = proj(B.C).d;
+  // gambe: sempre prima del busto (la giacca copre l'attacco)
+  for (const [hip, knee, ank, f, s] of [[B.hipL, B.kneeL, B.ankL, B.footL, -1], [B.hipR, B.kneeR, B.ankR, B.footR, 1]]) {
+    const hem = add(knee, mul(sub(ank, knee), .86));
+    const g = [limb(st, hip, knee, 10.5, 9), limb(st, knee, hem, 9, 8, { cuff: 1 }), limb(st, hem, ank, 4.2, 4, { skin: 1, bias: -1 }), footPart(st, ank, f, s)];
+    g.forEach(x => { x.d = Math.min(x.d, tD - 30) + x.d * .01; parts.push(x); });
+  }
+  parts.push(torsoPart(st, B)); const hd = headPart(st, B, manga); hd.d = Math.max(hd.d, tD + .5); parts.push(hd);
+  for (const a of [B.L, B.R]) {
+    const sleeveEnd = add(a.el, mul(a.f, 14));
+    const g = [limb(st, a.sh, a.el, 7.2, 6.6), limb(st, a.el, sleeveEnd, 6.6, 6.2, { cuff: 1 }), limb(st, sleeveEnd, a.wr, 4.4, 3.8, { skin: 1 }), fistPart(st, a)];
+    g.forEach((x, i) => { x.d += i * .3; parts.push(x); });
+  }
+  parts.sort((a, b) => a.d - b.d);
+  const dmin = parts[0].d, dmax = parts.at(-1).d;
+  return parts.map(p => ({ p, near: (p.d - dmin) / ((dmax - dmin) || 1) }));
+}
+
+/* ---------- Riquadri informativi ---------- */
+function fistInfo(arm, F) {
+  const pY = arm.p[1], pF = dot(arm.p, F), w = cross(arm.f, arm.p), horiz = Math.abs(w[1]) < .55;
+  const palm = pY < -.55 ? 'palmo in giù' : pY > .55 ? 'palmo in su' : pF > .55 ? 'palmo in avanti' : pF < -.55 ? 'palmo indietro' : 'palmo di lato';
+  return { a: arm.open ? 'mano aperta' : horiz ? 'orizzontale' : 'verticale', b: palm, horiz };
+}
+function fistGlyph(ctx, st, arm, cx, cy, manga) {
+  const f = arm.f; let e1 = cross(V(0, 1, 0), f); if (len(e1) < .2) e1 = V(0, 0, 1); e1 = norm(e1); const e2 = norm(cross(f, e1));
+  const w = cross(arm.f, arm.p), ang = Math.atan2(-dot(w, e2), dot(w, e1)), px = dot(arm.p, e1), py = -dot(arm.p, e2);
+  ctx.save(); ctx.translate(cx, cy); ctx.rotate(ang);
+  const box = []; for (let i = 0; i < 16; i++) { const a = i / 16 * Math.PI * 2; box.push({ x: Math.cos(a) * 19 * (Math.abs(Math.cos(a)) > .7 ? 1 : .98), y: Math.sin(a) * 12 }); }
+  if (arm.open) { const bl = []; for (let i = 0; i < 16; i++) { const a = i / 16 * Math.PI * 2; bl.push({ x: Math.cos(a) * 21, y: Math.sin(a) * 6 }); } st.shape(ctx, bl, { near: 1, skin: 1 }); st.stroke(ctx, [{ x: -14, y: 0 }, { x: 14, y: 0 }], .8, .5); }
+  else { st.shape(ctx, box, { near: 1, skin: 1 });
+  for (let i = 0; i < 4; i++) { ctx.beginPath(); ctx.arc(-12 + i * 8, -3, 3.6, 0, 7); ctx.strokeStyle = st.ink(.8); ctx.lineWidth = 1; ctx.stroke(); } }
+  ctx.restore();
+  // pollice sul lato del palmo
+  ctx.fillStyle = manga ? '#111' : st.ink(.55); ctx.beginPath(); ctx.arc(cx + px * 13, cy + py * 13, 3, 0, 7); ctx.fill();
+}
+function insets(ctx, st, B, manga) {
+  const y0 = MAINH + 8, hh = H - y0 - 10;
+  ctx.save();
+  if (manga) { ctx.fillStyle = '#fff'; ctx.fillRect(10, y0, W - 20, hh); ctx.strokeStyle = '#111'; ctx.lineWidth = 2.5; ctx.strokeRect(10, y0, W - 20, hh); ctx.beginPath(); ctx.moveTo(W / 2, y0); ctx.lineTo(W / 2, y0 + hh); ctx.stroke(); }
+  else { st.stroke(ctx, seg({ x: 14, y: y0 }, { x: W - 14, y: y0 }, 12), 1, .45); st.stroke(ctx, seg({ x: W / 2, y: y0 + 8 }, { x: W / 2, y: H - 12 }, 6), .9, .35); }
+  const anyOpen = B.L.open || B.R.open;
+  ctx.fillStyle = manga ? '#111' : st.ink(.9); ctx.font = st.font; ctx.fillText('Piedi dall\'alto, avanti →', 22, y0 + 20); ctx.fillText(anyOpen ? 'Mani (viste di fronte)' : 'Pugni (visti di fronte)', W / 2 + 12, y0 + 20);
+  // pianta piedi, nel riferimento del karateka
+  const rel = a => ry(sub(a, B.C), -B.face), rL = rel(B.ankL), rR = rel(B.ankR);
+  const k = Math.min(1.35, 170 / (Math.abs(rL[0] - rR[0]) + 34), 56 / (Math.abs(rL[2] - rR[2]) + 16)), mx = (rL[0] + rR[0]) / 2 + 4, mzz = (rL[2] + rR[2]) / 2;
+  const ox = W / 4 + 4, oz = y0 + 80, pl = p => { const q = ry(sub(p, B.C), -B.face); return { x: ox + (q[0] - mx) * k, y: oz + (q[2] - mzz) * k }; };
+  for (const [ank, f, lab, pct] of [[B.ankL, B.footL, 'S', B.wt], [B.ankR, B.footR, 'D', 100 - B.wt]]) {
+    const fr = ry(norm(V(f[0], 0, f[2])), -B.face), sh = Math.max(.45, Math.hypot(f[0], f[2])), kf = Math.max(k, 1), c0 = pl(ank);
+    const sole = [[-6, -3.7], [-3, -4.6], [8, -4.8], [15, -4.4], [19, -1.4], [19.5, 1.6], [17, 4.1], [8, 4.6], [-3, 4.1], [-6, 2.8]].map(([u, v]) => ({ x: c0.x + (fr[0] * u * sh + fr[2] * v) * kf, y: c0.y + (fr[2] * u * sh - fr[0] * v) * kf }));
+    const air = ank[1] > 20;
+    if (air) { ctx.save(); ctx.setLineDash([4, 4]); st.stroke(ctx, sole, 1, .5, true); ctx.restore(); } else st.shape(ctx, sole, { near: 1, skin: 1, shade: manga && lab === 'D' ? { a: sole[0], n: { x: 0, y: 1 }, off: -40 } : null });
+    const c = pl(ank); ctx.fillStyle = manga ? '#111' : st.ink(.9); ctx.font = st.small; ctx.fillText(lab + ' · ' + (air ? 'in aria' : Math.round(pct / 5) * 5 + '% peso'), c.x - 30, c.y + (c.y >= oz ? 30 : -18));
+  }
+  ctx.font = st.small; ctx.fillStyle = manga ? '#111' : st.ink(.7);
+  ctx.fillText(AC.note || B.stance, 22, H - 16);
+  // pugni
+  const LX = W / 2 + 60, RX = W / 2 + 172, CY = y0 + 72;
+  fistGlyph(ctx, st, B.L, LX, CY, manga); fistGlyph(ctx, st, B.R, RX, CY, manga);
+  const iL = fistInfo(B.L, B.F), iR = fistInfo(B.R, B.F);
+  ctx.fillStyle = manga ? '#111' : st.ink(.9); ctx.font = st.small; ctx.textAlign = 'center';
+  ctx.fillText('sinistro', LX, CY + 32); ctx.fillText('destro', RX, CY + 32);
+  ctx.font = manga ? '500 12.5px "Zen Kaku Gothic New", sans-serif' : '600 19px Caveat, cursive'; ctx.fillText(iL.a, LX, CY + 50); ctx.fillText(iR.a, RX, CY + 50); ctx.fillText(iL.b, LX, CY + 66); ctx.fillText(iR.b, RX, CY + 66); ctx.textAlign = 'left';
+  ctx.restore();
+}
+
+/* ---------- Disegno tavola ---------- */
+function scene(ctx, st, t, manga, noInsets) {
+  if (NOBG) ctx.clearRect(0, 0, W, H); else st.bg(ctx);
+  const B = body(poseAt(t)), tt = ((t % D) + D) % D;
+  CT = AC.follow ? [B.C[0], B.C[2]] : [0, 0];
+  ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, MAINH); ctx.clip(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  // terreno e ombre
+  if (AC.follow) { const g0x = Math.floor(CT[0] / 90) * 90, g0z = Math.floor(CT[1] / 90) * 90; for (let i = -2; i <= 3; i++) { st.stroke(ctx, resample([proj(V(g0x + i * 90, 0, g0z - 180)), proj(V(g0x + i * 90, 0, g0z + 270))], 30), .8, .18); st.stroke(ctx, resample([proj(V(g0x - 180, 0, g0z + i * 90)), proj(V(g0x + 270, 0, g0z + i * 90))], 30), .8, .18); } }
+  else { const gpts = [[-120, -45], [120, -45], [120, 45], [-120, 45]].map(([x, z]) => proj(V(x, 0, z))); st.stroke(ctx, resample(gpts, 30), 1, .25, true); }
+  for (const a of [B.ankL, B.ankR]) { const sh = []; for (let i = 0; i < 18; i++) { const q = i / 18 * Math.PI * 2; sh.push(proj(V(a[0] + 5 + Math.cos(q) * 17, 0, a[2] + Math.sin(q) * 8))); } ctx.save(); path(ctx, sh, true, 0, 0); ctx.clip(); if (manga) { ctx.fillStyle = ctx.createPattern(TONE, 'repeat'); ctx.fillRect(0, 0, W, H); } else { ctx.globalAlpha = .22; blit(ctx, shadowL(), sh); } ctx.restore(); }
+  // linee cinetiche (manga) / scie (matita)
+  const kime = tt > 2.6 && tt < 3.15 ? B.R : tt > 1.48 && tt < 1.9 ? B.L : null;
+  if (manga && kime) { const c = proj(add(kime.wr, mul(kime.f, 5))); ctx.strokeStyle = '#111'; for (let i = 0; i < 64; i++) { const a = i / 64 * Math.PI * 2 + rnd(i) * .05, r0 = 70 + rnd(i + 9) * 40; ctx.lineWidth = .6 + rnd(i + 3) * 1.6; ctx.beginPath(); ctx.moveTo(c.x + Math.cos(a) * r0, c.y + Math.sin(a) * r0); ctx.lineTo(c.x + Math.cos(a) * 420, c.y + Math.sin(a) * 420); ctx.stroke(); } }
+  const TB = [B]; for (let k = 1; k <= 5; k++) TB.push(body(poseAt(t - k * .042)));
+  for (const side of ['L', 'R']) {
+    const tr = TB.map(bb => { const b = bb[side]; return proj(add(b.wr, mul(b.f, 5))); });
+    if (Math.hypot(tr[0].x - tr.at(-1).x, tr[0].y - tr.at(-1).y) > 22) { for (let j = -1; j <= 1; j++) { const o = j * 5; st.stroke(ctx, tr.slice(1).map(p => ({ x: p.x, y: p.y + o })), manga ? 1.4 : .9, manga ? .9 : .4); } }
+  }
+  for (const { p, near } of build(st, B, manga)) p.draw(ctx, near);
+  { const B2 = TB[1], dyw = (B.yw - B2.yw) * 1.43; if (Math.abs(dyw) > 4) { // linee di rotazione delle anche
+    const sg = Math.sign(dyw), k = Math.min(1, Math.abs(dyw) / 14); for (let j = 0; j < 3; j++) { const r = 24 + j * 4.5, pts = []; for (let i = 0; i <= 10; i++) { const a = -sg * (.2 + i * .13) + Math.PI * (j === 1 ? .08 : 0); pts.push(proj(add(add(B.at(4 - j * 3), mul(B.fw, Math.cos(a) * r)), mul(B.sd, Math.sin(a) * r * 1.1)))); } st.stroke(ctx, pts, 1.1, .25 + .35 * k); } } }
+  if (AC.rows && !noInsets) { let i = 0; AC.marks.forEach((m, j) => { if (tt >= m) i = j; }); const r = AC.rows[i]; ctx.fillStyle = st.ink(.85); ctx.font = st.font; ctx.fillText((/\d/.test(r[0]) ? r[0] + ' · ' : '') + r[1], 18, 32);
+    if (AC.kiai.some(([a, b]) => tt >= a && tt <= b)) { const hp = proj(B.head); ctx.save(); ctx.translate(hp.x + 26, hp.y - 26); ctx.rotate(rad(-8)); ctx.font = '700 34px Caveat, cursive'; ctx.fillStyle = 'rgba(163,55,44,.9)'; ctx.fillText('kiai!', 0, 0); ctx.restore(); } }
+  if (manga && kime) {
+    const c = proj(add(kime.wr, mul(kime.f, 5))), txt = kime === B.R ? 'ドン!' : 'バシッ!';
+    ctx.save(); ctx.translate(Math.min(c.x + 10, W - 110), Math.max(c.y - 30, 40)); ctx.rotate(rad(-9)); ctx.font = '40px "Dela Gothic One", "Zen Old Mincho", sans-serif'; ctx.lineWidth = 7; ctx.strokeStyle = '#fff'; ctx.strokeText(txt, 0, 0); ctx.fillStyle = '#111'; ctx.fillText(txt, 0, 0); ctx.restore();
+  }
+  ctx.restore();
+  if (manga) { ctx.strokeStyle = '#111'; ctx.lineWidth = 3; ctx.strokeRect(10, 10, W - 20, MAINH - 14); }
+  if (!noInsets) { // i riquadri cambiano lentamente: si ridisegnano un fotogramma su tre
+    let e = INS.get(ctx.canvas); const k = ctx.getTransform().a;
+    if (!e || e.k !== k) { const c = document.createElement('canvas'); c.width = Math.ceil(W * k); c.height = Math.ceil((H - MAINH) * k); e = { c, k, n: 0 }; INS.set(ctx.canvas, e); }
+    if (e.n++ % 3 === 0) { const x = e.c.getContext('2d'); x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, e.c.width, e.c.height); x.setTransform(k, 0, 0, k, 0, -MAINH * k); if (!NOBG) { x.save(); x.beginPath(); x.rect(0, MAINH, W, H - MAINH); x.clip(); st.bg(x); x.restore(); } insets(x, st, B, manga); }
+    ctx.drawImage(e.c, 0, MAINH, W, H - MAINH);
+  }
+}
+
+function drawTech(ctx, anim, t, view, withInsets) { AC = anim; KEYS = anim.keys; D = anim.D; CAM = VIEWS[view]; NOBG = !!ctx.canvas._paper; scene(ctx, PENCIL, t, false, !withInsets); NOBG = false; }
+
+/* ---------- Stato ---------- */
+const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const S = { tab: 'home', detail: null, cat: 'tutte', favs: new Set(store.get('ka-favs', ['ageuke'])), seen: new Set(store.get('ka-seen', ['zenkutsu'])), t: 0, playing: !reduced, speed: .5, view: '34', sub: null, gcat: 'tutte', gq: '', term: null, train: null, quiz: null, mirror: false, lesson: null, psub: null, tset: null, dj: { code: '', err: '', name: '', title: '', pick: [], reps: 10, due: '', note: '', out: '' } };
+const byId = id => TECH.find(x => x.id === id);
+let live = []; // canvas animati {el, anim, own}
+
+/* ---------- Icone ---------- */
+const IC = {
+  home: '<svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 13 4l9 8"/><path d="M6.5 10.5V22h13V10.5"/><path d="M11 22v-6h4v6"/></svg>',
+  cat: '<svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="4" width="7.5" height="7.5" rx="1.5"/><rect x="14.5" y="4" width="7.5" height="7.5" rx="1.5"/><rect x="4" y="14.5" width="7.5" height="7.5" rx="1.5"/><rect x="14.5" y="14.5" width="7.5" height="7.5" rx="1.5"/></svg>',
+  fav: '<svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m13 3.8 2.8 5.8 6.3.8-4.6 4.4 1.2 6.3L13 18l-5.7 3.1 1.2-6.3-4.6-4.4 6.3-.8z"/></svg>',
+  learn: '<svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 7c-2.5-1.8-5.5-2.2-8.5-1.6v14c3-.6 6-.2 8.5 1.6 2.5-1.8 5.5-2.2 8.5-1.6v-14C18.5 4.8 15.5 5.2 13 7z"/><path d="M13 7v14"/></svg>',
+  me: '<svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="13" cy="8.5" r="4"/><path d="M5 22c1-4.5 4.3-7 8-7s7 2.5 8 7"/><path d="M8.5 17.5h9"/></svg>'
+};
+IC.path = '<svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="20" r="2.6"/><circle cx="19" cy="13" r="2.6"/><circle cx="8" cy="5.5" r="2.6"/><path d="M9.4 18.8 16.7 14.4M16.8 11.6 10.2 7"/></svg>';
+const TABS = [['home', 'Home', IC.home], ['percorso', 'Percorso', IC.path], ['catalogo', 'Catalogo', IC.cat], ['impara', 'Impara', IC.learn], ['profilo', 'Profilo', IC.me]];
+
+/* ---------- Schermate ---------- */
+const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+function tile(x) {
+  const fav = S.favs.has(x.id) ? ' ★' : '';
+  const art = x.anim ? `<canvas data-thumb="${x.id}" aria-hidden="true"></canvas>` : x.kata ? `<div class="soon">21 passi</div>` : `<div class="soon">in arrivo</div>`;
+  return `<button class="tile rough" data-open="${x.id}">${art}<span class="name">${esc(x.jp)}${fav}</span><span class="jp">${esc(x.it)}</span><span class="kyu">${x.kyu}</span></button>`;
+}
+function home() {
+  const t = byId('combo1');
+  const due = dueList(), pr = NIJUKUN[dayIdx() % 20];
+  const nl = nextLesson();
+  return `<div class="top"><div><div class="eyebrow">Ciao Roberto</div><h2>Oggi al dojo</h2></div></div>
+  ${goalCard()}
+  ${nl ? `<button class="card rough" data-lesson="${nl[0]}-${nl[1]}"><div class="eyebrow">Continua il percorso · verso il ${LEVELS[nl[0]].kyu}° kyu</div><h3>Lezione ${nl[1] + 1}: ${esc(lessonName(LEVELS[nl[0]].lessons[nl[1]]))}</h3><p class="muted">5 minuti, poi 3 domande. +10 punti.</p></button>` : ''}
+  <button class="card rough" data-train-open><div class="eyebrow">Allenamento su misura</div><h3>Allenati con me, da 5 a 30 minuti</h3><p class="muted">Scegli tempo e obiettivo: kihon, calci, kata o il tuo esame. Cambia ogni volta.</p></button>
+  ${TASKS.some(t => t.done.length < t.ids.length) ? `<button class="card rough" data-tab="profilo" data-go-dojo><div class="eyebrow">Dal tuo dojo</div><h3>${esc(TASKS.find(t => t.done.length < t.ids.length).title)}</h3><p class="muted">Compito dell'istruttore da completare.</p></button>` : ''}
+  ${due.length ? `<div class="card rough"><div class="row" style="justify-content:space-between"><h3>Da ripassare oggi</h3><span class="kyu">${due.length}</span></div><div class="row">${due.slice(0, 6).map(x => `<button class="chip rough" data-open="${x.id}">${esc(x.jp)}</button>`).join('')}</div></div>` : ''}
+  <button class="card rough" data-tab="impara"><div class="eyebrow">Il principio di oggi</div><h3>${esc(pr[1])}</h3><p class="muted">${esc(pr[2])}</p></button>
+  <button class="card rough" data-open="${t.id}"><div class="eyebrow">Tecnica del giorno</div><canvas data-live="${t.anim}" aria-label="Animazione ${esc(t.jp)}"></canvas><h3>${esc(t.jp)}</h3><p class="muted">${esc(t.it)}. Tocca per i passi.</p></button>
+  <div><p class="sec">Ripassa</p></div><div class="grid">${['gedan', 'gyaku'].map(id => tile(byId(id))).join('')}</div>`;
+}
+function catalogo() {
+  const list = TECH.filter(x => S.cat === 'tutte' || x.cat === S.cat);
+  return `<div class="top"><h2>Catalogo</h2><span class="kyu">${TECH.length} tecniche</span></div>
+  <div class="chips" role="group" aria-label="Categorie">${CATS.map(c => `<button class="chip rough ${S.cat === c.id ? 'on' : ''}" data-cat="${c.id}" aria-pressed="${S.cat === c.id}">${c.it}</button>`).join('')}</div>
+  <div class="grid">${list.map(tile).join('') || '<p class="muted">Nessuna tecnica qui, per ora.</p>'}</div>`;
+}
+function preferiti() {
+  const list = TECH.filter(x => S.favs.has(x.id));
+  return `<div class="top"><button class="back" data-tab="profilo">← profilo</button><span class="kyu">offline</span></div><h2 style="font-family:var(--hand);font-size:34px;line-height:1;margin:0">Preferiti</h2>
+  ${list.length ? `<div class="grid">${list.map(tile).join('')}</div>` : `<div class="card rough"><h3>Ancora niente</h3><p class="muted">Tocca la stella ☆ in una tecnica per salvarla qui e ripassarla anche senza rete.</p></div>`}`;
+}
+function profilo() {
+  const prog = [['10° kyu', 'prima cintura', ['musubi', 'heiko']], ['9° kyu', 'cintura bianca', ['zenkutsu', 'gedan', 'ageuke', 'gyaku', 'oizuki', 'maegeri', 'taikyoku1']], ['8° kyu', 'cintura gialla', ['kokutsu', 'soto', 'uchiuke', 'shutouke', 'combo1', 'combo2', 'combo3', 'combo4', 'heian1']], ['7° kyu', 'cintura arancio', ['kiba', 'kizami', 'urazuki', 'shutouchi', 'uraken', 'empi', 'nukite', 'keage', 'kekomi', 'combo5', 'combo6', 'combo7', 'heian2']], ['6° kyu', 'cintura verde', ['mawashi', 'ushiro']]];
+  if (S.psub === 'diario') return diario();
+  if (S.psub === 'dojo') return dojo();
+  const passed = LEVELS.filter(L => PATH['exam' + L.kyu] >= 6).map(L => L.kyu), g = passed.length ? Math.min(...passed) : 10;
+  return `<div class="top"><h2>Profilo</h2></div>
+  <div class="card rough"><div class="eyebrow">Grado nell'app</div><div class="belt"></div><h3>${g}° kyu${passed.length ? ' · esame simulato superato' : ' · cintura bianca'}</h3><p class="muted">${S.seen.size} tecniche studiate · 🔥 ${streak()} giorni di fila · ${LOG.reduce((a, e) => a + e.xp, 0)} punti</p></div>
+  <div class="grid"><button class="card rough" data-psub="diario"><h3>Diario</h3><p class="muted">Calendario, serie, promemoria</p></button><button class="card rough" data-psub="dojo"><h3>Il mio dojo</h3><p class="muted">${TASKS.length ? `${TASKS.length} ${TASKS.length === 1 ? 'compito' : 'compiti'}` : 'Compiti dall\'istruttore'}</p></button></div>
+  <button class="card rough" data-tab="preferiti"><div class="row" style="justify-content:space-between"><h3>Preferiti</h3><span class="kyu">${S.favs.size} ☆</span></div></button>
+  <p class="sec">Programma per cintura</p>
+  ${prog.map(([k, c, ids]) => `<div class="card rough"><div class="row" style="justify-content:space-between"><h3>${k}</h3><span class="kyu">${c}</span></div><ul class="list">${ids.map(id => { const x = byId(id); return `<li><button data-open="${id}">${S.seen.has(id) ? '✓ ' : ''}${esc(x.jp)} <span class="jp">· ${esc(x.it)}</span></button></li>`; }).join('')}</ul></div>`).join('')}
+  <p class="example">Programma di esempio, da allineare a quello del tuo dojo.</p>`;
+}
+function detail(x) {
+  const fav = S.favs.has(x.id);
+  const head = `<div class="top"><button class="back" data-back>← indietro</button><button class="star" data-fav="${x.id}" aria-pressed="${fav}" aria-label="${fav ? 'Togli dai preferiti' : 'Salva nei preferiti'}">${fav ? '★' : '☆'}</button></div>
+  <div><div class="eyebrow">${esc(CATS.find(c => c.id === x.cat).it)} · ${x.kyu}</div><h2 style="font-family:var(--hand);font-size:38px;line-height:1;margin:2px 0 4px">${linkify(x.jp)}</h2><div class="jp">${esc(x.it)}</div></div>`;
+  if (!x.anim) return head + `<div class="soon" style="aspect-ratio:4/3">animazione in arrivo</div><p class="muted">Questa tecnica entra nel catalogo con la prossima versione.</p>`;
+  return head + `<canvas class="tall" data-live="${x.anim}" data-main aria-label="Animazione ${esc(x.jp)}"></canvas>
+  <div class="ctrl" role="group" aria-label="Controlli"><button class="btn rough" data-play>${S.playing ? 'pausa' : 'play'}</button>
+  ${[.25, .5, 1].map(s => `<button class="btn ${S.speed === s ? 'on' : ''}" data-speed="${s}" aria-pressed="${S.speed === s}">${String(s).replace('.', ',')}×</button>`).join('')}
+  <button class="btn ${VOICE_ON ? 'on' : ''}" data-voice aria-pressed="${VOICE_ON}">voce</button>
+  <button class="btn ${S.mirror ? 'on' : ''}" data-mirror aria-pressed="${!!S.mirror}">specchio</button>
+</div>
+  ${S.mirror ? mirrorBox() : ''}
+  <div class="ctrl" role="group" aria-label="Vista">${[['34', '3/4'], ['lato', 'lato'], ['fronte', 'fronte'], ['alto', 'dall\'alto']].map(([v, l]) => `<button class="btn ${S.view === v ? 'on' : ''}" data-view="${v}" aria-pressed="${S.view === v}">${l}</button>`).join('')}</div>
+  <ol class="steps">${ANIM[x.anim]?.rows ? ANIM[x.anim].rows.map((r, i) => `<li><button data-step="${i}"><span class="n">${r[0]}</span><span>${esc(r[1])}${r[3] ? ' <span class="kiai">kiai!</span>' : ''} <span class="jp">· ${r[2]}</span></span></button></li>`).join('') : x.steps.map((s, i) => `<li><button data-step="${i}"><span class="n">${i + 1}</span><span>${linkify(s)}</span></button></li>`).join('')}</ol>
+  <p class="muted">${linkify(x.desc)}</p>
+  ${KATA_MEAN[x.id] ? `<p class="sec">Significato</p><p class="muted">${linkify(KATA_MEAN[x.id][0])}</p><p class="muted">${linkify(KATA_MEAN[x.id][1])}</p>` : ''}
+  ${POSTURE[x.id] ? postureBox(x) : ''}
+  <p class="sec">Punti chiave</p><ul class="list">${x.points.map(p => `<li>${linkify(p)}</li>`).join('')}</ul>
+  <p class="sec">Errori comuni</p><ul class="list">${x.errors.map(p => `<li>${linkify(p)}</li>`).join('')}</ul>
+  <div class="card rough"><h3>Com'è andato il ripasso?</h3><p class="muted">${REV[x.id] ? `Prossimo ripasso: ${REV[x.id].due === today() ? 'oggi' : new Date(REV[x.id].due).toLocaleDateString('it-IT', { day: 'numeric', month: 'long' })}` : 'Segna come ti è venuta: l\'app te la riproporrà al momento giusto.'}</p><div class="row"><button class="btn rough" data-rate="no">difficile</button><button class="btn rough" data-rate="ok">bene</button></div></div>
+  <p class="example">${x.id === 'heian1' ? 'Sequenza da confrontare con il manuale Caprioli: il passo 4 è da verificare. ' : x.id === 'heian2' ? 'Sequenza dalla scheda dojoshotokan.it (Heian Nidan), da far verificare a un istruttore. ' : ''}Fonti: Caprioli, Shotokan karate-do; Nakayama, Best Karate. Testo riscritto.</p>`;
+}
+
+/* ---------- Impara: glossario, comandi, filosofia, etichetta ---------- */
+// [id, romaji, kanji, kana, significato, parti [[pezzo, senso]], categoria, alias]
+const GL_RAW = [
+  ['karate', 'Karate', '空手', 'からて', 'Mano vuota: si combatte senza armi.', [['kara 空', 'vuoto'], ['te 手', 'mano']], 'gen'],
+  ['do', 'Dō', '道', 'どう', 'Via: un percorso che dura tutta la vita, non solo una tecnica.', [], 'gen'],
+  ['dojo', 'Dōjō', '道場', 'どうじょう', 'Il luogo dove si pratica la via.', [['dō 道', 'via'], ['jō 場', 'luogo']], 'dojo'],
+  ['sensei', 'Sensei', '先生', 'せんせい', 'Maestro. Letteralmente "nato prima": chi ha percorso la via prima di te.', [['sen 先', 'prima'], ['sei 生', 'nascere']], 'dojo'],
+  ['senpai', 'Senpai', '先輩', 'せんぱい', 'Allievo più anziano di pratica, che aiuta i nuovi.', [['sen 先', 'prima'], ['pai 輩', 'compagno']], 'dojo'],
+  ['kohai', 'Kōhai', '後輩', 'こうはい', 'Allievo più giovane di pratica.', [['kō 後', 'dopo'], ['hai 輩', 'compagno']], 'dojo'],
+  ['karategi', 'Karategi', '空手着', 'からてぎ', 'La divisa bianca del karate.', [['karate 空手', 'mano vuota'], ['gi 着', 'abito']], 'dojo'],
+  ['obi', 'Obi', '帯', 'おび', 'Cintura: il colore indica il grado.', [], 'dojo'],
+  ['kyu', 'Kyū', '級', 'きゅう', 'Grado prima della cintura nera, dal 10° al 1°.', [], 'dojo'],
+  ['dan', 'Dan', '段', 'だん', 'Grado di cintura nera, dal 1° in su. Vuol dire anche "livello".', [], 'dojo'],
+  ['rei', 'Rei', '礼', 'れい', 'Saluto e rispetto, espresso con l\'inchino.', [], 'dojo'],
+  ['seiza', 'Seiza', '正座', 'せいざ', 'Seduta corretta, in ginocchio sui talloni.', [['sei 正', 'corretto'], ['za 座', 'sedere']], 'dojo'],
+  ['mokuso', 'Mokusō', '黙想', 'もくそう', 'Breve meditazione in silenzio a inizio e fine lezione.', [['moku 黙', 'silenzio'], ['sō 想', 'pensiero']], 'dojo'],
+  ['osu', 'Osu', '押忍', 'おす', 'Saluto e "ho capito" tra praticanti, usato in molti dojo. Unisce "spingere" e "sopportare".', [['o 押', 'spingere'], ['su 忍', 'sopportare']], 'dojo'],
+  ['shotokan', 'Shōtōkan', '松濤館', 'しょうとうかん', 'La casa di Shōtō. Shōtō, "onde tra i pini", era il nome con cui Funakoshi firmava le sue poesie.', [['shō 松', 'pino'], ['tō 濤', 'onde'], ['kan 館', 'casa']], 'gen'],
+  ['kiai', 'Kiai', '気合', 'きあい', 'Grido che unisce energia, respiro e tecnica nello stesso istante.', [['ki 気', 'energia'], ['ai 合', 'unire']], 'gen'],
+  ['kime', 'Kime', '決め', 'きめ', 'Decisione: l\'istante di massima concentrazione alla fine della tecnica.', [], 'gen'],
+  ['zanshin', 'Zanshin', '残心', 'ざんしん', 'Mente che resta: l\'attenzione continua anche dopo la tecnica.', [['zan 残', 'restare'], ['shin 心', 'mente, cuore']], 'gen'],
+  ['kokoro', 'Kokoro', '心', 'こころ', 'Cuore e mente insieme: lo spirito con cui si pratica.', [], 'gen'],
+  ['kihon', 'Kihon', '基本', 'きほん', 'Fondamentali: le tecniche di base, ripetute fino a renderle naturali.', [['ki 基', 'base'], ['hon 本', 'origine']], 'gen'],
+  ['kata', 'Kata', '形', 'かた', 'Forma: una sequenza fissa di tecniche contro avversari immaginari.', [], 'kata'],
+  ['kumite', 'Kumite', '組手', 'くみて', 'Combattimento con un compagno, "mani che si incontrano".', [['kumi 組', 'incontrare, unire'], ['te 手', 'mano']], 'gen'],
+  ['kamae', 'Kamae', '構え', 'かまえ', 'Guardia: la posizione pronta prima e dopo la tecnica.', [], 'gen'],
+  ['yoi', 'Yoi', '用意', 'ようい', 'Pronti: posizione di attesa prima di iniziare.', [], 'dojo'],
+  ['hikite', 'Hikite', '引き手', 'ひきて', 'Mano che tira al fianco mentre l\'altra colpisce o para.', [['hiki 引き', 'tirare'], ['te 手', 'mano']], 'gen'],
+  ['hanmi', 'Hanmi', '半身', 'はんみ', 'Mezzo corpo: busto ruotato di tre quarti.', [['han 半', 'metà'], ['mi 身', 'corpo']], 'gen'],
+  ['shomen', 'Shōmen', '正面', 'しょうめん', 'Di fronte: busto frontale. Indica anche la parete principale del dojo.', [['shō 正', 'diritto'], ['men 面', 'viso']], 'gen'],
+  ['dachi', 'Dachi', '立ち', 'だち', 'Posizione. Viene da tachi, "stare in piedi".', [], 'dachi', ['tachi']],
+  ['zenkutsu', 'Zenkutsu', '前屈', 'ぜんくつ', 'Piegato in avanti.', [['zen 前', 'avanti'], ['kutsu 屈', 'piegare']], 'dachi'],
+  ['kokutsu', 'Kōkutsu', '後屈', 'こうくつ', 'Piegato indietro.', [['kō 後', 'dietro'], ['kutsu 屈', 'piegare']], 'dachi'],
+  ['kiba', 'Kiba', '騎馬', 'きば', 'Cavaliere: si sta come in sella a un cavallo.', [['ki 騎', 'cavalcare'], ['ba 馬', 'cavallo']], 'dachi'],
+  ['musubi', 'Musubi', '結び', 'むすび', 'Legato, unito: i talloni si toccano.', [], 'dachi'],
+  ['heiko', 'Heikō', '平行', 'へいこう', 'Parallelo.', [], 'dachi'],
+  ['hachiji', 'Hachiji', '八字', 'はちじ', 'A forma del carattere 八, "otto": piedi aperti in fuori.', [['hachi 八', 'otto'], ['ji 字', 'carattere']], 'dachi'],
+  ['uke', 'Uke', '受け', 'うけ', 'Ricevere: parata. Indica anche chi riceve la tecnica nel kumite.', [], 'uke'],
+  ['age', 'Age', '上げ', 'あげ', 'Alzare, verso l\'alto.', [], 'uke'],
+  ['gedan', 'Gedan', '下段', 'げだん', 'Livello basso, sotto la cintura.', [['ge 下', 'sotto'], ['dan 段', 'livello']], 'uke'],
+  ['chudan', 'Chūdan', '中段', 'ちゅうだん', 'Livello medio: il busto.', [['chū 中', 'mezzo'], ['dan 段', 'livello']], 'uke'],
+  ['jodan', 'Jōdan', '上段', 'じょうだん', 'Livello alto: la testa.', [['jō 上', 'sopra'], ['dan 段', 'livello']], 'uke'],
+  ['barai', 'Barai', '払い', 'ばらい', 'Spazzare via. Viene da harai.', [], 'uke', ['harai']],
+  ['soto', 'Soto', '外', 'そと', 'Esterno: da fuori verso dentro.', [], 'uke'],
+  ['uchi', 'Uchi', '内 · 打ち', 'うち', 'Ha due significati. 内 è "interno" (uchi-uke), 打ち è "colpo" (shutō-uchi).', [], 'uke'],
+  ['ude', 'Ude', '腕', 'うで', 'Braccio, avambraccio.', [], 'uke'],
+  ['haiwan', 'Haiwan', '背腕', 'はいわん', 'Dorso dell\'avambraccio.', [['hai 背', 'dorso'], ['wan 腕', 'braccio']], 'uke'],
+  ['morote', 'Morote', '諸手', 'もろて', 'Con entrambe le mani.', [['moro 諸', 'tutti e due'], ['te 手', 'mano']], 'uke'],
+  ['tsuki', 'Tsuki', '突き', 'つき', 'Spinta: pugno diretto. Nei nomi composti diventa -zuki.', [], 'att', ['zuki']],
+  ['oi', 'Oi', '追い', 'おい', 'Inseguire: il pugno che avanza con il passo.', [], 'att'],
+  ['gyaku', 'Gyaku', '逆', 'ぎゃく', 'Contrario, opposto.', [], 'att'],
+  ['kizami', 'Kizami', '刻み', 'きざみ', 'Incidere, tagliare corto: colpo veloce con la mano avanti.', [], 'att'],
+  ['ura', 'Ura', '裏', 'うら', 'Rovescio, il lato nascosto.', [], 'att'],
+  ['shuto', 'Shutō', '手刀', 'しゅとう', 'Mano a spada: il taglio della mano.', [['shu 手', 'mano'], ['tō 刀', 'spada']], 'att'],
+  ['uraken', 'Uraken', '裏拳', 'うらけん', 'Pugno rovescio: si colpisce con il dorso delle nocche.', [['ura 裏', 'rovescio'], ['ken 拳', 'pugno']], 'att'],
+  ['empi', 'Empi', '猿臂', 'えんぴ', 'Gomito. Letteralmente "braccio di scimmia".', [['en 猿', 'scimmia'], ['pi 臂', 'braccio']], 'att', ['enpi']],
+  ['nukite', 'Nukite', '貫手', 'ぬきて', 'Mano che trafigge, a punta di dita.', [['nuki 貫', 'trafiggere'], ['te 手', 'mano']], 'att'],
+  ['tettsui', 'Tettsui', '鉄槌', 'てっつい', 'Martello di ferro: si colpisce con il lato del pugno.', [['tetsu 鉄', 'ferro'], ['tsui 槌', 'martello']], 'att', ['tetsui']],
+  ['geri', 'Geri', '蹴り', 'げり', 'Calcio. Viene da keri.', [], 'geri', ['keri']],
+  ['mae', 'Mae', '前', 'まえ', 'Davanti.', [], 'geri'],
+  ['yoko', 'Yoko', '横', 'よこ', 'Lato.', [], 'geri'],
+  ['mawashi', 'Mawashi', '回し', 'まわし', 'Girare: traiettoria circolare.', [], 'geri'],
+  ['ushiro', 'Ushiro', '後ろ', 'うしろ', 'Dietro.', [], 'geri'],
+  ['keage', 'Keage', '蹴上げ', 'けあげ', 'Calciare verso l\'alto, a frusta.', [['ke 蹴', 'calciare'], ['age 上げ', 'alzare']], 'geri'],
+  ['kekomi', 'Kekomi', '蹴込み', 'けこみ', 'Calciare spingendo dentro, in profondità.', [['ke 蹴', 'calciare'], ['komi 込み', 'spingere dentro']], 'geri'],
+  ['sokuto', 'Sokutō', '足刀', 'そくとう', 'Piede a spada: il taglio esterno del piede.', [['soku 足', 'piede'], ['tō 刀', 'spada']], 'geri'],
+  ['koshi', 'Koshi', '虎趾', 'こし', 'Avampiede, la parte sotto le dita. Letteralmente "zampa di tigre".', [['ko 虎', 'tigre'], ['shi 趾', 'dita del piede']], 'geri'],
+  ['haisoku', 'Haisoku', '背足', 'はいそく', 'Collo del piede.', [['hai 背', 'dorso'], ['soku 足', 'piede']], 'geri'],
+  ['kakato', 'Kakato', '踵', 'かかと', 'Tallone.', [], 'geri'],
+  ['hidari', 'Hidari', '左', 'ひだり', 'Sinistra.', [], 'gen'],
+  ['migi', 'Migi', '右', 'みぎ', 'Destra.', [], 'gen'],
+  ['heian', 'Heian', '平安', 'へいあん', 'Pace e tranquillità.', [['hei 平', 'calmo'], ['an 安', 'sicuro']], 'kata'],
+  ['taikyoku', 'Taikyoku', '太極', 'たいきょく', 'Il grande principio: l\'origine da cui nasce tutto.', [['tai 太', 'grande'], ['kyoku 極', 'estremo, principio']], 'kata'],
+  ['shodan', 'Shodan', '初段', 'しょだん', 'Primo livello. È anche il nome del 1° dan.', [['sho 初', 'primo'], ['dan 段', 'livello']], 'kata'],
+  ['nidan', 'Nidan', '二段', 'にだん', 'Secondo livello.', [['ni 二', 'due'], ['dan 段', 'livello']], 'kata'],
+  ['embusen', 'Embusen', '演武線', 'えんぶせん', 'La linea che il kata disegna sul pavimento.', [['en 演', 'eseguire'], ['bu 武', 'arte marziale'], ['sen 線', 'linea']], 'kata', ['enbusen']]
+];
+const GLOSS = GL_RAW.map(([id, r, k, kana, it, parts, cat, alias]) => ({ id, r, k, kana, it, parts, cat, alias: alias || [] }));
+const GCAT = [['tutte', 'Tutte'], ['gen', 'Generale'], ['dojo', 'Dojo'], ['dachi', 'Posizioni'], ['uke', 'Parate'], ['att', 'Attacchi'], ['geri', 'Calci'], ['kata', 'Kata']];
+const plain = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const GMAP = {}; GLOSS.forEach(g => { GMAP[plain(g.r)] = g; g.alias.forEach(a => GMAP[a] = g); });
+// rende toccabili le parole giapponesi conosciute
+function linkify(text) {
+  return text.split(/([A-Za-zÀ-ÿōūŌŪ]+)/).map((p, i) => { const g = i % 2 && p !== 'do' && GMAP[plain(p)]; return g && p.length > 1 ? `<button class="term" data-term="${g.id}">${esc(p)}</button>` : esc(p); }).join('');
+}
+const CMD = [
+  ['Rei', 'れい', 'Saluto, inchino'], ['Seiza', 'せいざ', 'In ginocchio, seduti sui talloni'], ['Mokusō', 'もくそう', 'Occhi chiusi, meditazione'], ['Mokusō yame', 'もくそう やめ', 'Fine della meditazione'],
+  ['Shōmen ni rei', 'しょうめんに れい', 'Saluto verso la parete principale'], ['Sensei ni rei', 'せんせいに れい', 'Saluto al maestro'], ['Otagai ni rei', 'おたがいに れい', 'Saluto tra di voi'],
+  ['Kiritsu', 'きりつ', 'In piedi'], ['Yoi', 'ようい', 'Pronti'], ['Kamaete', 'かまえて', 'In guardia'], ['Hajime', 'はじめ', 'Iniziate'], ['Yame', 'やめ', 'Fermi'],
+  ['Mawatte', 'まわって', 'Giratevi'], ['Naore', 'なおれ', 'Tornate in posizione'], ['Yasume', 'やすめ', 'Riposo']
+];
+const COUNT = [['Ichi', 'いち', 1], ['Ni', 'に', 2], ['San', 'さん', 3], ['Shi (yon)', 'し', 4], ['Go', 'ご', 5], ['Roku', 'ろく', 6], ['Shichi (nana)', 'しち', 7], ['Hachi', 'はち', 8], ['Ku (kyū)', 'く', 9], ['Jū', 'じゅう', 10]];
+const DOJOKUN = [
+  ['Hitotsu, jinkaku kansei ni tsutomuru koto', 'Impegnarsi a perfezionare il carattere', 'Il primo scopo non è vincere, ma diventare una persona migliore.'],
+  ['Hitotsu, makoto no michi o mamoru koto', 'Essere fedeli alla via della sincerità', 'Essere onesti con gli altri e con sé stessi, anche quando nessuno guarda.'],
+  ['Hitotsu, doryoku no seishin o yashinau koto', 'Coltivare lo spirito dell\'impegno', 'I progressi vengono dalla costanza, non dal talento.'],
+  ['Hitotsu, reigi o omonzuru koto', 'Rispettare la cortesia', 'Il rispetto per il maestro, i compagni e il luogo viene prima della tecnica.'],
+  ['Hitotsu, kekki no yū o imashimuru koto', 'Trattenere la violenza impulsiva', 'La forza va controllata: chi pratica karate evita lo scontro.']
+];
+const NIJUKUN = [
+  ['Karate-dō wa rei ni hajimari rei ni owaru koto o wasuruna', 'Il karate inizia e finisce con il saluto.', 'Il rispetto non è una formalità: apre e chiude ogni pratica.', 'Oggi, con chi hai mostrato rispetto senza che te lo chiedessero?'],
+  ['Karate ni sente nashi', 'Nel karate non si attacca per primi.', 'Il karate nasce per difendersi. Molte sequenze iniziano infatti con una parata.', 'In quale situazione recente hai scelto di non reagire?'],
+  ['Karate wa gi no tasuke', 'Il karate sta dalla parte della giustizia.', 'Ciò che impari serve a proteggere, non a prevaricare.', 'Come useresti ciò che impari per aiutare qualcuno?'],
+  ['Mazu onore o shire, shikashite ta o shire', 'Prima conosci te stesso, poi gli altri.', 'Capire i propri limiti e le proprie paure è il primo allenamento.', 'Qual è il tuo punto debole nella pratica di oggi?'],
+  ['Gijutsu yori shinjutsu', 'Lo spirito viene prima della tecnica.', 'Una tecnica perfetta senza l\'atteggiamento giusto resta vuota.', 'Con quale spirito hai iniziato l\'allenamento?'],
+  ['Kokoro wa hanatan koto o yōsu', 'Lascia libera la mente.', 'Una mente rigida reagisce in ritardo; una mente libera si adatta.', 'Che cosa ti distrae quando ti alleni?'],
+  ['Wazawai wa ketai ni shōzu', 'Le sventure nascono dalla negligenza.', 'Gli infortuni e gli errori arrivano quando si abbassa l\'attenzione.', 'Dove sei stato distratto, oggi?'],
+  ['Dōjō nomi no karate to omou na', 'Il karate non è solo nel dojo.', 'Postura, respiro e calma servono anche a casa, a scuola, al lavoro.', 'Dove hai usato il karate fuori dal dojo?'],
+  ['Karate no shugyō wa isshō de aru', 'L\'allenamento dura tutta la vita.', 'Non esiste un traguardo finale: anche la cintura nera è un inizio.', 'Cosa vorresti saper fare tra dieci anni?'],
+  ['Arayuru mono o karate-ka seyo, soko ni myōmi ari', 'Porta il karate in ogni cosa: lì sta la sua bellezza.', 'Lo stesso impegno del kata si può mettere in qualunque attività.', 'Quale attività quotidiana potresti fare "come un kata"?'],
+  ['Karate wa yu no gotoku taezu netsu o ataezareba moto no mizu ni kaeru', 'Il karate è come l\'acqua calda: se smetti di scaldarla, torna fredda.', 'Senza pratica costante le abilità svaniscono.', 'Quanti giorni a settimana riesci davvero ad allenarti?'],
+  ['Katsu kangae wa motsuna, makenu kangae wa hitsuyō', 'Non pensare a vincere, pensa a non perdere.', 'Più che sconfiggere l\'altro, conta non perdere il controllo di sé.', 'Quando hai perso la calma l\'ultima volta?'],
+  ['Teki ni yotte tenka seyo', 'Cambia in base all\'avversario.', 'Non esiste una risposta valida per tutti: osserva e adattati.', 'Come cambi il tuo modo di fare con persone diverse?'],
+  ['Ikusa wa kyojitsu no sōjū ikan ni ari', 'Il combattimento dipende da come gestisci il vuoto e il pieno.', 'Sapere quando essere forti e quando cedere è una tecnica.', 'In cosa ti sarebbe utile "cedere" invece di spingere?'],
+  ['Hito no teashi o ken to omoe', 'Pensa alle mani e ai piedi dell\'altro come a spade.', 'Rispetta il pericolo: nessun colpo è innocuo.', 'Ti alleni con il giusto rispetto per il compagno?'],
+  ['Danshi mon o izureba hyakuman no teki ari', 'Fuori dalla porta di casa ti aspettano molti avversari.', 'Le difficoltà della vita richiedono la stessa attenzione del dojo.', 'Qual è il tuo "avversario" di questa settimana?'],
+  ['Kamae wa shoshinsha ni, ato wa shizentai', 'Le posizioni sono per i principianti, poi si sta in modo naturale.', 'Si studiano forme precise perché un giorno diventino spontanee.', 'Quale tecnica ti viene già naturale?'],
+  ['Kata wa tadashiku, jissen wa betsumono', 'Esegui i kata correttamente; il combattimento reale è un\'altra cosa.', 'Il kata insegna principi, non risposte pronte.', 'Quale principio di un kata ti sembra più utile?'],
+  ['Chikara no kyōjaku, karada no shinshuku, waza no kankyū o wasuruna', 'Non dimenticare forza e leggerezza, tensione e rilassamento, lentezza e velocità.', 'Il karate vive di contrasti: senza rilassamento non c\'è kime.', 'Riesci a rilassarti tra una tecnica e l\'altra?'],
+  ['Tsune ni shinen kufū seyo', 'Rifletti e cerca sempre di migliorare.', 'Ripetere non basta: bisogna pensare a cosa cambiare.', 'Qual è la prossima piccola cosa che vuoi correggere?']
+];
+const KATA_MEAN = {
+  taikyoku1: ['Taikyoku vuol dire "grande principio". Funakoshi lo creò come primo passo: con due sole tecniche insegna il tracciato a "I", le girate e il ritmo del kata.', 'Insegna a girarsi guardando prima la nuova direzione e a mantenere la stessa altezza.'],
+  heian1: ['Heian vuol dire "pace e tranquillità". Chi conosce questi kata può affrontare un pericolo restando calmo. Shodan è il primo livello.', 'Insegna a passare da zenkutsu a kokutsu e a unire parata e attacco.'],
+  heian2: ['Il secondo kata della pace. Introduce tecniche fatte insieme da braccia e gambe, come yoko-geri con uraken.', 'Insegna l\'equilibrio su una gamba e le parate in gyaku hanmi, con le anche ruotate dalla parte opposta.']
+};
+const ETIQ = [
+  ['Entrare nel dojo', ['Togli le scarpe prima di salire sul tatami.', 'Sulla soglia fai un inchino (rei) verso l\'interno.', 'Arriva qualche minuto prima e in silenzio.']],
+  ['Karategi e cintura', ['Il karategi è pulito e in ordine: è un segno di rispetto.', 'La cintura si annoda con i due capi della stessa lunghezza.', 'Unghie corte, niente anelli, orologi o catenine.']],
+  ['Apertura della lezione', ['Ci si allinea in seiza, dal grado più alto al più basso.', 'Mokusō: qualche respiro a occhi chiusi per lasciare fuori il resto della giornata.', 'Shōmen ni rei, sensei ni rei, otagai ni rei: saluto al dojo, al maestro, ai compagni.']],
+  ['Durante la lezione', ['Si risponde ai comandi con prontezza, spesso con "osu".', 'Prima e dopo ogni esercizio in coppia ci si saluta.', 'Se devi uscire o sistemarti il karategi, chiedi e girati verso il fondo.']],
+  ['Perché ci si inchina', ['L\'inchino non è sottomissione: dice "ti rispetto e mi fido di te".', 'Ricorda che il karate inizia e finisce con il saluto (primo principio di Funakoshi).', 'Con il saluto si promette di usare la tecnica con controllo.']]
+];
+
+/* ---------- Voce ---------- */
+let VOICE_ON = store.get('ka-voice', true);
+const hasJa = () => { try { return speechSynthesis.getVoices().some(v => v.lang && v.lang.toLowerCase().startsWith('ja')); } catch (e) { return false; } };
+function speak(text, lang = 'ja-JP') {
+  try { const u = new SpeechSynthesisUtterance(text); u.lang = lang; const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.toLowerCase().startsWith(lang.slice(0, 2))); if (v) u.voice = v; u.rate = lang === 'ja-JP' ? .85 : 1; speechSynthesis.speak(u); } catch (e) {}
+}
+const sayBtn = (kana, label = 'ascolta') => `<button class="say" data-say="${kana}" aria-label="${label}">🔊</button>`;
+
+/* ---------- Ripasso a intervalli ---------- */
+const DAYS = [1, 2, 4, 7, 14], today = () => new Date().toISOString().slice(0, 10), addDays = n => new Date(Date.now() + n * 864e5).toISOString().slice(0, 10);
+const REV = store.get('ka-rev', {});
+function rate(id, ok) { const r = REV[id] || { box: 0 }; r.box = ok ? Math.min(4, r.box + (REV[id] ? 1 : 0)) : 0; r.due = addDays(DAYS[r.box]); REV[id] = r; store.set('ka-rev', REV); }
+const dueList = () => TECH.filter(x => S.seen.has(x.id) && (!REV[x.id] || REV[x.id].due <= today()));
+
+/* ---------- Quiz ---------- */
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const KYU_IDS = { 9: ['zenkutsu', 'gedan', 'ageuke', 'gyaku', 'oizuki', 'maegeri', 'taikyoku1'], 8: ['kokutsu', 'soto', 'uchiuke', 'shutouke', 'combo1', 'combo2', 'combo3', 'combo4', 'heian1'], 7: ['kiba', 'kizami', 'urazuki', 'shutouchi', 'uraken', 'empi', 'nukite', 'keage', 'kekomi', 'combo5', 'combo6', 'combo7', 'heian2'], 6: ['mawashi', 'ushiro'] };
+function makeQuiz(kyu) {
+  const ids = Object.entries(KYU_IDS).filter(([k]) => +k >= kyu).flatMap(([, v]) => v), techs = ids.map(byId), Q = [];
+  const singles = techs.filter(x => !ANIM[x.anim].rows);
+  // 1) riconosci la tecnica dal disegno
+  shuffle(singles).slice(0, 3).forEach(x => { const other = shuffle(TECH.filter(y => y.id !== x.id && !y.kata && y.cat === x.cat)).slice(0, 3); while (other.length < 3) other.push(shuffle(TECH.filter(y => y.id !== x.id && !other.includes(y)))[0]); Q.push({ kind: 'pic', tech: x.id, q: 'Che tecnica è questa?', opts: shuffle([x, ...other].map(y => y.jp)), a: x.jp, why: x.desc }); });
+  // 2) significato delle parole
+  const words = [...new Set(techs.flatMap(x => x.jp.split(/[^A-Za-zōū]+/)).map(w => GMAP[plain(w)]).filter(Boolean))];
+  shuffle(words).slice(0, 3).forEach(g => { const other = shuffle(GLOSS.filter(h => h !== g && h.cat !== 'dojo')).slice(0, 3); Q.push({ kind: 'word', q: `Cosa vuol dire "${g.r}"?`, opts: shuffle([g, ...other].map(h => h.it.split(/[.:]/)[0])), a: g.it.split(/[.:]/)[0], why: `${g.r} ${g.k}: ${g.it}`, say: g.kana }); });
+  // 3) ordine nei kata
+  const kata = techs.filter(x => x.kata); if (kata.length) for (let n = 0; n < 2; n++) { const k = kata[Math.floor(Math.random() * kata.length)], rows = ANIM[k.anim].rows, i = 1 + Math.floor(Math.random() * (rows.length - 3)), right = rows[i + 1][1]; const other = shuffle([...new Set(rows.slice(1, -1).map(r => r[1]))].filter(t => t !== right)).slice(0, 3); Q.push({ kind: 'kata', tech: k.id, q: `In ${k.jp}, cosa viene dopo il passo ${rows[i][0]} (${rows[i][1]})?`, opts: shuffle([right, ...other]), a: right, why: `Passo ${rows[i + 1][0]}: ${right}${rows[i + 1][3] ? ', con kiai' : ''}.` }); }
+  // 4) etichetta e filosofia
+  Q.push({ kind: 'phil', q: 'Secondo Funakoshi, con cosa inizia e finisce il karate?', opts: shuffle(['Con il saluto', 'Con il kiai', 'Con una parata', 'Con il riscaldamento']), a: 'Con il saluto', why: 'Primo dei 20 principi: "Karate-dō wa rei ni hajimari rei ni owaru".' });
+  return shuffle(Q).slice(0, 8);
+}
+
+/* ---------- Allenamento guidato ---------- */
+const WARM = ['Rotazione del collo, lenta', 'Cerchi con le spalle avanti e indietro', 'Rotazione delle anche', 'Piegamenti sulle ginocchia', 'Rotazione delle caviglie', 'Saltelli sul posto'];
+const STRETCH = ['Allungamento dei polpacci', 'Affondo laterale, gamba tesa', 'Farfalla da seduti', 'Respiro lento, braccia in alto'];
+const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+function trainScreen() {
+  const T = S.train;
+  if (!T.plan) {
+    if (!S.tset) S.tset = { min: 10, focus: 'misto' };
+    const Z = S.tset; if (!Z.plan) Z.plan = makePlan(Z.min, Z.focus); const tot = Math.round(Z.plan.reduce((a, s) => a + s.dur, 0) / 60);
+    return `<div class="top"><button class="back" data-train-exit>← indietro</button></div><div><h2 style="font-family:var(--hand);font-size:38px;line-height:1;margin:0">Allenamento su misura</h2><p class="muted">Scegli quanto tempo hai e su cosa vuoi lavorare: ogni volta l'allenamento cambia. La voce conta e annuncia ogni esercizio.</p></div>
+    <div class="eyebrow">Quanto tempo</div><div class="chips">${[5, 10, 20, 30].map(m => `<button class="chip rough ${Z.min === m ? 'on' : ''}" data-tset-min="${m}" aria-pressed="${Z.min === m}">${m} min</button>`).join('')}</div>
+    <div class="eyebrow">Su cosa</div><div class="chips">${FOCUS.map(([id, l]) => `<button class="chip rough ${Z.focus === id ? 'on' : ''}" data-tset-focus="${id}" aria-pressed="${Z.focus === id}">${l}</button>`).join('')}</div>
+    <div class="card rough"><div class="row" style="justify-content:space-between"><h3>Il tuo allenamento</h3><span class="kyu">circa ${tot} min</span></div><ol class="list">${Z.plan.map(s => `<li>${esc(s.k === 'kihon' ? byId(s.tech).jp + (s.noCount ? (s.reps > 1 ? ` × ${s.reps}` : '') : ` × ${s.reps}`) : s.title)}</li>`).join('')}</ol>
+    <div class="row"><button class="btn rough" data-train-go>inizia</button><button class="btn" data-tset-shuffle>cambia esercizi</button></div></div>
+    <p class="example">Le tecniche "da ripassare" entrano per prime. "Il mio esame" usa il programma del tuo prossimo kyu.</p>`;
+  }
+  const s = T.plan[T.i], left = Math.max(0, s.dur - T.el), total = T.plan.reduce((a, x) => a + x.dur, 0), doneT = T.plan.slice(0, T.i).reduce((a, x) => a + x.dur, 0) + T.el;
+  const title = s.k === 'kihon' ? byId(s.tech).jp : s.title;
+  const body = s.k === 'kihon' ? `<canvas class="tall" data-train aria-label="Animazione ${esc(title)}"></canvas>`
+    : s.k === 'list' ? `<ol class="steps">${s.items.map((it, j) => `<li><span class="trow ${Math.floor(T.el / s.each) === j ? 'on' : ''}"><span class="n">${j + 1}</span><span>${esc(it)}</span></span></li>`).join('')}</ol>`
+    : `<div class="soon" style="aspect-ratio:4/3;font-size:26px">${esc(s.sub)}</div>`;
+  return `<div class="top"><button class="back" data-train-exit>← esci</button><span class="kyu">${T.i + 1}/${T.plan.length} · ${fmt(total - doneT)} alla fine</span></div>
+  <div class="bar"><i style="width:${doneT / total * 100}%"></i></div>
+  <div><div class="eyebrow">${s.k === 'kihon' ? (s.noCount ? 'Combinazione o kata' : 'Kihon') : 'Allenamento'}</div><h2 style="font-family:var(--hand);font-size:36px;line-height:1;margin:2px 0" id="ttitle">${esc(title)}</h2>
+  <p class="muted" id="tinfo">${s.k === 'kihon' ? (s.noCount ? `${s.reps} ${s.reps > 1 ? 'volte' : 'volta'}` : `${s.reps} ripetizioni, conta ad alta voce`) : ''} · <span id="tleft">${fmt(left)}</span></p></div>
+  ${body}
+  ${S.mirror ? mirrorBox() : ''}
+  <div class="ctrl"><button class="btn rough" data-train-pause>${T.paused ? 'riprendi' : 'pausa'}</button><button class="btn" data-train-next>avanti →</button><button class="btn ${VOICE_ON ? 'on' : ''}" data-voice aria-pressed="${VOICE_ON}">voce</button><button class="btn ${S.mirror ? 'on' : ''}" data-mirror aria-pressed="${!!S.mirror}">specchio</button></div>
+  <p class="big-count" id="tcount" aria-live="polite"></p>`;
+}
+function startSeg() {
+  const T = S.train, s = T.plan[T.i]; T.el = 0; T.rep = -1;
+  if (!VOICE_ON) return;
+  if (s.say) speak(...s.say);
+  else if (s.k === 'kihon') speak(byId(s.tech).jp.replace(/-/g, ' ') + (s.noCount ? '' : `, ${s.reps} ripetizioni`), 'it-IT');
+  else if (s.k === 'list') speak(s.title + '. ' + s.items[0], 'it-IT');
+}
+function trainTick(dt) {
+  const T = S.train; if (!T || !T.plan || T.paused) return;
+  const s = T.plan[T.i], prevItem = s.k === 'list' ? Math.floor(T.el / s.each) : 0; T.el += dt;
+  if (s.k === 'list') { const it = Math.floor(T.el / s.each); if (it !== prevItem && it < s.items.length) { if (VOICE_ON) speak(s.items[it], 'it-IT'); $scr.querySelectorAll('.trow').forEach((r, j) => r.classList.toggle('on', j === it)); } }
+  if (s.k === 'kihon' && !s.noCount) { const a = ANIM[byId(s.tech).anim], rep = Math.floor((T.el + .5) * s.speed / a.D + .3); if (rep !== T.rep && rep >= 1 && rep <= s.reps) { T.rep = rep; const c = COUNT[(rep - 1) % 10]; if (VOICE_ON) speak(c[1]); const el = document.getElementById('tcount'); if (el) el.textContent = `${c[0].split(' ')[0]} · ${rep}`; } }
+  const tl = document.getElementById('tleft'); if (tl) tl.textContent = fmt(Math.max(0, s.dur - T.el));
+  if (T.el >= s.dur) { if (T.i < T.plan.length - 1) { T.i++; render(); startSeg(); } else { T.plan.forEach(x => x.k === 'kihon' && rate(x.tech, true)); const mins = T.plan.reduce((a, x) => a + x.dur, 0) / 60;
+      if (T.exam) { addLog('esame', 0, mins, `Esame ${T.exam}° kyu, parte pratica`); S.train = null; S.lesson = { exam: T.exam, phase: 'quiz' }; S.quiz = { kyu: T.exam, q: makeQuiz(T.exam), i: 0, ok: 0, ans: null, exam: T.exam }; if (VOICE_ON) speak('Parte pratica finita. Ora le domande', 'it-IT'); render(); return; }
+      addLog('allenamento', 15, mins, `Allenamento ${T.min || ''} min · ${(FOCUS.find(f => f[0] === T.focus) || FOCUS[0])[1].toLowerCase()}`); S.train = { done: 1 }; if (VOICE_ON) speak('Allenamento finito. Otsukaresama deshita', 'it-IT'); render(); } }
+}
+function trainDone() { return `<div class="top"><button class="back" data-train-exit>← home</button></div><div class="card rough"><h3>Allenamento finito</h3><p class="muted">Otsukaresama deshita: "grazie per la fatica". Le tecniche del kihon sono segnate come ripassate. +15 punti.</p></div>${goalCard()}`; }
+
+/* ---------- Specchio ---------- */
+let CAMSTREAM = null;
+const mirrorBox = () => `<div class="mirror rough"><video id="cam" autoplay playsinline muted></video><p class="muted" id="camnote">Apro la fotocamera frontale…</p></div>`;
+async function startCam() {
+  const v = document.getElementById('cam'), n = document.getElementById('camnote'); if (!v) return;
+  try { if (!CAMSTREAM) CAMSTREAM = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false }); v.srcObject = CAMSTREAM; n.textContent = 'Confronta la tua posizione con il disegno qui sopra.'; }
+  catch (e) { n.textContent = 'La fotocamera non è disponibile in questa anteprima. Nell\'app vera vedrai qui la tua immagine a specchio accanto al disegno.'; v.remove(); }
+}
+function stopCam() { if (CAMSTREAM) { CAMSTREAM.getTracks().forEach(t => t.stop()); CAMSTREAM = null; } }
+
+/* ---------- Schermata Impara ---------- */
+const dayIdx = () => Math.floor(Date.now() / 864e5);
+function impara() {
+  const sub = S.sub, back = `<div class="top"><button class="back" data-sub="">← Impara</button></div>`;
+  if (sub === 'glossario') {
+    const q = plain(S.gq || ''), list = GLOSS.filter(g => (S.gcat === 'tutte' || g.cat === S.gcat) && (!q || plain(g.r + ' ' + g.it + ' ' + g.alias.join(' ')).includes(q)));
+    return back + `<div><h2 style="font-family:var(--hand);font-size:36px;line-height:1;margin:0">Glossario</h2><p class="muted">${GLOSS.length} parole. Tocca una parola per la scheda, 🔊 per ascoltarla.</p></div>
+    <input class="search rough" type="search" placeholder="Cerca: gyaku, calcio, saluto…" value="${esc(S.gq || '')}" data-gsearch aria-label="Cerca nel glossario">
+    <div class="chips">${GCAT.map(([id, l]) => `<button class="chip rough ${S.gcat === id ? 'on' : ''}" data-gcat="${id}">${l}</button>`).join('')}</div>
+    <ul class="glist">${list.map(g => `<li><button data-term="${g.id}"><span class="gk">${g.k}</span><span><b>${esc(g.r)}</b> <span class="muted">${esc(g.it.split(/[.:]/)[0])}</span></span></button>${sayBtn(g.kana)}</li>`).join('') || '<li class="muted">Nessuna parola trovata.</li>'}</ul>`;
+  }
+  if (sub === 'comandi') return back + `<div><h2 style="font-family:var(--hand);font-size:36px;line-height:1;margin:0">Comandi e conteggio</h2><p class="muted">Quello che senti a lezione, con la pronuncia.</p></div>
+    <p class="sec">Conteggio</p><div class="count">${COUNT.map(c => `<button data-say="${c[1]}"><b>${c[2]}</b><span>${c[0]}</span></button>`).join('')}</div>
+    <div class="row"><button class="btn rough" data-say="${COUNT.map(c => c[1]).join('、')}">🔊 conta da 1 a 10</button></div>
+    <p class="sec">Comandi del dojo</p><ul class="glist">${CMD.map(c => `<li><button data-say="${c[1]}"><span><b>${c[0]}</b> <span class="muted">${c[2]}</span></span></button>${sayBtn(c[1])}</li>`).join('')}</ul>`;
+  if (sub === 'filosofia') { const n = dayIdx() % 20; return back + `<div><h2 style="font-family:var(--hand);font-size:36px;line-height:1;margin:0">Filosofia</h2></div>
+    <p class="sec">Dōjō kun</p><p class="muted">Le cinque regole del dojo. In molti dojo si recitano a fine lezione, in seiza. Ognuna inizia con "hitotsu", "primo", perché sono tutte ugualmente importanti.</p>
+    <ol class="steps">${DOJOKUN.map((d, i) => `<li><div class="phil"><span class="n">${i + 1}</span><div><b>${esc(d[1])}</b><div class="jp">${esc(d[0])}</div><p class="muted">${esc(d[2])}</p></div></div></li>`).join('')}</ol>
+    <p class="sec">I 20 principi di Funakoshi</p><p class="muted">Shōtō nijū kun: li scrisse il fondatore dello Shotokan. Quello evidenziato è il principio di oggi.</p>
+    <ol class="steps">${NIJUKUN.map((d, i) => `<li><div class="phil ${i === n ? 'today' : ''}"><span class="n">${i + 1}</span><div><b>${esc(d[1])}</b><div class="jp">${esc(d[0])}</div><p class="muted">${esc(d[2])}</p>${i === n ? `<p class="ask">Per riflettere: ${esc(d[3])}</p>` : ''}</div></div></li>`).join('')}</ol>
+    <p class="example">Traduzioni libere, da confrontare con il testo del tuo dojo.</p>`; }
+  if (sub === 'etichetta') return back + `<div><h2 style="font-family:var(--hand);font-size:36px;line-height:1;margin:0">Etichetta del dojo</h2><p class="muted">Le regole non scritte che fanno sentire a casa in qualunque dojo.</p></div>
+    ${ETIQ.map(([t, l]) => `<div class="card rough"><h3>${esc(t)}</h3><ul class="list">${l.map(x => `<li>${linkify(x)}</li>`).join('')}</ul></div>`).join('')}`;
+  if (sub === 'quiz') return back + quizScreen();
+  const n = NIJUKUN[dayIdx() % 20];
+  return `<div class="top"><h2>Impara</h2></div>
+  <div class="card rough"><div class="eyebrow">Il principio di oggi · ${dayIdx() % 20 + 1} di 20</div><h3>${esc(n[1])}</h3><p class="muted">${esc(n[2])}</p><p class="ask">${esc(n[3])}</p></div>
+  ${[['glossario', 'Glossario parlante', `${GLOSS.length} parole con pronuncia, kanji e significato`], ['comandi', 'Comandi e conteggio', 'Rei, yoi, hajime… e i numeri da 1 a 10'], ['quiz', 'Quiz per il prossimo kyu', 'Riconosci le tecniche, le parole e i passi dei kata'], ['filosofia', 'Filosofia', 'Dōjō kun e i 20 principi di Funakoshi'], ['etichetta', 'Etichetta del dojo', 'Come si entra, si saluta e ci si comporta']].map(([id, t, d]) => `<button class="card rough" data-sub="${id}"><h3>${t}</h3><p class="muted">${d}</p></button>`).join('')}`;
+}
+function quizScreen() {
+  const Z = S.quiz;
+  if (!Z) return `<div><h2 style="font-family:var(--hand);font-size:36px;line-height:1;margin:0">Quiz per il prossimo kyu</h2><p class="muted">8 domande sul programma fino al grado che scegli.</p></div>
+    ${[9, 8, 7, 6].map(k => { const best = store.get('ka-quiz', {})[k]; return `<button class="card rough" data-quiz-start="${k}"><div class="row" style="justify-content:space-between"><h3>Verso il ${k}° kyu</h3><span class="kyu">${best != null ? `migliore ${best}/8` : 'da fare'}</span></div></button>`; }).join('')}`;
+  if (Z.i >= Z.q.length && Z.lesson) { const [li, j] = Z.lesson; if (!Z.logged) { Z.logged = 1; PATH[`${li}-${j}`] = 1; store.set('ka-path', PATH); addLog('lezione', 10, 5, `Lezione: ${lessonName(LEVELS[li].lessons[j])}`); } const nl = nextLesson();
+    return `<div class="card rough"><div class="eyebrow">Lezione completata · +10 punti</div><h3>${Z.ok} su ${Z.q.length} giuste</h3><p class="muted">${Z.ok === Z.q.length ? 'Perfetto.' : 'Le tecniche sbagliate torneranno nel ripasso.'}</p></div>${goalCard()}
+    <div class="row">${nl ? `<button class="btn rough" data-lesson="${nl[0]}-${nl[1]}">prossima lezione →</button>` : ''}<button class="btn" data-tab="percorso">percorso</button></div>`; }
+  if (Z.i >= Z.q.length && Z.exam) { const pass = Z.ok >= 6; if (!Z.logged) { Z.logged = 1; PATH['exam' + Z.exam] = Math.max(PATH['exam' + Z.exam] || 0, Z.ok); store.set('ka-path', PATH); addLog('esame', pass ? 30 : 10, 3, `Esame ${Z.exam}° kyu: ${Z.ok}/8`); }
+    return `<div class="card rough"><div class="eyebrow">Esame simulato · ${Z.exam}° kyu</div><h3>${pass ? '★ Superato' : 'Non ancora'}: ${Z.ok}/8</h3><p class="muted">${pass ? 'Sei pronto per parlarne con il tuo istruttore.' : 'Ti servono almeno 6 risposte giuste. Ripassa le lezioni del livello e riprova.'} +${pass ? 30 : 10} punti.</p></div><div class="row"><button class="btn rough" data-tab="percorso">percorso</button><button class="btn" data-exam="${Z.exam}">rifai l'esame</button></div>`; }
+  if (Z.i >= Z.q.length) { const all = store.get('ka-quiz', {}); all[Z.kyu] = Math.max(all[Z.kyu] || 0, Z.ok); store.set('ka-quiz', all); if (!Z.logged) { Z.logged = 1; addLog('quiz', 5, 2, `Quiz ${Z.kyu}° kyu: ${Z.ok}/8`); }
+    return `<div class="card rough"><div class="eyebrow">Verso il ${Z.kyu}° kyu</div><h3>${Z.ok} risposte giuste su ${Z.q.length}</h3><p class="muted">${Z.ok >= 7 ? 'Sei pronto: ripassa solo i dettagli.' : Z.ok >= 5 ? 'Buona base. Ripassa le tecniche che hai sbagliato.' : 'Ripassa con calma e riprova tra qualche giorno.'}</p></div><div class="row"><button class="btn rough" data-quiz-start="${Z.kyu}">rifai il quiz</button><button class="btn" data-sub="quiz">cambia grado</button></div>`; }
+  const q = Z.q[Z.i];
+  return `<div class="row" style="justify-content:space-between"><span class="kyu">Domanda ${Z.i + 1} di ${Z.q.length}</span><span class="kyu">${Z.ok} giuste</span></div><div class="bar"><i style="width:${Z.i / Z.q.length * 100}%"></i></div>
+  ${q.kind === 'pic' ? `<canvas data-thumb="${q.tech}" aria-label="Disegno della tecnica"></canvas>` : ''}
+  <h3 style="font-family:var(--hand);font-size:28px;line-height:1.1;margin:0">${esc(q.q)} ${q.say ? sayBtn(q.say) : ''}</h3>
+  <div class="opts">${q.opts.map(o => `<button class="opt rough ${Z.ans != null ? (o === q.a ? 'good' : o === Z.ans ? 'bad' : '') : ''}" data-ans="${esc(o)}" ${Z.ans != null ? 'disabled' : ''}>${esc(o)}</button>`).join('')}</div>
+  ${Z.ans != null ? `<p class="muted">${Z.ans === q.a ? '✓ Giusto.' : '✗ Non è così.'} ${linkify(q.why)}</p><div class="row"><button class="btn rough" data-quiz-next>${Z.i + 1 < Z.q.length ? 'prossima →' : 'vedi il risultato'}</button></div>` : ''}`;
+}
+function termSheet(g) {
+  const techs = TECH.filter(x => x.jp.split(/[^A-Za-zōū]+/).some(w => GMAP[plain(w)] === g)).slice(0, 6);
+  return `<div class="sheet-bg" data-close-term></div><div class="sheet" role="dialog" aria-label="${esc(g.r)}">
+  <div class="row" style="justify-content:space-between;align-items:flex-start"><div class="gk big">${g.k}</div><button class="back" data-close-term aria-label="Chiudi">✕</button></div>
+  <div class="row"><h3 style="font-family:var(--hand);font-size:32px;margin:0">${esc(g.r)}</h3>${sayBtn(g.kana)}<span class="jp">${g.kana}</span></div>
+  <p style="margin:0">${esc(g.it)}</p>
+  ${g.parts.length ? `<div class="parts">${g.parts.map(([a, b]) => `<span class="part rough"><b>${esc(a)}</b><span>${esc(b)}</span></span>`).join('<span class="plus">+</span>')}</div>` : ''}
+  ${techs.length ? `<p class="sec" style="font-size:20px">Lo trovi in</p><div class="row">${techs.map(x => `<button class="chip rough" data-open="${x.id}">${esc(x.jp)}</button>`).join('')}</div>` : ''}
+  ${hasJa() ? '' : '<p class="example">Se la voce non suona giapponese, il dispositivo non ha una voce giapponese installata.</p>'}</div>`;
+}
+
+/* ---------- Progressi: punti, serie di giorni, diario ---------- */
+const LOG = store.get('ka-log', []); // {d, k, xp, min, title}
+const GOAL = 20, dayStr = ms => new Date(ms).toISOString().slice(0, 10);
+const xpOn = d => LOG.filter(e => e.d === d).reduce((a, e) => a + e.xp, 0);
+function addLog(k, xp, min = 0, title = '') { LOG.push({ d: today(), k, xp, min, title }); store.set('ka-log', LOG); }
+function streak() { const days = new Set(LOG.map(e => e.d)); let n = 0, d = Date.now(); if (!days.has(today())) d -= 864e5; while (days.has(dayStr(d))) { n++; d -= 864e5; } return n; }
+const goalCard = () => { const xp = xpOn(today()), st = streak(); return `<div class="card rough"><div class="row" style="justify-content:space-between"><h3>${st ? `🔥 ${st} ${st === 1 ? 'giorno' : 'giorni'} di fila` : 'Inizia la tua serie'}</h3><span class="kyu">${Math.min(xp, GOAL)}/${GOAL} punti oggi</span></div><div class="bar"><i style="width:${Math.min(100, xp / GOAL * 100)}%"></i></div><p class="muted">${xp >= GOAL ? 'Obiettivo di oggi raggiunto. Domani la serie continua.' : 'Una lezione vale 10 punti, un allenamento 15.'}</p></div>`; };
+
+/* ---------- Percorso a tappe ---------- */
+const LEVELS = [
+  { kyu: 9, belt: 'cintura bianca', ids: ['musubi', 'heiko', ...KYU_IDS[9]] },
+  { kyu: 8, belt: 'cintura gialla', ids: KYU_IDS[8] },
+  { kyu: 7, belt: 'cintura arancio', ids: KYU_IDS[7] },
+  { kyu: 6, belt: 'cintura verde', ids: KYU_IDS[6] }
+];
+// lezioni da circa 5 minuti: due tecniche alla volta, i kata da soli
+LEVELS.forEach(L => { const out = []; let cur = []; L.ids.forEach(id => { if (byId(id).kata) { if (cur.length) out.push(cur); out.push([id]); cur = []; } else { cur.push(id); if (cur.length === 2) { out.push(cur); cur = []; } } }); if (cur.length) out.push(cur); L.lessons = out; });
+const PATH = store.get('ka-path', {});
+const lessonDone = (li, j) => !!PATH[`${li}-${j}`], levelDone = li => LEVELS[li].lessons.every((_, j) => lessonDone(li, j));
+const levelOpen = li => li === 0 || levelDone(li - 1);
+const curLevel = () => { const i = LEVELS.findIndex((_, li) => !levelDone(li)); return i < 0 ? LEVELS.length - 1 : i; };
+function nextLesson() { for (let li = 0; li < LEVELS.length; li++) for (let j = 0; j < LEVELS[li].lessons.length; j++) if (!lessonDone(li, j)) return [li, j]; return null; }
+const lessonName = ids => ids.map(id => byId(id).jp).join(' e ');
+function percorso() {
+  const nl = nextLesson();
+  return `<div class="top"><h2>Percorso</h2><span class="kyu">lezioni da 5 minuti</span></div>
+  ${goalCard()}
+  ${LEVELS.map((L, li) => { const open = levelOpen(li), ex = PATH['exam' + L.kyu];
+    return `<div class="lvl"><div class="row" style="justify-content:space-between"><p class="sec">Verso il ${L.kyu}° kyu</p><span class="kyu">${L.belt}${open ? '' : ' · 🔒'}</span></div>
+    <ol class="path">${L.lessons.map((ids, j) => { const done = lessonDone(li, j), can = open && (j === 0 || lessonDone(li, j - 1)), cur = nl && nl[0] === li && nl[1] === j;
+      return `<li class="${j % 2 ? 'r' : ''}"><button class="node ${done ? 'done' : ''} ${cur ? 'cur' : ''}" ${can ? `data-lesson="${li}-${j}"` : 'disabled'} aria-label="Lezione ${j + 1}: ${esc(lessonName(ids))}${done ? ', fatta' : can ? '' : ', bloccata'}"><span class="dot rough">${done ? '✓' : can ? j + 1 : '🔒'}</span><span class="nl">${esc(lessonName(ids))}</span></button></li>`; }).join('')}
+    <li><button class="node exam ${ex >= 6 ? 'done' : ''}" ${levelDone(li) ? `data-exam="${L.kyu}"` : 'disabled'}><span class="dot rough">${ex >= 6 ? '★' : '🥋'}</span><span class="nl">Esame simulato${ex != null ? ` · ${ex}/8` : ''}</span></button></li></ol></div>`; }).join('')}
+  <p class="example">L'esame simulato non sostituisce quello del dojo: serve a capire se sei pronto.</p>`;
+}
+// domande riusabili: dal disegno, dal significato, dall'ordine nei kata
+function qPic(x) { const other = shuffle(TECH.filter(y => y.id !== x.id && !y.kata && y.cat === x.cat)).slice(0, 3); while (other.length < 3) other.push(shuffle(TECH.filter(y => y.id !== x.id && !y.kata && !other.includes(y)))[0]); return { kind: 'pic', tech: x.id, q: 'Che tecnica è questa?', opts: shuffle([x, ...other].map(y => y.jp)), a: x.jp, why: x.desc }; }
+function qWord(g) { const other = shuffle(GLOSS.filter(h => h !== g && h.cat !== 'dojo')).slice(0, 3); return { kind: 'word', q: `Cosa vuol dire "${g.r}"?`, opts: shuffle([g, ...other].map(h => h.it.split(/[.:]/)[0])), a: g.it.split(/[.:]/)[0], why: `${g.r} ${g.k}: ${g.it}`, say: g.kana }; }
+function qKata(k) { const rows = ANIM[k.anim].rows, i = 1 + Math.floor(Math.random() * (rows.length - 3)), right = rows[i + 1][1]; const other = shuffle([...new Set(rows.slice(1, -1).map(r => r[1]))].filter(t => t !== right)).slice(0, 3); return { kind: 'kata', tech: k.id, q: `In ${k.jp}, cosa viene dopo il passo ${rows[i][0]} (${rows[i][1]})?`, opts: shuffle([right, ...other]), a: right, why: `Passo ${rows[i + 1][0]}: ${right}${rows[i + 1][3] ? ', con kiai' : ''}.` }; }
+const wordsOf = techs => [...new Set(techs.flatMap(x => x.jp.split(/[^A-Za-zōū]+/)).map(w => GMAP[plain(w)]).filter(Boolean))];
+function lessonQuiz(ids) {
+  const techs = ids.map(byId), Q = techs.map(x => x.kata ? qKata(x) : qPic(x));
+  if (techs.some(x => x.kata)) Q.push(qKata(techs.find(x => x.kata)));
+  shuffle(wordsOf(techs)).slice(0, 3 - Math.min(Q.length, 2)).forEach(g => Q.push(qWord(g)));
+  return shuffle(Q).slice(0, 3);
+}
+function lessonScreen() {
+  const Ls = S.lesson, back = `<div class="top"><button class="back" data-tab="percorso">← percorso</button>${Ls.exam ? `<span class="kyu">esame ${Ls.exam}° kyu</span>` : `<span class="kyu">${Ls.phase === 'quiz' ? 'verifica' : `${Ls.i + 1} di ${Ls.ids.length}`}</span>`}</div>`;
+  if (Ls.phase === 'quiz') return back + quizScreen();
+  const x = byId(Ls.ids[Ls.i]);
+  return back + `<div class="bar"><i style="width:${Ls.i / (Ls.ids.length + 1) * 100}%"></i></div>
+  <div><div class="eyebrow">Lezione · ${esc(CATS.find(c => c.id === x.cat).it)}</div><h2 style="font-family:var(--hand);font-size:36px;line-height:1;margin:2px 0">${linkify(x.jp)}</h2><div class="jp">${esc(x.it)}</div></div>
+  <canvas data-live="${x.anim}" aria-label="Animazione ${esc(x.jp)}"></canvas>
+  <p class="muted">${linkify(x.desc)}</p>
+  <p class="sec">Prova tu</p><p class="muted">${x.kata ? 'Segui il kata una volta guardando il disegno, poi una seconda volta da solo.' : 'Guarda il disegno due volte, poi esegui la tecnica 5 volte per lato, lentamente.'}</p>
+  <ul class="list">${x.points.map(p => `<li>${linkify(p)}</li>`).join('')}</ul>
+  <div class="row"><button class="btn rough" data-lesson-next>${Ls.i + 1 < Ls.ids.length ? 'fatto, avanti →' : 'fatto, alla verifica →'}</button><button class="btn" data-open="${x.id}">scheda completa</button></div>`;
+}
+function examPlan(kyu) {
+  const L = LEVELS.find(l => l.kyu === kyu), techs = L.ids.map(byId).filter(x => x.anim);
+  const plan = [{ k: 'cer', title: 'Esame simulato', sub: 'Rei. La voce chiama le tecniche come un esaminatore', dur: 12, say: [`Esame simulato per il ${kyu}° kyu. Rei`, 'it-IT'] }];
+  shuffle(techs.filter(x => !x.kata && x.cat !== 'combo' && x.cat !== 'dachi')).slice(0, 4).forEach(x => plan.push({ k: 'kihon', tech: x.id, reps: 5, speed: .8 }));
+  shuffle(techs.filter(x => x.cat === 'combo')).slice(0, 2).forEach(x => plan.push({ k: 'kihon', tech: x.id, reps: 1, speed: .8, noCount: 1 }));
+  techs.filter(x => x.kata).forEach(x => plan.push({ k: 'kihon', tech: x.id, reps: 1, speed: .8, noCount: 1 }));
+  plan.forEach(s => { if (s.k === 'kihon') s.dur = ANIM[byId(s.tech).anim].D / s.speed * s.reps; });
+  return plan;
+}
+
+/* ---------- Allenamento su misura ---------- */
+const POOL = {
+  kihon: ['gedan', 'ageuke', 'gyaku', 'oizuki', 'soto', 'uchiuke', 'shutouke', 'kizami', 'urazuki', 'shutouchi', 'uraken', 'empi', 'nukite'],
+  geri: ['maegeri', 'keage', 'kekomi', 'mawashi', 'ushiro'],
+  combo: TECH.filter(x => x.cat === 'combo').map(x => x.id),
+  kata: TECH.filter(x => x.kata).map(x => x.id)
+};
+const FOCUS = [['misto', 'Misto'], ['kihon', 'Kihon'], ['geri', 'Calci'], ['kata', 'Kata'], ['esame', 'Il mio esame']];
+function makePlan(min, focus = 'misto') {
+  const budget = min * 60, due = new Set(dueList().map(x => x.id)), pri = a => [...a.filter(id => due.has(id)), ...shuffle(a.filter(id => !due.has(id)))];
+  const reps = min >= 20 ? 16 : min >= 10 ? 10 : 6, nWarm = min >= 20 ? 6 : min >= 10 ? 5 : 3;
+  const head = [{ k: 'cer', title: 'Mokusō', sub: 'In seiza, occhi chiusi, respira con calma', dur: min >= 10 ? 20 : 12, say: ['Seiza. Mokusō', 'it-IT'] },
+    { k: 'list', title: 'Riscaldamento', items: shuffle(WARM).slice(0, nWarm), each: min >= 20 ? 30 : 22 }];
+  const tail = [{ k: 'list', title: 'Defaticamento', items: shuffle(STRETCH).slice(0, min >= 10 ? 4 : 2), each: min >= 20 ? 30 : 20 }, { k: 'cer', title: 'Saluto finale', sub: 'Mokusō, poi rei', dur: 15, say: ['Mokusō. Rei', 'it-IT'] }];
+  const kh = id => ({ k: 'kihon', tech: id, reps, speed: .7 }), once = (id, n = 1) => ({ k: 'kihon', tech: id, reps: n, speed: .8, noCount: 1 });
+  let mid;
+  if (focus === 'kihon') mid = [...pri(POOL.kihon).map(kh), ...pri(POOL.combo).map(id => once(id, 3))];
+  else if (focus === 'geri') mid = [...pri(POOL.geri).map(kh), ...pri(['combo4']).map(id => once(id, 3)), ...pri(POOL.geri).map(kh)];
+  else if (focus === 'kata') mid = [...pri(POOL.kata).map(id => once(id, 2)), ...pri(POOL.kihon).slice(0, 3).map(kh)];
+  else if (focus === 'esame') { const L = LEVELS[curLevel()], t = L.ids.map(byId); mid = [...pri(t.filter(x => !x.kata && x.cat !== 'combo' && x.cat !== 'dachi').map(x => x.id)).map(kh), ...pri(t.filter(x => x.cat === 'combo').map(x => x.id)).map(id => once(id, 3)), ...t.filter(x => x.kata).map(x => once(x.id, 2))]; }
+  else { const k = pri(POOL.kihon), g = pri(POOL.geri), c = pri(POOL.combo), a = pri(POOL.kata); mid = [kh(k[0]), kh(k[1]), kh(g[0]), once(c[0], 3), once(a[0]), kh(k[2]), kh(g[1]), once(c[1], 3), once(a[1] || a[0]), kh(k[3]), once(c[2], 3)]; }
+  const dur = s => { if (s.k === 'list') s.dur = s.items.length * s.each; if (s.k === 'kihon') s.dur = ANIM[byId(s.tech).anim].D / s.speed * s.reps; return s.dur; };
+  let used = [...head, ...tail].reduce((a, s) => a + dur(s), 0); const body = [];
+  for (const s0 of [...mid, ...mid, ...mid]) { const s = { ...s0 }, d = dur(s); if (used + d > budget * 1.06) continue; body.push(s); used += d; }
+  if (!body.length) body.push(mid[0]);
+  return [...head, ...body, ...tail];
+}
+
+/* ---------- Diario e promemoria ---------- */
+function calendar() {
+  const now = new Date(), y = now.getUTCFullYear(), m = now.getUTCMonth(), first = new Date(Date.UTC(y, m, 1)), days = new Date(Date.UTC(y, m + 1, 0)).getUTCDate(), pad = (first.getUTCDay() + 6) % 7;
+  const cells = Array(pad).fill('<span></span>').concat(Array.from({ length: days }, (_, i) => { const d = dayStr(Date.UTC(y, m, i + 1)), xp = xpOn(d); return `<span class="${xp ? (xp >= GOAL ? 'full' : 'some') : ''} ${d === today() ? 'now' : ''}" title="${d}: ${xp} punti">${i + 1}</span>`; }));
+  return `<div class="cal">${['L', 'M', 'M', 'G', 'V', 'S', 'D'].map(d => `<b>${d}</b>`).join('')}${cells.join('')}</div>`;
+}
+function diario() {
+  const mins = Math.round(LOG.reduce((a, e) => a + (e.min || 0), 0)), sess = LOG.filter(e => e.k === 'allenamento').length, lez = LOG.filter(e => e.k === 'lezione').length, R = store.get('ka-remind', { on: false, at: '18:30' });
+  return `<div class="top"><button class="back" data-psub="">← profilo</button></div><div><h2 style="font-family:var(--hand);font-size:36px;line-height:1;margin:0">Diario</h2><p class="muted">${new Date().toLocaleDateString('it-IT', { month: 'long', year: 'numeric' })}</p></div>
+  ${goalCard()}
+  <div class="card rough">${calendar()}<p class="muted">Pieno: obiettivo raggiunto. Tratteggiato: un po' di pratica.</p></div>
+  <div class="stats"><div class="card rough"><b>${streak()}</b><span>giorni di fila</span></div><div class="card rough"><b>${mins}</b><span>minuti</span></div><div class="card rough"><b>${sess}</b><span>allenamenti</span></div><div class="card rough"><b>${lez}</b><span>lezioni</span></div></div>
+  <p class="sec">Ultime attività</p><ul class="list">${LOG.slice(-6).reverse().map(e => `<li>${new Date(e.d).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })} · ${esc(e.title || e.k)} <span class="jp">+${e.xp}</span></li>`).join('') || '<li class="muted">Ancora niente: fai la prima lezione del percorso.</li>'}</ul>
+  <div class="card rough"><h3>Promemoria</h3><div class="row"><button class="btn rough ${R.on ? 'on' : ''}" data-remind aria-pressed="${R.on}">${R.on ? 'attivo' : 'spento'}</button><input type="time" class="search rough" style="width:auto" value="${R.at}" data-remind-at aria-label="Ora del promemoria"></div><p class="muted" id="remnote">${R.on ? `Ogni giorno alle ${R.at}, se non ti sei ancora allenato.` : 'Un avviso al giorno per non rompere la serie.'}</p></div>`;
+}
+
+/* ---------- Dojo: compiti dell'istruttore ---------- */
+const TASKS = store.get('ka-tasks', []);
+const b64e = o => btoa(String.fromCharCode(...new TextEncoder().encode(JSON.stringify(o)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const b64d = s => JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0))));
+function addTask(code) {
+  try { const o = b64d(code.trim().replace(/^KAT-/i, '')); if (!o.i?.length) throw 0; const id = code.trim().slice(-10); if (TASKS.some(t => t.id === id)) return 'Questo compito c\'è già.'; TASKS.unshift({ id, dojo: o.n || 'Dojo', title: o.t || 'Compito', ids: o.i.filter(byId), reps: o.r || 10, due: o.d || '', note: o.no || '', done: [] }); store.set('ka-tasks', TASKS); return ''; }
+  catch (e) { return 'Codice non valido: controlla di averlo copiato tutto.'; }
+}
+function dojo() {
+  const D = S.dj;
+  return `<div class="top"><button class="back" data-psub="">← profilo</button></div><div><h2 style="font-family:var(--hand);font-size:36px;line-height:1;margin:0">Il mio dojo</h2><p class="muted">L'istruttore prepara un compito, lo condivide con un codice nel gruppo del dojo e gli allievi lo trovano qui.</p></div>
+  <p class="sec">Compiti ricevuti</p>
+  ${TASKS.map(t => { const n = t.done.length; return `<div class="card rough"><div class="eyebrow">${esc(t.dojo)}${t.due ? ` · entro il ${new Date(t.due).toLocaleDateString('it-IT', { day: 'numeric', month: 'long' })}` : ''}</div><h3>${esc(t.title)}</h3>${t.note ? `<p class="muted">${esc(t.note)}</p>` : ''}
+    <ul class="glist">${t.ids.map(id => `<li><button data-open="${id}"><span><b>${esc(byId(id).jp)}</b> <span class="muted">${byId(id).kata ? '2 volte' : `× ${t.reps} per lato`}</span></span></button><button class="btn ${t.done.includes(id) ? 'on' : ''}" data-task-done="${t.id}|${id}" aria-pressed="${t.done.includes(id)}">${t.done.includes(id) ? '✓ fatto' : 'fatto?'}</button></li>`).join('')}</ul>
+    <div class="bar"><i style="width:${n / t.ids.length * 100}%"></i></div></div>`; }).join('') || '<p class="muted">Nessun compito per ora.</p>'}
+  <div class="row"><input class="search rough" style="flex:1;min-width:0" placeholder="Incolla il codice KAT-…" value="${esc(D.code)}" data-dj="code" aria-label="Codice del compito"><button class="btn rough" data-task-add>aggiungi</button></div>
+  ${D.err ? `<p class="muted" style="color:var(--red)">${esc(D.err)}</p>` : ''}
+  <p class="sec">Sono l'istruttore</p>
+  <div class="card rough">
+    <input class="search rough" placeholder="Nome del dojo" value="${esc(D.name)}" data-dj="name" aria-label="Nome del dojo">
+    <input class="search rough" placeholder="Titolo, es. Ripasso per l'esame" value="${esc(D.title)}" data-dj="title" aria-label="Titolo del compito">
+    <div class="eyebrow">Tecniche da assegnare</div>
+    <div class="row">${TECH.map(x => `<button class="chip rough ${D.pick.includes(x.id) ? 'on' : ''}" data-dj-pick="${x.id}" aria-pressed="${D.pick.includes(x.id)}">${esc(x.jp)}</button>`).join('')}</div>
+    <div class="row"><label class="muted">Ripetizioni <input type="number" min="1" max="50" class="search rough" style="width:70px" value="${D.reps}" data-dj="reps"></label><label class="muted">Entro il <input type="date" class="search rough" style="width:auto" value="${D.due}" data-dj="due"></label></div>
+    <input class="search rough" placeholder="Nota per gli allievi (facoltativa)" value="${esc(D.note)}" data-dj="note" aria-label="Nota">
+    <div class="row"><button class="btn rough" data-dj-make ${D.pick.length ? '' : 'disabled'}>crea il codice</button></div>
+    ${D.out ? `<p class="muted">Manda questo messaggio nel gruppo del dojo:</p><div class="code rough">Nuovo compito su KatApp: "${esc(D.title || 'Compito')}". Apri Profilo → Il mio dojo e incolla il codice: <b>${D.out}</b></div><div class="row"><button class="btn rough" data-dj-copy>copia</button><button class="btn" data-dj-self>provalo come allievo</button></div>` : ''}
+  </div>
+  <p class="example">Nel prototipo il codice contiene tutto il compito. Nell'app vera il dojo avrà un gruppo condiviso e l'istruttore vedrà chi l'ha completato.</p>`;
+}
+
+/* ---------- Correzione della posizione ---------- */
+// regole per le posizioni base, misurate sugli angoli di ginocchia, busto e larghezza dei piedi
+const POSTURE = {
+  zenkutsu: { view: 'lato', how: 'Mettiti di lato rispetto al telefono, a 2-3 metri, con tutto il corpo nell\'inquadratura.' },
+  kokutsu: { view: 'lato', how: 'Mettiti di lato rispetto al telefono, a 2-3 metri, con tutto il corpo nell\'inquadratura.' },
+  kiba: { view: 'fronte', how: 'Mettiti di fronte al telefono, a 2-3 metri, con tutto il corpo nell\'inquadratura.' },
+  musubi: { view: 'fronte', how: 'Mettiti di fronte al telefono, con tutto il corpo nell\'inquadratura.' },
+  heiko: { view: 'fronte', how: 'Mettiti di fronte al telefono, con tutto il corpo nell\'inquadratura.' }
+};
+const ang = (a, b, c) => { const u = [a.x - b.x, a.y - b.y], v = [c.x - b.x, c.y - b.y]; return Math.acos(Math.max(-1, Math.min(1, (u[0] * v[0] + u[1] * v[1]) / (Math.hypot(...u) * Math.hypot(...v) || 1)))) * 180 / Math.PI; };
+const midP = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
+function checkStance(id, P) {
+  const kL = ang(P.hipL, P.kneeL, P.ankL), kR = ang(P.hipR, P.kneeR, P.ankR), bent = Math.min(kL, kR), str = Math.max(kL, kR);
+  const sh = midP(P.shL, P.shR), hp = midP(P.hipL, P.hipR), T = Math.hypot(sh.x - hp.x, sh.y - hp.y) || 1;
+  const lean = Math.abs(Math.atan2(sh.x - hp.x, hp.y - sh.y) * 180 / Math.PI), wide = Math.abs(P.ankL.x - P.ankR.x) / T;
+  const bentSide = kL < kR ? 'L' : 'R', bentAnk = P['ank' + bentSide], strAnk = P['ank' + (bentSide === 'L' ? 'R' : 'L')];
+  const towardBent = Math.abs(hp.x - bentAnk.x) / (Math.abs(bentAnk.x - strAnk.x) || 1); // 0 = bacino sopra il piede piegato
+  const R = [], rule = (ok, good, bad) => R.push({ ok, text: ok ? good : bad });
+  rule(lean < 13, 'Busto dritto.', 'Il busto si inclina: tienilo verticale, come se un filo ti tirasse la testa in su.');
+  if (id === 'zenkutsu') {
+    rule(bent < 128, 'Ginocchio avanti ben piegato.', 'Piega di più il ginocchio avanti: deve arrivare sopra la punta del piede.');
+    rule(bent > 78, 'Il ginocchio avanti non supera la punta del piede.', 'Il ginocchio avanti va troppo oltre: allunga un po\' la posizione.');
+    rule(str > 152, 'Gamba dietro tesa.', 'Distendi la gamba dietro e spingi il tallone a terra.');
+    rule(wide > 1.45, 'Posizione lunga quanto basta.', 'Allunga la posizione: il piede dietro va più indietro.');
+  } else if (id === 'kokutsu') {
+    // la gamba dietro è quella con il piede più vicino sotto il bacino
+    const bk = Math.abs(hp.x - P.ankL.x) < Math.abs(hp.x - P.ankR.x) ? 'L' : 'R', fr = bk === 'L' ? 'R' : 'L', kB = bk === 'L' ? kL : kR, kF = bk === 'L' ? kR : kL;
+    const towardBack = Math.abs(hp.x - P['ank' + bk].x) / (Math.abs(P.ankL.x - P.ankR.x) || 1);
+    rule(kB < 156, 'Ginocchio dietro piegato.', 'Piega di più il ginocchio dietro e scendi con il bacino.');
+    rule(kF > 128 && kF < 177, 'Gamba avanti morbida.', kF >= 177 ? 'Ammorbidisci il ginocchio avanti, non bloccarlo.' : 'La gamba avanti è troppo piegata: il peso deve stare dietro.');
+    rule(towardBack < .42, 'Peso sulla gamba dietro.', 'Porta il bacino sopra la gamba dietro: circa due terzi del peso stanno lì.');
+  } else if (id === 'kiba') {
+    rule(Math.abs(kL - kR) < 16, 'Peso distribuito sulle due gambe.', 'Una gamba è più piegata dell\'altra: scendi in mezzo, con il peso al centro.');
+    rule(str < 150, 'Ginocchia piegate.', 'Scendi di più: piega entrambe le ginocchia e spingile in fuori.');
+    rule(wide > 1.15, 'Piedi larghi quanto serve.', 'Allarga i piedi: circa il doppio della larghezza delle spalle.');
+  } else {
+    rule(bent > 160, 'Gambe distese.', 'Distendi le gambe: in questa posizione si sta dritti, senza piegare le ginocchia.');
+    if (id === 'musubi') rule(wide < .4, 'Talloni uniti.', 'Avvicina i talloni fino a farli toccare, punte aperte.');
+    else rule(wide > .3 && wide < .85, 'Piedi alla larghezza delle anche.', wide <= .3 ? 'Apri un po\' i piedi: alla larghezza delle anche.' : 'Stringi i piedi: alla larghezza delle anche, non oltre.');
+  }
+  return { score: Math.round(R.filter(r => r.ok).length / R.length * 100), tips: R, m: { kL, kR, lean, wide, towardBent } };
+}
+// il disegno stesso come modello: punti presi dal manichino 3D, proiettati nella vista consigliata
+function rigPoints(id, wrong) {
+  const x = byId(id), a = ANIM[x.anim]; AC = a; KEYS = a.keys; D = a.D; CAM = VIEWS[POSTURE[id].view];
+  let p = poseAt(a.thumb ?? a.D * .5);
+  if (wrong) { // errori tipici, uno per posizione
+    if (id === 'zenkutsu' || id === 'kokutsu') p = { ...p, C: [p.C[0], p.C[1] + (id === 'kokutsu' ? 12 : 9), p.C[2]], lean: (p.lean || 0) + 18 };
+    else if (id === 'kiba') p = { ...p, C: [p.C[0], p.C[1] + 4, p.C[2]], aL: [p.aL[0], p.aL[1], p.aL[2] * .62], aR: [p.aR[0], p.aR[1], p.aR[2] * .62] };
+    else { const zc = (p.aL[2] + p.aR[2]) / 2, k = id === 'musubi' ? 14 : 26; p = { ...p, aL: [p.aL[0], p.aL[1], zc - k], aR: [p.aR[0], p.aR[1], zc + k] }; }
+  }
+  const B = body(p); CT = [B.C[0], B.C[2]];
+  const pt = v => { const q = proj(v); return { x: q.x, y: q.y }; };
+  return { p, P: { shL: pt(B.shL), shR: pt(B.shR), hipL: pt(B.hipL), hipR: pt(B.hipR), kneeL: pt(B.kneeL), kneeR: pt(B.kneeR), ankL: pt(B.ankL), ankR: pt(B.ankR) } };
+}
+const BONES = [['shL', 'shR'], ['shL', 'hipL'], ['shR', 'hipR'], ['hipL', 'hipR'], ['hipL', 'kneeL'], ['kneeL', 'ankL'], ['hipR', 'kneeR'], ['kneeR', 'ankR']];
+function drawBones(ctx, P, k = 1) { ctx.save(); ctx.lineWidth = 3 * k; ctx.strokeStyle = 'rgba(163,55,44,.85)'; ctx.fillStyle = 'rgba(163,55,44,.95)'; ctx.lineCap = 'round'; BONES.forEach(([a, b]) => { ctx.beginPath(); ctx.moveTo(P[a].x, P[a].y); ctx.lineTo(P[b].x, P[b].y); ctx.stroke(); }); Object.values(P).forEach(q => { ctx.beginPath(); ctx.arc(q.x, q.y, 4.5 * k, 0, 7); ctx.fill(); }); ctx.restore(); }
+const postureResult = r => `<div class="row" style="justify-content:space-between"><h3>Punteggio ${r.score}/100</h3><span class="kyu">${r.score === 100 ? 'ottimo' : r.score >= 60 ? 'quasi' : 'da correggere'}</span></div><ul class="tips">${r.tips.sort((a, b) => a.ok - b.ok).map(t => `<li class="${t.ok ? 'ok' : 'no'}">${t.ok ? '✓' : '✗'} ${esc(t.text)}</li>`).join('')}</ul>`;
+const postureBox = x => `<div class="card rough" id="posture"><div class="eyebrow">Correggi la posizione</div><h3>Ti guardo e ti correggo</h3><p class="muted">${POSTURE[x.id].how} Il telefono riconosce ginocchia, anche e spalle e ti dice cosa sistemare. L'immagine resta sul telefono.</p>
+  <div class="row"><button class="btn rough" data-pose-cam>fotocamera</button><label class="btn rough" style="cursor:pointer">foto<input type="file" accept="image/*" data-pose-file hidden></label><button class="btn" data-pose-demo="ok">esempio giusto</button><button class="btn" data-pose-demo="wrong">esempio sbagliato</button></div>
+  <div id="pose-out"></div></div>`;
+let POSELIB = null, POSECAM = null;
+function loadPose() {
+  if (POSELIB) return POSELIB;
+  const base = 'https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/';
+  POSELIB = new Promise((ok, ko) => { const s = document.createElement('script'); s.src = base + 'pose.js'; s.crossOrigin = 'anonymous'; s.onload = async () => { try { const ps = new window.Pose({ locateFile: f => base + f }); ps.setOptions({ modelComplexity: 1, smoothLandmarks: true, minDetectionConfidence: .5, minTrackingConfidence: .5 }); await ps.initialize(); ok(ps); } catch (e) { ko(e); } }; s.onerror = ko; document.head.appendChild(s); setTimeout(() => ko(new Error('timeout')), 20000); });
+  POSELIB.catch(() => { POSELIB = null; });
+  return POSELIB;
+}
+const LM = { shL: 11, shR: 12, hipL: 23, hipR: 24, kneeL: 25, kneeR: 26, ankL: 27, ankR: 28 };
+function lmPoints(lm, w, h) { const P = {}; for (const [k, i] of Object.entries(LM)) { if (!lm[i] || lm[i].visibility < .4) return null; P[k] = { x: lm[i].x * w, y: lm[i].y * h }; } return P; }
+async function detectOn(img, w, h) { const ps = await loadPose(); return new Promise(ok => { ps.onResults(r => ok(r.poseLandmarks ? lmPoints(r.poseLandmarks, w, h) : null)); ps.send({ image: img }); }); }
+function poseOut(html) { const o = document.getElementById('pose-out'); if (o) o.innerHTML = html; }
+function poseCanvasFor(src, w, h, P, flip) {
+  const c = document.createElement('canvas'), k = Math.min(1, 640 / w); c.width = w * k; c.height = h * k; c.style.aspectRatio = `${w}/${h}`; const x = c.getContext('2d');
+  if (flip) { x.translate(c.width, 0); x.scale(-1, 1); } x.drawImage(src, 0, 0, c.width, c.height); if (flip) x.setTransform(1, 0, 0, 1, 0, 0);
+  if (P) { const Q = {}; for (const [n, q] of Object.entries(P)) Q[n] = { x: flip ? c.width - q.x * k : q.x * k, y: q.y * k }; drawBones(x, Q, Math.max(1, c.width / 400)); }
+  return c;
+}
+function poseDemo(wrong) {
+  const id = S.detail, { p, P } = rigPoints(id, wrong), r = checkStance(id, P);
+  const c = document.createElement('canvas'); c.width = W * 1.5; c.height = H * 1.5; c.className = 'tall'; const x = c.getContext('2d'); x.setTransform(1.5, 0, 0, 1.5, 0, 0);
+  const tmp = { D: 1, keys: [[0, p], [1, p]], marks: [0] }; SEED = 1; drawTech(x, tmp, 0, POSTURE[id].view, false);
+  const { P: P2 } = rigPoints(id, wrong); drawBones(x, P2); // stessi punti, dopo che drawTech ha fissato la camera
+  poseOut(''); document.getElementById('pose-out').append(c); document.getElementById('pose-out').insertAdjacentHTML('beforeend', `<p class="muted">${wrong ? 'Esempio con errori: bacino alto e busto inclinato.' : 'Il disegno della scheda, misurato come misuro te.'}</p>` + postureResult(r));
+}
+async function poseFile(file) {
+  const id = S.detail; poseOut('<p class="muted">Carico il riconoscimento della postura…</p>');
+  const img = new Image(); img.src = URL.createObjectURL(file); await img.decode().catch(() => {});
+  try { const P = await detectOn(img, img.naturalWidth, img.naturalHeight); const out = document.getElementById('pose-out'); poseOut(''); out.append(poseCanvasFor(img, img.naturalWidth, img.naturalHeight, P)); out.insertAdjacentHTML('beforeend', P ? postureResult(checkStance(id, P)) : '<p class="muted">Non vedo bene gambe e spalle. Riprova con tutto il corpo nella foto e più luce.</p>'); }
+  catch (e) { poseOut('<p class="muted">Il riconoscimento non si è caricato in questa anteprima. Nell\'app vera funziona sul telefono, anche senza rete. Intanto prova "esempio giusto" o "esempio sbagliato".</p>'); }
+}
+function stopPoseCam() { if (POSECAM) { POSECAM.stream.getTracks().forEach(t => t.stop()); clearInterval(POSECAM.iv); POSECAM = null; } }
+async function poseCam() {
+  stopPoseCam(); const id = S.detail; poseOut('<p class="muted">Apro la fotocamera…</p>');
+  let stream; try { stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false }); }
+  catch (e) { poseOut('<p class="muted">La fotocamera non è disponibile in questa anteprima. Puoi caricare una foto oppure provare gli esempi.</p>'); return; }
+  poseOut('<video id="pcam" autoplay playsinline muted style="display:none"></video><canvas id="pcv" class="tall"></canvas><div id="ptips"><p class="muted">Carico il riconoscimento…</p></div><div class="row"><button class="btn rough" data-pose-stop>ferma</button></div>');
+  const v = document.getElementById('pcam'); v.srcObject = stream; POSECAM = { stream };
+  try { await loadPose(); } catch (e) { stopPoseCam(); poseOut('<p class="muted">Il riconoscimento non si è caricato in questa anteprima. Prova gli esempi.</p>'); return; }
+  let busy = false, lastSay = '';
+  POSECAM.iv = setInterval(async () => {
+    if (busy || !v.videoWidth || !document.getElementById('pcv')) return; busy = true;
+    const P = await detectOn(v, v.videoWidth, v.videoHeight).catch(() => null), cv = document.getElementById('pcv'); if (!cv) { busy = false; return; }
+    const pc = poseCanvasFor(v, v.videoWidth, v.videoHeight, P, true); cv.width = pc.width; cv.height = pc.height; cv.style.aspectRatio = pc.style.aspectRatio; cv.getContext('2d').drawImage(pc, 0, 0);
+    const r = P && checkStance(id, P), tip = r && r.tips.find(t => !t.ok);
+    document.getElementById('ptips').innerHTML = r ? postureResult(r) : '<p class="muted">Entra tutto nell\'inquadratura.</p>';
+    if (VOICE_ON && tip && tip.text !== lastSay && Date.now() - (POSECAM.said || 0) > 4000) { lastSay = tip.text; POSECAM.said = Date.now(); speak(tip.text, 'it-IT'); }
+    busy = false;
+  }, 450);
+}
+
+/* ---------- Render e interazioni ---------- */
+const $scr = document.getElementById('scr'), $tab = document.getElementById('tab');
+function render(scrollTop = true) {
+  const x = S.detail && byId(S.detail);
+  $scr.innerHTML = x ? detail(x) : S.lesson ? lessonScreen() : S.train ? (S.train.done ? trainDone() : trainScreen()) : { home, percorso, catalogo, impara, preferiti, profilo }[S.tab]();
+  if (!document.getElementById('posture')) stopPoseCam();
+  renderSheet();
+  if (document.getElementById('cam')) startCam(); else stopCam();
+  $tab.innerHTML = TABS.map(([id, label, ic]) => `<button data-tab="${id}" ${S.tab === id || (S.tab === 'preferiti' && id === 'profilo') ? 'aria-current="page"' : ''}>${ic}<span>${label}</span></button>`).join('');
+  if (scrollTop) $scr.scrollTop = 0;
+  const dpr = Math.min(devicePixelRatio || 1, 2), dprL = Math.min(devicePixelRatio || 1, 1.5);
+  live = [...$scr.querySelectorAll('canvas[data-live]')].map(el => { const main = el.hasAttribute('data-main'); el.width = Math.round(el.clientWidth * dprL); el.height = Math.round(el.clientWidth * (main ? H / W : .75) * dprL); paperBg(el); return { el, anim: ANIM[el.dataset.live], main }; });
+  $scr.querySelectorAll('canvas[data-train]').forEach(el => { paperBg(el); el.width = Math.round(el.clientWidth * dprL); el.height = Math.round(el.clientWidth * H / W * dprL); });
+  $scr.querySelectorAll('canvas[data-thumb]').forEach(el => { const a = ANIM[byId(el.dataset.thumb).anim], w = el.clientWidth || 150; el.width = Math.round(w * dpr); el.height = Math.round(w * dpr); const c = el.getContext('2d'), k = el.width / MAINH; SEED = 2; c.setTransform(k, 0, 0, k, -(60 + (a.thumbX || 0)) * k, 0); drawTech(c, a, a.thumb, a.view || '34', false); });
+}
+function renderSheet() { const g = S.term && GLOSS.find(x => x.id === S.term); document.getElementById('sheet').innerHTML = g ? termSheet(g) : ''; }
+function save() { store.set('ka-favs', [...S.favs]); store.set('ka-seen', [...S.seen]); }
+document.addEventListener('click', e => {
+  if (e.target.closest('[data-close-term]')) { S.term = null; renderSheet(); return; }
+  const b = e.target.closest('button'); if (!b) return;
+  const Z = S.quiz;
+  if (b.dataset.say) { speak(b.dataset.say); if (!b.dataset.term) return; }
+  if (b.dataset.term) { S.term = b.dataset.term; renderSheet(); }
+  else if (b.dataset.tab) { if (S.tab === b.dataset.tab) S.sub = null; S.tab = b.dataset.tab; S.detail = null; S.train = null; S.term = null; if (S.lesson) S.quiz = null; S.lesson = null; S.psub = b.hasAttribute('data-go-dojo') ? 'dojo' : null; render(); }
+  else if (b.dataset.sub !== undefined) { S.sub = b.dataset.sub || null; S.quiz = null; render(); }
+  else if (b.dataset.gcat) { S.gcat = b.dataset.gcat; render(false); }
+  else if (b.dataset.quizStart) { S.quiz = { kyu: +b.dataset.quizStart, q: makeQuiz(+b.dataset.quizStart), i: 0, ok: 0, ans: null }; S.sub = 'quiz'; render(); }
+  else if (b.dataset.ans !== undefined && Z) { const q = Z.q[Z.i]; Z.ans = b.dataset.ans; if (Z.ans === q.a) { Z.ok++; if (q.tech) rate(q.tech, true); } const y = $scr.scrollTop; render(false); $scr.scrollTop = y + 80; }
+  else if (b.hasAttribute('data-quiz-next')) { Z.i++; Z.ans = null; render(); }
+  else if (b.dataset.lesson) { const [li, j] = b.dataset.lesson.split('-').map(Number), ids = LEVELS[li].lessons[j]; S.lesson = { li, j, ids, i: 0, phase: 'learn' }; S.quiz = null; ids.forEach(id => S.seen.add(id)); save(); render(); }
+  else if (b.hasAttribute('data-lesson-next')) { const Ls = S.lesson; if (Ls.i + 1 < Ls.ids.length) Ls.i++; else { Ls.phase = 'quiz'; S.quiz = { q: lessonQuiz(Ls.ids), i: 0, ok: 0, ans: null, lesson: [Ls.li, Ls.j] }; } render(); }
+  else if (b.dataset.exam) { const k = +b.dataset.exam; S.lesson = null; S.train = { plan: examPlan(k), i: 0, el: 0, exam: k }; S.mirror = false; render(); startSeg(); }
+  else if (b.dataset.psub !== undefined) { S.psub = b.dataset.psub || null; S.dj.err = ''; render(); }
+  else if (b.hasAttribute('data-remind')) { const R = store.get('ka-remind', { on: false, at: '18:30' }); R.on = !R.on; store.set('ka-remind', R); if (R.on) try { Notification.requestPermission().catch(() => {}); } catch (er) {} const y = $scr.scrollTop; render(false); $scr.scrollTop = y; }
+  else if (b.dataset.taskDone) { const [tid, id] = b.dataset.taskDone.split('|'), t = TASKS.find(x => x.id === tid); if (t) { const had = t.done.includes(id); t.done = had ? t.done.filter(z => z !== id) : [...t.done, id]; if (!had) { rate(id, true); addLog('compito', 5, 0, `Compito: ${byId(id).jp}`); } store.set('ka-tasks', TASKS); } const y = $scr.scrollTop; render(false); $scr.scrollTop = y; }
+  else if (b.hasAttribute('data-task-add')) { S.dj.err = addTask(S.dj.code); if (!S.dj.err) S.dj.code = ''; render(false); }
+  else if (b.dataset.djPick) { const id = b.dataset.djPick, P = S.dj.pick; S.dj.pick = P.includes(id) ? P.filter(z => z !== id) : [...P, id]; S.dj.out = ''; const y = $scr.scrollTop; render(false); $scr.scrollTop = y; }
+  else if (b.hasAttribute('data-dj-make')) { const D = S.dj; D.out = 'KAT-' + b64e({ n: D.name, t: D.title, i: D.pick, r: +D.reps || 10, d: D.due, no: D.note }); const y = $scr.scrollTop; render(false); $scr.scrollTop = y; }
+  else if (b.hasAttribute('data-dj-copy')) { const t = $scr.querySelector('.code')?.textContent || ''; try { navigator.clipboard.writeText(t).then(() => { b.textContent = 'copiato'; }, () => { b.textContent = 'copia a mano'; }); } catch (er) { b.textContent = 'copia a mano'; } }
+  else if (b.hasAttribute('data-dj-self')) { S.dj.err = addTask(S.dj.out); render(); }
+  else if (b.hasAttribute('data-pose-cam')) poseCam();
+  else if (b.hasAttribute('data-pose-stop')) { stopPoseCam(); poseOut(''); }
+  else if (b.dataset.poseDemo) { stopPoseCam(); poseDemo(b.dataset.poseDemo === 'wrong'); }
+  else if (b.dataset.tsetMin) { S.tset.min = +b.dataset.tsetMin; S.tset.plan = makePlan(S.tset.min, S.tset.focus); render(false); }
+  else if (b.dataset.tsetFocus) { S.tset.focus = b.dataset.tsetFocus; S.tset.plan = makePlan(S.tset.min, S.tset.focus); render(false); }
+  else if (b.hasAttribute('data-tset-shuffle')) { S.tset.plan = makePlan(S.tset.min, S.tset.focus); const y = $scr.scrollTop; render(false); $scr.scrollTop = y; }
+  else if (b.hasAttribute('data-train-open')) { S.train = {}; if (S.tset) S.tset.plan = null; S.mirror = false; render(); }
+  else if (b.hasAttribute('data-train-go')) { S.train = { plan: S.tset.plan, i: 0, el: 0, min: S.tset.min, focus: S.tset.focus }; S.train.plan.forEach(s => s.k === 'kihon' && S.seen.add(s.tech)); save(); render(); startSeg(); }
+  else if (b.hasAttribute('data-train-exit')) { if (S.train?.done) { /* già segnate */ } S.train = null; S.mirror = false; try { speechSynthesis.cancel(); } catch (er) {} render(); }
+  else if (b.hasAttribute('data-train-pause')) { S.train.paused = !S.train.paused; b.textContent = S.train.paused ? 'riprendi' : 'pausa'; try { S.train.paused ? speechSynthesis.pause() : speechSynthesis.resume(); } catch (er) {} }
+  else if (b.hasAttribute('data-train-next')) { S.train.el = S.train.plan[S.train.i].dur; }
+  else if (b.hasAttribute('data-voice')) { VOICE_ON = !VOICE_ON; store.set('ka-voice', VOICE_ON); b.classList.toggle('on', VOICE_ON); b.setAttribute('aria-pressed', VOICE_ON); if (!VOICE_ON) try { speechSynthesis.cancel(); } catch (er) {} }
+  else if (b.hasAttribute('data-mirror')) { S.mirror = !S.mirror; const y = $scr.scrollTop; render(false); $scr.scrollTop = y; }
+  else if (b.dataset.rate) { rate(S.detail, b.dataset.rate === 'ok'); const y = $scr.scrollTop; render(false); $scr.scrollTop = y; }
+  else if (b.dataset.open) { S.term = null; S.train = null; S.detail = b.dataset.open; S.t = 0; S.view = ANIM[byId(S.detail).anim]?.view || '34'; S.seen.add(S.detail); save(); render(); }
+  else if (b.hasAttribute('data-back')) { S.detail = null; render(); }
+  else if (b.dataset.cat) { S.cat = b.dataset.cat; render(false); }
+  else if (b.dataset.fav) { const id = b.dataset.fav; S.favs.has(id) ? S.favs.delete(id) : S.favs.add(id); save(); const y = $scr.scrollTop; render(false); $scr.scrollTop = y; }
+  else if (b.hasAttribute('data-play')) { S.playing = !S.playing; b.textContent = S.playing ? 'pausa' : 'play'; if (S.playing && S.detail) { const a = ANIM[byId(S.detail).anim]; callStep(a.rows || byId(S.detail).call ? Math.max(stepOn, 0) : 0, a.rows ? 0 : 10 * Math.floor(S.t / a.D / 10)); } }
+  else if (b.dataset.speed) { S.speed = +b.dataset.speed; $scr.querySelectorAll('[data-speed]').forEach(o => { const on = +o.dataset.speed === S.speed; o.classList.toggle('on', on); o.setAttribute('aria-pressed', on); }); }
+  else if (b.dataset.view) { S.view = b.dataset.view; $scr.querySelectorAll('[data-view]').forEach(o => { const on = o.dataset.view === S.view; o.classList.toggle('on', on); o.setAttribute('aria-pressed', on); }); }
+  else if (b.dataset.step) { const x = byId(S.detail), a = ANIM[x.anim]; S.t = (a.hit || a.marks)[+b.dataset.step] + .02; S.playing = false; if (a.rows) callStep(+b.dataset.step, 0); else if (VOICE_ON) { try { speechSynthesis.cancel(); } catch (e) {} speak(x.steps[+b.dataset.step], 'it-IT'); } const p = $scr.querySelector('[data-play]'); if (p) p.textContent = 'play'; }
+});
+document.addEventListener('input', e => { if (e.target.dataset.dj) { S.dj[e.target.dataset.dj] = e.target.value; if (e.target.dataset.dj !== 'code') S.dj.out = ''; return; } });
+document.addEventListener('change', e => {
+  if (e.target.hasAttribute('data-remind-at')) { const R = store.get('ka-remind', { on: false, at: '18:30' }); R.at = e.target.value; store.set('ka-remind', R); const n = document.getElementById('remnote'); if (n && R.on) n.textContent = `Ogni giorno alle ${R.at}, se non ti sei ancora allenato.`; }
+  if (e.target.hasAttribute('data-pose-file') && e.target.files[0]) { stopPoseCam(); poseFile(e.target.files[0]); }
+});
+document.addEventListener('input', e => { if (!e.target.hasAttribute('data-gsearch')) return; S.gq = e.target.value; const pos = e.target.selectionStart; render(false); const n = $scr.querySelector('[data-gsearch]'); n.focus(); n.setSelectionRange(pos, pos); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && S.term) { S.term = null; renderSheet(); } });
+// carta del telefono
+// la grana della carta diventa uno sfondo statico: nessun livello in fusione da ricomporre a ogni fotogramma
+(() => { const c = document.createElement('canvas'), ph = document.getElementById('phone'); c.width = 400; c.height = 820; const x = c.getContext('2d'); for (let i = 0; i < 14000; i++) { x.fillStyle = `rgba(90,80,60,${Math.random() * .066})`; x.fillRect(Math.random() * 400, Math.random() * 820, 1.2, 1.2); } ph.style.backgroundImage = `url(${c.toDataURL()})`; ph.style.backgroundSize = '100% 100%'; })();
+
+let last = performance.now(), lastDraw = 0, stepOn = -1, loopOn = -1, vStep = -1, vLoop = -1;
+// la voce chiama la tecnica: nei kata e nelle combinazioni ogni passo, nelle tecniche singole il nome e poi il conteggio
+function callStep(i, loop) {
+  if (!VOICE_ON || !S.detail) return;
+  const x = byId(S.detail), a = ANIM[x.anim], clean = t => t.replace(/-/g, ' ').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  let txt, lang = 'it-IT';
+  if (a.rows) { const r = a.rows[i]; if (!r) return; txt = /\d/.test(r[0]) ? r[1] + (r[3] ? '. Kiai!' : '') : r[0]; }
+  else if (x.call) { txt = x.call[i]; if (!txt) return; }
+  else { if (i) return; if (loop % 10 === 0) txt = x.jp; else { txt = COUNT[loop % 10][1]; lang = 'ja-JP'; } }
+  try { speechSynthesis.cancel(); } catch (e) {}
+  speak(lang === 'it-IT' ? clean(txt) : txt, lang);
+}
+const visible = (el, sr) => { const r = el.getBoundingClientRect(); return r.bottom > sr.top && r.top < sr.bottom; };
+function frame(now) {
+  const dt = Math.min((now - last) / 1000, .1); last = now;
+  if (S.playing) S.t += dt * S.speed;
+  trainTick(dt);
+  // 30 fotogrammi al secondo bastano per il tratto a matita; si ridisegna solo ciò che cambia ed è visibile
+  if (now - lastDraw >= 48) { // circa 20 fotogrammi al secondo, il ritmo dei disegni animati "a passo due"
+    lastDraw = now;
+    const seed = reduced ? 1 : Math.floor(now / 110) % 3 + 1, sr = $scr.getBoundingClientRect();
+    SEED = seed;
+    const tc = S.train?.plan && $scr.querySelector('canvas[data-train]');
+    if (tc && !(S.train.paused && tc._seed === seed)) { tc._seed = seed; const s = S.train.plan[S.train.i], a = ANIM[byId(s.tech).anim], c = tc.getContext('2d'), k = tc.width / W; c.setTransform(k, 0, 0, k, 0, 0); drawTech(c, a, S.train.el * s.speed, a.view || '34', true); }
+    for (const v of live) {
+      if (!v.el.isConnected || !visible(v.el, sr)) continue;
+      const t = v.main ? S.t : (reduced ? v.anim.thumb : now / 1000), view = v.main ? S.view : v.anim.view || '34';
+      if (v.main && !S.playing && v.t === t && v.view === view && v.seed === seed) continue;
+      if (!v.main && now - (v.at || 0) < 80) continue;
+      v.t = t; v.view = view; v.seed = seed; v.at = now;
+      const c = v.el.getContext('2d'), k = v.el.width / W;
+      c.setTransform(k, 0, 0, k, 0, 0);
+      drawTech(c, v.anim, t, view, v.main);
+      if (v.main) { const tt = ((S.t % v.anim.D) + v.anim.D) % v.anim.D, loop = Math.floor(S.t / v.anim.D); let i = 0; v.anim.marks.forEach((m, j) => { if (tt >= m) i = j; }); // la voce anticipa di mezzo secondo reale il movimento
+        const tv = S.t + .5 * S.speed, vt = ((tv % v.anim.D) + v.anim.D) % v.anim.D, vl = Math.floor(tv / v.anim.D); let vi = 0; v.anim.marks.forEach((m, j) => { if (vt >= m) vi = j; });
+        if (vi !== vStep || vl !== vLoop) { if (S.playing && v.fresh === v.el && (vi !== vStep || !v.anim.rows && !byId(S.detail).call)) callStep(vi, vl); vStep = vi; vLoop = vl; }
+        if (i !== stepOn || loop !== loopOn || v.fresh !== v.el) { if (v.fresh !== v.el) { vStep = vi; vLoop = vl; } stepOn = i; loopOn = loop; v.fresh = v.el; $scr.querySelectorAll('[data-step]').forEach((s, j) => s.classList.toggle('on', j === i)); } }
+    }
+  }
+  requestAnimationFrame(frame);
+}
+window.KA = { makePlan, rigPoints, checkStance, S, PATH, LEVELS, render }; // per i test
+if (reduced) S.t = 2;
+render();
+requestAnimationFrame(frame);
+window.__K={drawTech,eIO,eOut,eIn,W,MAINH};
+})();
+</script>

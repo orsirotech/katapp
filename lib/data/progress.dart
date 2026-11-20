@@ -57,14 +57,23 @@ const kyuIds = {
   6: ['mawashi', 'ushiro'],
 };
 
+const beltNames = {10: 'prima cintura', 9: 'cintura bianca', 8: 'cintura gialla', 7: 'cintura arancio', 6: 'cintura verde', 5: 'cintura blu', 4: 'cintura blu', 3: 'cintura marrone', 2: 'cintura marrone', 1: 'cintura marrone', 0: 'cintura nera'};
+
+/// Tecniche per grado: prima l'elenco fisso (l'ordine delle lezioni già fatte non cambia), poi le altre del catalogo secondo il loro kyu.
+Map<int, List<String>> programOf(Catalog c) {
+  final m = <int, List<String>>{10: ['musubi', 'heiko'], for (final e in kyuIds.entries) e.key: [...e.value]};
+  final known = {for (final l in m.values) ...l};
+  for (final t in c.all) {
+    if (!known.contains(t.id)) (m[t.kyu.clamp(0, 10)] ??= []).add(t.id);
+  }
+  return m;
+}
+
 /// Programma per cintura mostrato nel profilo.
-const beltProgram = [
-  ('10° kyu', 'prima cintura', ['musubi', 'heiko']),
-  ('9° kyu', 'cintura bianca', ['zenkutsu', 'gedan', 'ageuke', 'gyaku', 'oizuki', 'maegeri', 'taikyoku1']),
-  ('8° kyu', 'cintura gialla', ['kokutsu', 'soto', 'uchiuke', 'shutouke', 'combo1', 'combo2', 'combo3', 'combo4', 'heian1']),
-  ('7° kyu', 'cintura arancio', ['kiba', 'kizami', 'urazuki', 'shutouchi', 'uraken', 'empi', 'nukite', 'keage', 'kekomi', 'combo5', 'combo6', 'combo7', 'heian2']),
-  ('6° kyu', 'cintura verde', ['mawashi', 'ushiro']),
-];
+List<(String, String, List<String>)> beltProgramOf(Catalog c) {
+  final m = programOf(c), ks = m.keys.toList()..sort((a, b) => b - a);
+  return [for (final k in ks) (k == 0 ? '1° dan' : '$k° kyu', beltNames[k]!, m[k]!)];
+}
 
 List<Level> buildLevels(Catalog c) {
   Level make(int kyu, String belt, List<String> ids) {
@@ -89,7 +98,12 @@ List<Level> buildLevels(Catalog c) {
     return Level(kyu, belt, ids, out);
   }
 
-  return [make(9, 'cintura bianca', ['musubi', 'heiko', ...kyuIds[9]!]), make(8, 'cintura gialla', kyuIds[8]!), make(7, 'cintura arancio', kyuIds[7]!), make(6, 'cintura verde', kyuIds[6]!)];
+  final m = programOf(c), base10 = ['musubi', 'heiko'];
+  return [
+    make(9, beltNames[9]!, [...base10, ...kyuIds[9]!, ...m[10]!.where((id) => !base10.contains(id)), ...m[9]!.where((id) => !kyuIds[9]!.contains(id))]),
+    for (var k = 8; k >= 1; k--)
+      if ((m[k] ?? const []).isNotEmpty) make(k, beltNames[k]!, m[k]!),
+  ];
 }
 
 class Question {
@@ -144,7 +158,7 @@ class QuizMaker {
 
   /// Otto domande sul programma fino al kyu scelto.
   List<Question> forKyu(int kyu) {
-    final ts = [for (final e in kyuIds.entries) if (e.key >= kyu) for (final id in e.value) ?c.byId(id)], q = <Question>[];
+    final ts = [for (final e in programOf(c).entries) if (e.key >= kyu) for (final id in e.value) ?c.byId(id)], q = <Question>[];
     q.addAll(shuffled(ts.where((x) => !x.isSequence), r).take(3).map(pic));
     q.addAll(shuffled(wordsOf(ts), r).take(3).map(word));
     final kt = ts.where((x) => x.isKata).toList();
@@ -340,7 +354,7 @@ class Progress {
     final pool = (
       kihon: ['gedan', 'ageuke', 'gyaku', 'oizuki', 'soto', 'uchiuke', 'shutouke', 'kizami', 'urazuki', 'shutouchi', 'uraken', 'empi', 'nukite'],
       geri: ['maegeri', 'keage', 'kekomi', 'mawashi', 'ushiro'],
-      combo: [for (final t in all) if (t.categoryId == 'combo') t.id],
+      combo: [for (final t in all) if (t.isCombo) t.id],
       kata: [for (final t in all) if (t.isKata) t.id],
     );
     final reps = minutes >= 20 ? 16 : minutes >= 10 ? 10 : 6, nWarm = minutes >= 20 ? 6 : minutes >= 10 ? 5 : 3;
@@ -365,8 +379,8 @@ class Progress {
       case 'esame':
         final t = [for (final id in levels[curLevel].ids) catalog.byId(id)!];
         mid = () => [
-              ...pri([for (final x in t) if (!x.isKata && x.categoryId != 'combo' && x.categoryId != 'dachi') x.id]).map(kh),
-              ...pri([for (final x in t) if (x.categoryId == 'combo') x.id]).map((id) => once(id, 3)),
+              ...pri([for (final x in t) if (!x.isKata && !x.isCombo && x.categoryId != 'dachi') x.id]).map(kh),
+              ...pri([for (final x in t) if (x.isCombo) x.id]).map((id) => once(id, 3)),
               for (final x in t) if (x.isKata) once(x.id, 2),
             ];
       default:
@@ -391,8 +405,8 @@ class Progress {
   List<Segment> examPlan(int kyu) {
     final L = levels.firstWhere((l) => l.kyu == kyu), ts = [for (final id in L.ids) catalog.byId(id)!];
     final plan = [Segment(kind: 'cer', title: 'Esame simulato', sub: 'Rei. La voce chiama le tecniche come un esaminatore', dur: 12, say: 'Esame simulato per il $kyu° kyu. Rei')];
-    plan.addAll(shuffled(ts.where((x) => !x.isKata && x.categoryId != 'combo' && x.categoryId != 'dachi'), rnd).take(4).map((x) => Segment(kind: 'kihon', techId: x.id, reps: 5, speed: .8)));
-    plan.addAll(shuffled(ts.where((x) => x.categoryId == 'combo'), rnd).take(2).map((x) => Segment(kind: 'kihon', techId: x.id, reps: 1, speed: .8, noCount: true)));
+    plan.addAll(shuffled(ts.where((x) => !x.isKata && !x.isCombo && x.categoryId != 'dachi'), rnd).take(4).map((x) => Segment(kind: 'kihon', techId: x.id, reps: 5, speed: .8)));
+    plan.addAll(shuffled(ts.where((x) => x.isCombo), rnd).take(2).map((x) => Segment(kind: 'kihon', techId: x.id, reps: 1, speed: .8, noCount: true)));
     plan.addAll(ts.where((x) => x.isKata).map((x) => Segment(kind: 'kihon', techId: x.id, reps: 1, speed: .8, noCount: true)));
     for (final s in plan) {
       _durOf(s);
