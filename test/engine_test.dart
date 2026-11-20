@@ -23,19 +23,7 @@ void main() {
   });
 
   test('lerp: le stringhe scattano a metà, i numeri si interpolano', () {
-    final m = lerpValue(
-      {
-        'a': 0,
-        'h': 'x',
-        'v': [0, 10],
-      },
-      {
-        'a': 10,
-        'h': 'o',
-        'v': [10, 20],
-      },
-      .4,
-    ) as Map;
+    final m = lerpValue({'a': 0, 'h': 'x', 'v': [0, 10]}, {'a': 10, 'h': 'o', 'v': [10, 20]}, .4) as Map;
     expect(m['a'], closeTo(4, 1e-9));
     expect(m['h'], 'x');
     expect(m['v'], [4.0, 14.0]);

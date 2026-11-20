@@ -50,20 +50,11 @@ class AppState extends ChangeNotifier {
 
   Future<void> syncReminder() {
     final p = progress;
-    return reminder.sync(
-      on: p.remindOn,
-      at: p.remindAt,
-      trainedToday: p.xpOn(p.today) > 0,
-      body: p.streak > 0 ? 'Non rompere la serie: ${p.streak} giorni di fila.' : 'Pochi minuti di kihon per iniziare la serie.',
-    );
+    return reminder.sync(on: p.remindOn, at: p.remindAt, trainedToday: p.xpOn(p.today) > 0, body: p.streak > 0 ? 'Non rompere la serie: ${p.streak} giorni di fila.' : 'Pochi minuti di kihon per iniziare la serie.');
   }
 
   void openTech(BuildContext context, Technique t) {
     markSeen(t.id);
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => DetailScreen(app: this, tech: t),
-      ),
-    );
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => DetailScreen(app: this, tech: t)));
   }
 }

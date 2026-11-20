@@ -26,18 +26,8 @@ class Technique {
   Anim? anim;
 
   Technique({
-    required this.id,
-    required this.categoryId,
-    required this.nameJp,
-    required this.nameIt,
-    required this.description,
-    required this.animPath,
-    required this.kyu,
-    required this.steps,
-    required this.keyPoints,
-    required this.commonErrors,
-    required this.sources,
-    required this.toVerify,
+    required this.id, required this.categoryId, required this.nameJp, required this.nameIt, required this.description, required this.animPath,
+    required this.kyu, required this.steps, required this.keyPoints, required this.commonErrors, required this.sources, required this.toVerify,
   });
 
   bool get isKata => categoryId == 'kata';
@@ -95,7 +85,7 @@ class Catalog {
     final j = jsonDecode(await bundle.loadString('assets/contenuti/tecniche.json')) as Map<String, dynamic>;
     final cats = [
       for (final c in j['categorie'] as List)
-        Category(c['id'] as String, c['nome_it'] as String, c['nome_jp'] as String? ?? '', [for (final t in c['tecniche'] as List) Technique.fromJson(c['id'] as String, t as Map<String, dynamic>)]),
+        Category(c['id'] as String, c['nome_it'] as String, c['nome_jp'] as String? ?? '', [for (final t in c['tecniche'] as List) Technique.fromJson(c['id'] as String, t as Map<String, dynamic>)])
     ];
     final cat = Catalog(cats);
     final cache = <String, Anim>{};

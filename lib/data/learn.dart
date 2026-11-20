@@ -23,15 +23,15 @@ class Term {
   const Term({required this.id, required this.romaji, required this.kanji, required this.kana, required this.meaning, required this.category, this.parts = const [], this.alias = const []});
 
   factory Term.fromJson(Map<String, dynamic> j) => Term(
-    id: j['id'] as String,
-    romaji: j['romaji'] as String,
-    kanji: j['kanji'] as String,
-    kana: j['kana'] as String,
-    meaning: j['significato'] as String,
-    category: j['categoria'] as String,
-    parts: [for (final p in (j['parti'] as List? ?? const [])) (p['parte'] as String, p['senso'] as String)],
-    alias: [for (final a in (j['alias'] as List? ?? const [])) a as String],
-  );
+        id: j['id'] as String,
+        romaji: j['romaji'] as String,
+        kanji: j['kanji'] as String,
+        kana: j['kana'] as String,
+        meaning: j['significato'] as String,
+        category: j['categoria'] as String,
+        parts: [for (final p in (j['parti'] as List? ?? const [])) (p['parte'] as String, p['senso'] as String)],
+        alias: [for (final a in (j['alias'] as List? ?? const [])) a as String],
+      );
 }
 
 class Said {
@@ -52,17 +52,15 @@ class Rules {
   final List<Said> referee;
   const Rules({required this.note, required this.updated, required this.sources, required this.groups, required this.referee});
 
-  static List<(String, List<String>)> _sec(Object? l) => [
-    for (final e in (l as List? ?? const [])) (e['titolo'] as String, [for (final p in e['punti'] as List) p as String]),
-  ];
+  static List<(String, List<String>)> _sec(Object? l) => [for (final e in (l as List? ?? const [])) (e['titolo'] as String, [for (final p in e['punti'] as List) p as String])];
 
   factory Rules.fromJson(Map<String, dynamic> j) => Rules(
-    note: j['nota'] as String? ?? '',
-    updated: j['aggiornate'] as String? ?? '',
-    sources: [for (final f in (j['fonti'] as List? ?? const [])) f as String],
-    groups: [('Kumite', _sec(j['kumite'])), ('Kata', _sec(j['kata'])), ('Esami di cintura', _sec(j['esami']))],
-    referee: [for (final c in (j['comandi_arbitro'] as List? ?? const [])) Said(c['romaji'] as String, c['kana'] as String, c['significato'] as String)],
-  );
+        note: j['nota'] as String? ?? '',
+        updated: j['aggiornate'] as String? ?? '',
+        sources: [for (final f in (j['fonti'] as List? ?? const [])) f as String],
+        groups: [('Kumite', _sec(j['kumite'])), ('Kata', _sec(j['kata'])), ('Esami di cintura', _sec(j['esami']))],
+        referee: [for (final c in (j['comandi_arbitro'] as List? ?? const [])) Said(c['romaji'] as String, c['kana'] as String, c['significato'] as String)],
+      );
 }
 
 /// Contenuti di Impara: glossario, comandi, conteggio, filosofia, etichetta.
@@ -103,22 +101,20 @@ class Learn {
     final p = plain(q.trim());
     return [
       for (final g in glossary)
-        if ((cat == 'tutte' || g.category == cat) && (p.isEmpty || plain('${g.romaji} ${g.meaning} ${g.alias.join(' ')}').contains(p))) g,
+        if ((cat == 'tutte' || g.category == cat) && (p.isEmpty || plain('${g.romaji} ${g.meaning} ${g.alias.join(' ')}').contains(p))) g
     ];
   }
 
   factory Learn.fromJson(Map<String, dynamic> j) => Learn(
-    glossary: [for (final g in j['glossario'] as List) Term.fromJson(g as Map<String, dynamic>)],
-    commands: [for (final c in j['comandi'] as List) Said(c['romaji'] as String, c['kana'] as String, c['significato'] as String)],
-    count: [for (final c in j['conteggio'] as List) Said(c['romaji'] as String, c['kana'] as String, '${c['numero']}')],
-    dojoKun: [for (final d in j['dojo_kun'] as List) Principle(d['giapponese'] as String, d['italiano'] as String, d['spiegazione'] as String)],
-    nijukun: [for (final d in j['nijukun'] as List) Principle(d['giapponese'] as String, d['italiano'] as String, d['spiegazione'] as String, d['domanda'] as String? ?? '')],
-    kataMeaning: {for (final e in (j['significato_kata'] as Map).entries) e.key as String: (e.value['nome'] as String, e.value['insegna'] as String)},
-    etiquette: [
-      for (final e in j['etichetta'] as List) (e['titolo'] as String, [for (final p in e['punti'] as List) p as String]),
-    ],
-    rules: j['regole'] is Map ? Rules.fromJson(j['regole'] as Map<String, dynamic>) : null,
-  );
+        glossary: [for (final g in j['glossario'] as List) Term.fromJson(g as Map<String, dynamic>)],
+        commands: [for (final c in j['comandi'] as List) Said(c['romaji'] as String, c['kana'] as String, c['significato'] as String)],
+        count: [for (final c in j['conteggio'] as List) Said(c['romaji'] as String, c['kana'] as String, '${c['numero']}')],
+        dojoKun: [for (final d in j['dojo_kun'] as List) Principle(d['giapponese'] as String, d['italiano'] as String, d['spiegazione'] as String)],
+        nijukun: [for (final d in j['nijukun'] as List) Principle(d['giapponese'] as String, d['italiano'] as String, d['spiegazione'] as String, d['domanda'] as String? ?? '')],
+        kataMeaning: {for (final e in (j['significato_kata'] as Map).entries) e.key as String: (e.value['nome'] as String, e.value['insegna'] as String)},
+        etiquette: [for (final e in j['etichetta'] as List) (e['titolo'] as String, [for (final p in e['punti'] as List) p as String])],
+        rules: j['regole'] is Map ? Rules.fromJson(j['regole'] as Map<String, dynamic>) : null,
+      );
 
   static Future<Learn> load(AssetBundle bundle) async => Learn.fromJson(jsonDecode(await bundle.loadString('assets/contenuti/impara.json')) as Map<String, dynamic>);
 }

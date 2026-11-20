@@ -15,9 +15,7 @@ dynamic lerpValue(dynamic a, dynamic b, double k) {
   if (a is String) return k < .5 ? a : b;
   if (a is List && b is List) return [for (var i = 0; i < a.length; i++) lerpValue(a[i], b[i], k)];
   if (a is Map && b is Map) {
-    return <String, dynamic>{
-      for (final key in {...a.keys, ...b.keys}) key as String: lerpValue(a[key], b[key], k),
-    };
+    return <String, dynamic>{for (final key in {...a.keys, ...b.keys}) key as String: lerpValue(a[key], b[key], k)};
   }
   return k < .5 ? a : b;
 }
@@ -29,12 +27,7 @@ double _eOut(double x) => 1 - math.pow(1 - x, 3).toDouble();
 double _eIn(double x) => x * x;
 double _lin(double x) => x;
 
-Ease easeByName(String? n) => switch (n) {
-  'inOut' => _eIO,
-  'out' => _eOut,
-  'in' => _eIn,
-  _ => _lin,
-};
+Ease easeByName(String? n) => switch (n) { 'inOut' => _eIO, 'out' => _eOut, 'in' => _eIn, _ => _lin };
 
 class Key {
   final double t;
@@ -56,18 +49,14 @@ class Anim {
   const Anim({required this.id, required this.duration, required this.follow, required this.view, required this.keys, required this.marks, required this.kiai});
 
   factory Anim.fromJson(Map<String, dynamic> j) => Anim(
-    id: j['id'] as String,
-    duration: (j['durata'] as num).toDouble(),
-    follow: j['segue_camera'] == true,
-    view: (j['vista'] as String?) ?? '34',
-    keys: [for (final k in j['chiavi'] as List) Key((k['t'] as num).toDouble(), Map<String, dynamic>.from(k['pose'] as Map), easeByName(k['ease'] as String?))],
-    marks: [
-      for (final m in (j['passi_t'] as List? ?? const [0])) (m as num).toDouble(),
-    ],
-    kiai: [
-      for (final w in (j['kiai'] as List? ?? const [])) [for (final v in w as List) (v as num).toDouble()],
-    ],
-  );
+        id: j['id'] as String,
+        duration: (j['durata'] as num).toDouble(),
+        follow: j['segue_camera'] == true,
+        view: (j['vista'] as String?) ?? '34',
+        keys: [for (final k in j['chiavi'] as List) Key((k['t'] as num).toDouble(), Map<String, dynamic>.from(k['pose'] as Map), easeByName(k['ease'] as String?))],
+        marks: [for (final m in (j['passi_t'] as List? ?? const [0])) (m as num).toDouble()],
+        kiai: [for (final w in (j['kiai'] as List? ?? const [])) [for (final v in w as List) (v as num).toDouble()]],
+      );
 
   double wrap(double t) => ((t % duration) + duration) % duration;
 

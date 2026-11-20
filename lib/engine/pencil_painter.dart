@@ -108,13 +108,13 @@ class PencilPainter extends CustomPainter {
   // tratteggio diagonale riutilizzato per tutte le ombre
   static final Map<int, Path> _hatch = {};
   Path hatchPath() => _hatch.putIfAbsent(seed, () {
-    final p = Path();
-    for (var k = -70; k < 70; k++) {
-      final x0 = 240 + k * 4.2;
-      p.addPath(wobble([for (var i = 0; i <= 3; i++) Offset.lerp(Offset(x0 - 160, 470), Offset(x0 + 160, -10), i / 3)!], jit: .5, salt: 70.0 + k), Offset.zero);
-    }
-    return p;
-  });
+        final p = Path();
+        for (var k = -70; k < 70; k++) {
+          final x0 = 240 + k * 4.2;
+          p.addPath(wobble([for (var i = 0; i <= 3; i++) Offset.lerp(Offset(x0 - 160, 470), Offset(x0 + 160, -10), i / 3)!], jit: .5, salt: 70.0 + k), Offset.zero);
+        }
+        return p;
+      });
 
   void shape(Canvas c, List<Offset> pts, {required double near, bool isSkin = false, Shade? shade}) {
     final body = wobble(pts, closed: true);
@@ -123,47 +123,40 @@ class PencilPainter extends CustomPainter {
       c.save();
       c.clipPath(body);
       final dir = Offset(-shade.n.dy, shade.n.dx), base = shade.a + shade.n * shade.off;
-      c.clipPath(
-        Path()
-          ..moveTo(base.dx - dir.dx * 900, base.dy - dir.dy * 900)
-          ..lineTo(base.dx + dir.dx * 900, base.dy + dir.dy * 900)
-          ..lineTo(base.dx + dir.dx * 900 + shade.n.dx * 900, base.dy + dir.dy * 900 + shade.n.dy * 900)
-          ..lineTo(base.dx - dir.dx * 900 + shade.n.dx * 900, base.dy - dir.dy * 900 + shade.n.dy * 900)
-          ..close(),
-      );
-      c.drawPath(
-        hatchPath(),
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = .75
-          ..color = ink(.26 + (1 - near) * .12),
-      );
+      c.clipPath(Path()
+        ..moveTo(base.dx - dir.dx * 900, base.dy - dir.dy * 900)
+        ..lineTo(base.dx + dir.dx * 900, base.dy + dir.dy * 900)
+        ..lineTo(base.dx + dir.dx * 900 + shade.n.dx * 900, base.dy + dir.dy * 900 + shade.n.dy * 900)
+        ..lineTo(base.dx - dir.dx * 900 + shade.n.dx * 900, base.dy - dir.dy * 900 + shade.n.dy * 900)
+        ..close());
+      c.drawPath(hatchPath(), Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = .75
+        ..color = ink(.26 + (1 - near) * .12));
       c.restore();
     }
     final passes = near > .4 ? 2 : 1;
     for (var pass = 0; pass < passes; pass++) {
       c.drawPath(
-        wobble(resample(pts, 8), closed: true, jit: .9, salt: 100.0 + pass * 300 + pts.length),
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeCap = StrokeCap.round
-          ..strokeJoin = StrokeJoin.round
-          ..strokeWidth = pass == 1 ? .9 : 1.35
-          ..color = ink((pass == 1 ? .45 : .82) * (.65 + .35 * near)),
-      );
+          wobble(resample(pts, 8), closed: true, jit: .9, salt: 100.0 + pass * 300 + pts.length),
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeCap = StrokeCap.round
+            ..strokeJoin = StrokeJoin.round
+            ..strokeWidth = pass == 1 ? .9 : 1.35
+            ..color = ink((pass == 1 ? .45 : .82) * (.65 + .35 * near)));
     }
   }
 
   void stroke(Canvas c, List<Offset> pts, {double w = 1.2, double a = .8, bool closed = false}) {
     c.drawPath(
-      wobble(pts, closed: closed, jit: .6, salt: 500.0 + pts.length),
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeCap = StrokeCap.round
-        ..strokeJoin = StrokeJoin.round
-        ..strokeWidth = w
-        ..color = ink(a),
-    );
+        wobble(pts, closed: closed, jit: .6, salt: 500.0 + pts.length),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.round
+          ..strokeJoin = StrokeJoin.round
+          ..strokeWidth = w
+          ..color = ink(a));
   }
 
   Shade limbShade(Offset a, Offset b, double r) {
@@ -192,38 +185,13 @@ class PencilPainter extends CustomPainter {
     sdv = sdv.length < .2 ? const V3(0, 0, -1) : sdv.unit;
     final uf = f.cross(sdv).unit;
     const w = 4.6;
-    const sole = <List<double>>[
-      [-6, -w * .8],
-      [-3, -w],
-      [8, -w * 1.05],
-      [15, -w * .95],
-      [19, -w * .3],
-      [19.5, w * .35],
-      [17, w * .9],
-      [8, w],
-      [-3, w * .9],
-      [-6, w * .6],
-    ];
+    const sole = <List<double>>[[-6, -w * .8], [-3, -w], [8, -w * 1.05], [15, -w * .95], [19, -w * .3], [19.5, w * .35], [17, w * .9], [8, w], [-3, w * .9], [-6, w * .6]];
     V3 p3(double u, double v, double h) => ank + f * u + sdv * v + uf * (h - 8);
     final pts = <Offset>[];
     for (final s in sole) {
       final u = s[0], v = s[1];
       pts.add(o(cam.proj(p3(u, v, 0))));
-      pts.add(
-        o(
-          cam.proj(
-            p3(
-              u,
-              v,
-              u < 6
-                  ? 8
-                  : u < 14
-                  ? 5.5
-                  : 3,
-            ),
-          ),
-        ),
-      );
+      pts.add(o(cam.proj(p3(u, v, u < 6 ? 8 : u < 14 ? 5.5 : 3))));
     }
     return Part(cam.proj(ank).d - 3, (c, near) {
       shape(c, hull(pts), near: near, isSkin: true, shade: Shade(o(cam.proj(p3(6, 0, 4))), const Offset(.55, .83), 2));
@@ -238,7 +206,7 @@ class PencilPainter extends CustomPainter {
     final pts = <Offset>[
       for (final a in [-1.0, 1.0])
         for (final b in [-1.0, 1.0])
-          for (final e in [-1.0, 1.0]) o(cam.proj(corner(a, b, e))),
+          for (final e in [-1.0, 1.0]) o(cam.proj(corner(a, b, e)))
     ];
     final vd = cam.viewDir, palmVis = p.dot(vd) > .1, backVis = p.dot(vd) < -.1;
     Offset pr(V3 v) => o(cam.proj(v));
@@ -254,14 +222,10 @@ class PencilPainter extends CustomPainter {
       }
       for (var i = 0; i < 4; i++) {
         final b = -.75 + i * .5, k = pr(cc + f * 4.6 + w * (b * 4.4) + p * -1.6);
-        c.drawCircle(
-          k,
-          1.55 * kScale * .72,
-          Paint()
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = .9
-            ..color = ink(.75),
-        );
+        c.drawCircle(k, 1.55 * kScale * .72, Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = .9
+          ..color = ink(.75));
       }
       if (palmVis) {
         for (var i = 1; i < 4; i++) {
@@ -279,21 +243,9 @@ class PencilPainter extends CustomPainter {
     final fw = b.fw, sd = b.sd;
     V3 at(double h) => b.at(h);
     final p3 = [
-      b.shL + sd * -4,
-      b.shR + sd * 4,
-      b.shL + const V3(0, 4, 0) + fw * 3,
-      b.shR + const V3(0, 4, 0) + fw * 3,
-      at(32) + fw * 12,
-      at(32) + fw * -11,
-      at(8) + fw * 12 + sd * -15,
-      at(8) + fw * 12 + sd * 15,
-      at(8) + fw * -11 + sd * -15,
-      at(8) + fw * -11 + sd * 15,
-      at(-14) + sd * -16 + fw * 9,
-      at(-14) + sd * 16 + fw * 9,
-      at(-14) + sd * -16 + fw * -9,
-      at(-14) + sd * 16 + fw * -9,
-      at(52),
+      b.shL + sd * -4, b.shR + sd * 4, b.shL + const V3(0, 4, 0) + fw * 3, b.shR + const V3(0, 4, 0) + fw * 3,
+      at(32) + fw * 12, at(32) + fw * -11, at(8) + fw * 12 + sd * -15, at(8) + fw * 12 + sd * 15, at(8) + fw * -11 + sd * -15, at(8) + fw * -11 + sd * 15,
+      at(-14) + sd * -16 + fw * 9, at(-14) + sd * 16 + fw * 9, at(-14) + sd * -16 + fw * -9, at(-14) + sd * 16 + fw * -9, at(52),
     ];
     Offset pr(V3 v) => o(cam.proj(v));
     final pts = p3.map(pr).toList(), c2 = pr(at(20)), frontVis = fw.dot(cam.viewDir) > -.25;
@@ -311,7 +263,8 @@ class PencilPainter extends CustomPainter {
         final a = i / 28 * math.pi * 2, q = at(6) + fw * (math.cos(a) * 12.5) + sd * (math.sin(a) * 15.5);
         ring.add((q, cam.proj(q)));
       }
-      final front = ring.where((r) => r.$2.d >= dc - 1).toList()..sort((x, y) => math.atan2(x.$1.z - b.c.z, x.$1.x - b.c.x).compareTo(math.atan2(y.$1.z - b.c.z, y.$1.x - b.c.x)));
+      final front = ring.where((r) => r.$2.d >= dc - 1).toList()
+        ..sort((x, y) => math.atan2(x.$1.z - b.c.z, x.$1.x - b.c.x).compareTo(math.atan2(y.$1.z - b.c.z, y.$1.x - b.c.x)));
       final belt = Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 4.2 * kScale * .8
@@ -336,7 +289,8 @@ class PencilPainter extends CustomPainter {
     Offset pr(V3 v) => o(cam.proj(v));
     return Part(cp.d + 1, (c, near) {
       final pts = <Offset>[
-        for (var i = 0; i < 20; i++) Offset(cc.dx + math.cos(i / 20 * math.pi * 2) * r * .9, cc.dy + math.sin(i / 20 * math.pi * 2) * r * (math.sin(i / 20 * math.pi * 2) > 0 ? 1.12 : 1)),
+        for (var i = 0; i < 20; i++)
+          Offset(cc.dx + math.cos(i / 20 * math.pi * 2) * r * .9, cc.dy + math.sin(i / 20 * math.pi * 2) * r * (math.sin(i / 20 * math.pi * 2) > 0 ? 1.12 : 1))
       ];
       shape(c, pts, near: near, isSkin: true, shade: Shade(cc, const Offset(.55, .83), r * .25));
       // capelli: calotta sul lato opposto al viso, tratteggiata
@@ -357,13 +311,10 @@ class PencilPainter extends CustomPainter {
           final x0 = cc.dx + k * 2.2;
           lines.addPath(wobble([Offset(x0 - 30, cc.dy + 30), Offset(x0 - 10, cc.dy), Offset(x0 + 10, cc.dy - 30)], jit: .4, salt: 800.0 + k), Offset.zero);
         }
-        c.drawPath(
-          lines,
-          Paint()
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = .8
-            ..color = ink(.5),
-        );
+        c.drawPath(lines, Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = .8
+          ..color = ink(.5));
         c.restore();
         stroke(c, hp, w: 1.1, a: .7, closed: true);
       }
@@ -442,28 +393,17 @@ class PencilPainter extends CustomPainter {
         stroke(c, resample([o(cam.proj(V3(g0x - 180, 0, g0z + i * 90))), o(cam.proj(V3(g0x + 270, 0, g0z + i * 90)))], 30, closed: false), w: .8, a: .18);
       }
     } else {
-      final g = [
-        for (final q in const [
-          [-120.0, -45.0],
-          [120.0, -45.0],
-          [120.0, 45.0],
-          [-120.0, 45.0],
-        ])
-          o(cam.proj(V3(q[0], 0, q[1]))),
-      ];
+      final g = [for (final q in const [[-120.0, -45.0], [120.0, -45.0], [120.0, 45.0], [-120.0, 45.0]]) o(cam.proj(V3(q[0], 0, q[1])))];
       stroke(c, resample(g, 30), w: 1, a: .25, closed: true);
     }
     for (final a in [b.ankL, b.ankR]) {
       final sh = [for (var i = 0; i < 18; i++) o(cam.proj(V3(a.x + 5 + math.cos(i / 18 * math.pi * 2) * 17, 0, a.z + math.sin(i / 18 * math.pi * 2) * 8)))];
       c.save();
       c.clipPath(wobble(sh, closed: true));
-      c.drawPath(
-        hatchPath(),
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = .8
-          ..color = ink(.22),
-      );
+      c.drawPath(hatchPath(), Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = .8
+        ..color = ink(.22));
       c.restore();
     }
   }
@@ -490,9 +430,7 @@ class PencilPainter extends CustomPainter {
       final r = 24 + j * 4.5;
       final pts = [
         for (var i = 0; i <= 10; i++)
-          o(
-            cam.proj(b.at(4 - j * 3.0) + b.fw * (math.cos(-sg * (.2 + i * .13) + math.pi * (j == 1 ? .08 : 0)) * r) + b.sd * (math.sin(-sg * (.2 + i * .13) + math.pi * (j == 1 ? .08 : 0)) * r * 1.1)),
-          ),
+          o(cam.proj(b.at(4 - j * 3.0) + b.fw * (math.cos(-sg * (.2 + i * .13) + math.pi * (j == 1 ? .08 : 0)) * r) + b.sd * (math.sin(-sg * (.2 + i * .13) + math.pi * (j == 1 ? .08 : 0)) * r * 1.1)))
       ];
       stroke(c, pts, w: 1.1, a: .25 + .35 * k);
     }
@@ -500,10 +438,7 @@ class PencilPainter extends CustomPainter {
 
   void _text(Canvas c, String s, Offset at, double size, {Color? color, TextAlign align = TextAlign.left, double maxW = 440}) {
     final tp = TextPainter(
-      text: TextSpan(
-        text: s,
-        style: TextStyle(fontFamily: 'Caveat', fontSize: size, fontWeight: FontWeight.w700, color: color ?? ink(.88)),
-      ),
+      text: TextSpan(text: s, style: TextStyle(fontFamily: 'Caveat', fontSize: size, fontWeight: FontWeight.w700, color: color ?? ink(.88))),
       textDirection: TextDirection.ltr,
       textAlign: align,
     )..layout(maxWidth: maxW);
@@ -530,18 +465,7 @@ class PencilPainter extends CustomPainter {
 
     for (final e in [(b.ankL, b.footL, 'S', b.wt), (b.ankR, b.footR, 'D', 100 - b.wt)]) {
       final fr = ry(V3(e.$2.x, 0, e.$2.z).unit, -b.face), sh = math.max(.45, math.sqrt(e.$2.x * e.$2.x + e.$2.z * e.$2.z)), kf = math.max(k, 1.0), c0 = pl(e.$1);
-      const s = [
-        [-6.0, -3.7],
-        [-3.0, -4.6],
-        [8.0, -4.8],
-        [15.0, -4.4],
-        [19.0, -1.4],
-        [19.5, 1.6],
-        [17.0, 4.1],
-        [8.0, 4.6],
-        [-3.0, 4.1],
-        [-6.0, 2.8],
-      ];
+      const s = [[-6.0, -3.7], [-3.0, -4.6], [8.0, -4.8], [15.0, -4.4], [19.0, -1.4], [19.5, 1.6], [17.0, 4.1], [8.0, 4.6], [-3.0, 4.1], [-6.0, 2.8]];
       final sole = [for (final q in s) Offset(c0.dx + (fr.x * q[0] * sh + fr.z * q[1]) * kf, c0.dy + (fr.z * q[0] * sh - fr.x * q[1]) * kf)];
       final air = e.$1.y > 20;
       if (air) {
@@ -564,23 +488,8 @@ class PencilPainter extends CustomPainter {
 
   (String, String) _fistInfo(ArmState arm, V3 f) {
     final py = arm.p.y, pf = arm.p.dot(f), w = arm.f.cross(arm.p), horiz = w.y.abs() < .55;
-    final palm = py < -.55
-        ? 'palmo in giù'
-        : py > .55
-        ? 'palmo in su'
-        : pf > .55
-        ? 'palmo in avanti'
-        : pf < -.55
-        ? 'palmo indietro'
-        : 'palmo di lato';
-    return (
-      arm.open
-          ? 'mano aperta'
-          : horiz
-          ? 'orizzontale'
-          : 'verticale',
-      palm,
-    );
+    final palm = py < -.55 ? 'palmo in giù' : py > .55 ? 'palmo in su' : pf > .55 ? 'palmo in avanti' : pf < -.55 ? 'palmo indietro' : 'palmo di lato';
+    return (arm.open ? 'mano aperta' : horiz ? 'orizzontale' : 'verticale', palm);
   }
 
   void _fistGlyph(Canvas c, ArmState arm, Offset at) {
@@ -598,14 +507,10 @@ class PencilPainter extends CustomPainter {
     } else {
       shape(c, [for (var i = 0; i < 16; i++) Offset(math.cos(i / 16 * math.pi * 2) * 19, math.sin(i / 16 * math.pi * 2) * 12)], near: 1, isSkin: true);
       for (var i = 0; i < 4; i++) {
-        c.drawCircle(
-          Offset(-12.0 + i * 8, -3),
-          3.6,
-          Paint()
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 1
-            ..color = ink(.8),
-        );
+        c.drawCircle(Offset(-12.0 + i * 8, -3), 3.6, Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1
+          ..color = ink(.8));
       }
     }
     c.restore();
