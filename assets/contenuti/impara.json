@@ -1458,6 +1458,78 @@
     "tekki3": {
       "nome": "Terzo kata del cavaliere di ferro. Il più ricco di tecniche di braccio.",
       "insegna": "Insegna parate rapide in serie e la rotazione dell'avambraccio."
+    },
+    "bassaidai": {
+      "nome": "Bassai vuol dire \"penetrare la fortezza\": un kata di spinta decisa, come chi sfonda un muro.",
+      "insegna": "Insegna a cambiare lato rapidamente usando le anche e a passare dalla difesa all'attacco."
+    },
+    "kankudai": {
+      "nome": "Kankū vuol dire \"guardare il cielo\": il gesto iniziale apre lo sguardo al mondo intero. Era il kata preferito di Funakoshi.",
+      "insegna": "Insegna a combattere in tutte le direzioni e contiene molte tecniche degli Heian."
+    },
+    "jion": {
+      "nome": "Jion è il nome di un tempio buddista: il kata si collega alla tradizione dei monaci.",
+      "insegna": "Insegna posizioni forti e tecniche semplici ma pesanti."
+    },
+    "enpi": {
+      "nome": "Enpi vuol dire \"volo della rondine\": i movimenti salgono e scendono come una rondine in volo.",
+      "insegna": "Insegna velocità, cambi di livello e agilità."
+    },
+    "jitte": {
+      "nome": "Jitte vuol dire \"dieci mani\": chi lo padroneggia vale come dieci avversari.",
+      "insegna": "Insegna a difendersi a mani nude da un bastone."
+    },
+    "gankaku": {
+      "nome": "Gankaku vuol dire \"gru sulla roccia\": come una gru che attende ferma su uno scoglio.",
+      "insegna": "Insegna equilibrio e calma prima di colpire."
+    },
+    "hangetsu": {
+      "nome": "Hangetsu vuol dire \"mezza luna\": dal passo ad arco e dalla posizione.",
+      "insegna": "Insegna respirazione, tensione muscolare e radicamento."
+    },
+    "kankusho": {
+      "nome": "Il \"piccolo\" Kankū: stesso spirito di Kankū Dai, con più prese e salti.",
+      "insegna": "Insegna a combinare prese, calci e colpi ravvicinati."
+    },
+    "bassaisho": {
+      "nome": "Il \"piccolo\" Bassai: più tecnico e circolare del grande.",
+      "insegna": "Insegna a difendersi da un bastone e a usare le due mani insieme."
+    },
+    "jiin": {
+      "nome": "Jiin, come Jion e Jitte, porta il nome di un tempio.",
+      "insegna": "Insegna posizioni solide e potenza semplice."
+    },
+    "chinte": {
+      "nome": "Chinte vuol dire \"mano straordinaria\": per le tecniche di mano rare.",
+      "insegna": "Insegna precisione e tecniche di mano particolari."
+    },
+    "nijushiho": {
+      "nome": "Nijūshiho vuol dire \"ventiquattro passi\".",
+      "insegna": "Insegna a passare dalla calma all'esplosione."
+    },
+    "sochin": {
+      "nome": "Sōchin vuol dire \"forza tranquilla\": potenza che nasce dalla stabilità.",
+      "insegna": "Insegna radicamento e forza delle gambe."
+    },
+    "unsu": {
+      "nome": "Unsu vuol dire \"mani tra le nuvole\", dal gesto delle mani che si aprono.",
+      "insegna": "Insegna agilità e controllo in tutte le altezze."
+    },
+    "gojushihosho": {
+      "nome": "Gojūshiho vuol dire \"cinquantaquattro passi\".",
+      "insegna": "Insegna tecniche di mano aperta e ritmo veloce."
+    },
+    "gojushihodai": {
+      "nome": "Il \"grande\" Gojūshiho, con tecniche a becco d'uccello.",
+      "insegna": "Insegna leggerezza e colpi di precisione."
+    },
+    "meikyo": {
+      "nome": "Meikyō vuol dire \"specchio lucido\": la mente chiara riflette le cose come sono.",
+      "insegna": "Insegna calma interiore e difesa dal bastone."
+    },
+    "wankan": {
+      "nome": "Wankan vuol dire \"corona del re\".",
+      "insegna": "Insegna a chiudere un combattimento con poche tecniche decise."
     }
   },
   "etichetta": [
