@@ -25,7 +25,20 @@ void main() {
     final c = (await tester.runAsync(() => Catalog.load(rootBundle)))!;
     for (final t in c.all) {
       for (final v in views.keys) {
-        await tester.pumpWidget(Directionality(textDirection: TextDirection.ltr, child: Center(child: SizedBox(width: 240, height: 270, child: CustomPaint(painter: PencilPainter(anim: t.anim!, t: t.anim!.duration * .4, view: views[v]!))))));
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: Center(
+              child: SizedBox(
+                width: 240,
+                height: 270,
+                child: CustomPaint(
+                  painter: PencilPainter(anim: t.anim!, t: t.anim!.duration * .4, view: views[v]!),
+                ),
+              ),
+            ),
+          ),
+        );
       }
     }
     expect(tester.takeException(), isNull);

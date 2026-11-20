@@ -34,40 +34,71 @@ class _TrainSetupScreenState extends State<TrainSetupScreen> {
   @override
   Widget build(BuildContext context) {
     final app = widget.app, tot = (plan.fold(0.0, (a, s) => a + s.dur) / 60).round();
-    return Paper(back: 'indietro', title: 'Allenamento su misura', subtitle: 'Scegli quanto tempo hai e su cosa vuoi lavorare: ogni volta l\'allenamento cambia. La voce conta e annuncia ogni esercizio.', children: [
-      const Eyebrow('Quanto tempo'),
-      const SizedBox(height: 6),
-      Wrap(children: [
-        for (final m in [5, 10, 20, 30])
-          Pill('$m min', on: minutes == m, onTap: () => setState(() {
-                minutes = m;
-                plan = _make();
-              })),
-      ]),
-      const Eyebrow('Su cosa'),
-      const SizedBox(height: 6),
-      Wrap(children: [
-        for (final (id, l) in focuses)
-          Pill(l, on: focus == id, onTap: () => setState(() {
-                focus = id;
-                plan = _make();
-              })),
-      ]),
-      const SizedBox(height: 6),
-      Card2(title: 'Il tuo allenamento', badge: 'circa $tot min', children: [
-        const SizedBox(height: 4),
-        for (var i = 0; i < plan.length; i++) Text('${i + 1}.  ${segmentTitle(app, plan[i])}'),
-        const SizedBox(height: 8),
-        Wrap(children: [
-          HandButton('inizia', outlined: true, onTap: () {
-            final label = focuses.firstWhere((f) => f.$1 == focus).$2.toLowerCase();
-            Navigator.of(context).pushReplacement(MaterialPageRoute<void>(builder: (_) => TrainScreen(app: app, plan: plan, logTitle: 'Allenamento $minutes min · $label')));
-          }),
-          HandButton('cambia esercizi', onTap: () => setState(() => plan = _make())),
-        ]),
-      ]),
-      const Note('Le tecniche "da ripassare" entrano per prime. "Il mio esame" usa il programma del tuo prossimo kyu.'),
-    ]);
+    return Paper(
+      back: 'indietro',
+      title: 'Allenamento su misura',
+      subtitle: 'Scegli quanto tempo hai e su cosa vuoi lavorare: ogni volta l\'allenamento cambia. La voce conta e annuncia ogni esercizio.',
+      children: [
+        const Eyebrow('Quanto tempo'),
+        const SizedBox(height: 6),
+        Wrap(
+          children: [
+            for (final m in [5, 10, 20, 30])
+              Pill(
+                '$m min',
+                on: minutes == m,
+                onTap: () => setState(() {
+                  minutes = m;
+                  plan = _make();
+                }),
+              ),
+          ],
+        ),
+        const Eyebrow('Su cosa'),
+        const SizedBox(height: 6),
+        Wrap(
+          children: [
+            for (final (id, l) in focuses)
+              Pill(
+                l,
+                on: focus == id,
+                onTap: () => setState(() {
+                  focus = id;
+                  plan = _make();
+                }),
+              ),
+          ],
+        ),
+        const SizedBox(height: 6),
+        Card2(
+          title: 'Il tuo allenamento',
+          badge: 'circa $tot min',
+          children: [
+            const SizedBox(height: 4),
+            for (var i = 0; i < plan.length; i++) Text('${i + 1}.  ${segmentTitle(app, plan[i])}'),
+            const SizedBox(height: 8),
+            Wrap(
+              children: [
+                HandButton(
+                  'inizia',
+                  outlined: true,
+                  onTap: () {
+                    final label = focuses.firstWhere((f) => f.$1 == focus).$2.toLowerCase();
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute<void>(
+                        builder: (_) => TrainScreen(app: app, plan: plan, logTitle: 'Allenamento $minutes min · $label'),
+                      ),
+                    );
+                  },
+                ),
+                HandButton('cambia esercizi', onTap: () => setState(() => plan = _make())),
+              ],
+            ),
+          ],
+        ),
+        const Note('Le tecniche "da ripassare" entrano per prime. "Il mio esame" usa il programma del tuo prossimo kyu.'),
+      ],
+    );
   }
 }
 
@@ -185,41 +216,75 @@ class _TrainScreenState extends State<TrainScreen> {
   Widget build(BuildContext context) {
     final app = widget.app;
     if (done && widget.onFinished == null) {
-      return Paper(back: 'home', children: [
-        const Card2(title: 'Allenamento finito', text: 'Otsukaresama deshita: "grazie per la fatica". Le tecniche del kihon sono segnate come ripassate. +15 punti.'),
-        GoalCard(app),
-      ]);
+      return Paper(
+        back: 'home',
+        children: [
+          const Card2(title: 'Allenamento finito', text: 'Otsukaresama deshita: "grazie per la fatica". Le tecniche del kihon sono segnate come ripassate. +15 punti.'),
+          GoalCard(app),
+        ],
+      );
     }
     final doneT = widget.plan.take(i).fold(0.0, (a, x) => a + x.dur) + el, left = (s.dur - el).clamp(0.0, s.dur);
     final tech = s.kind == 'kihon' ? app.catalog.byId(s.techId!) : null;
-    return Paper(back: 'esci', badge: '${i + 1}/${widget.plan.length} · ${clock(total - doneT)} alla fine', children: [
-      Bar(doneT / total),
-      Eyebrow(s.kind == 'kihon' ? (s.noCount ? 'Combinazione o kata' : 'Kihon') : 'Allenamento'),
-      Text(tech?.nameJp ?? s.title, style: K.hand.copyWith(fontSize: 36)),
-      Muted('${s.kind == 'kihon' ? (s.noCount ? '${s.reps} ${s.reps > 1 ? 'volte' : 'volta'} · ' : '${s.reps} ripetizioni, conta ad alta voce · ') : ''}${clock(left)}'),
-      const SizedBox(height: 8),
-      if (tech != null)
-        TechAnimation(key: ValueKey('$i'), tech: tech, controller: ctrl!, insets: false)
-      else if (s.kind == 'list')
-        for (var j = 0; j < s.items.length; j++)
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-            decoration: BoxDecoration(color: j == item ? K.red.withValues(alpha: .08) : null, borderRadius: BorderRadius.circular(8)),
-            child: Row(children: [SizedBox(width: 32, child: Text('${j + 1}', style: K.hand.copyWith(fontSize: 21, color: j == item ? K.red : K.leadSoft))), Expanded(child: Text(s.items[j]))]),
-          )
-      else
-        AspectRatio(aspectRatio: 4 / 3, child: RoughBox(child: Center(child: Text(s.sub, textAlign: TextAlign.center, style: K.hand.copyWith(fontSize: 26))))),
-      const SizedBox(height: 8),
-      Wrap(children: [
-        HandButton(paused ? 'riprendi' : 'pausa', outlined: true, onTap: () => setState(() {
-              paused = !paused;
-              ctrl?.playing = !paused;
-              if (paused) app.voice.stop();
-            })),
-        HandButton('avanti →', onTap: () => setState(_next)),
-        ListenableBuilder(listenable: app, builder: (context, _) => HandButton('voce', on: app.voice.enabled, onTap: app.toggleVoice)),
-      ]),
-      if (count.isNotEmpty) Center(child: Text(count, style: K.hand.copyWith(fontSize: 48, color: K.red))),
-    ]);
+    return Paper(
+      back: 'esci',
+      badge: '${i + 1}/${widget.plan.length} · ${clock(total - doneT)} alla fine',
+      children: [
+        Bar(doneT / total),
+        Eyebrow(s.kind == 'kihon' ? (s.noCount ? 'Combinazione o kata' : 'Kihon') : 'Allenamento'),
+        Text(tech?.nameJp ?? s.title, style: K.hand.copyWith(fontSize: 36)),
+        Muted('${s.kind == 'kihon' ? (s.noCount ? '${s.reps} ${s.reps > 1 ? 'volte' : 'volta'} · ' : '${s.reps} ripetizioni, conta ad alta voce · ') : ''}${clock(left)}'),
+        const SizedBox(height: 8),
+        if (tech != null)
+          TechAnimation(key: ValueKey('$i'), tech: tech, controller: ctrl!, insets: false)
+        else if (s.kind == 'list')
+          for (var j = 0; j < s.items.length; j++)
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+              decoration: BoxDecoration(color: j == item ? K.red.withValues(alpha: .08) : null, borderRadius: BorderRadius.circular(8)),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 32,
+                    child: Text('${j + 1}', style: K.hand.copyWith(fontSize: 21, color: j == item ? K.red : K.leadSoft)),
+                  ),
+                  Expanded(child: Text(s.items[j])),
+                ],
+              ),
+            )
+        else
+          AspectRatio(
+            aspectRatio: 4 / 3,
+            child: RoughBox(
+              child: Center(
+                child: Text(s.sub, textAlign: TextAlign.center, style: K.hand.copyWith(fontSize: 26)),
+              ),
+            ),
+          ),
+        const SizedBox(height: 8),
+        Wrap(
+          children: [
+            HandButton(
+              paused ? 'riprendi' : 'pausa',
+              outlined: true,
+              onTap: () => setState(() {
+                paused = !paused;
+                ctrl?.playing = !paused;
+                if (paused) app.voice.stop();
+              }),
+            ),
+            HandButton('avanti →', onTap: () => setState(_next)),
+            ListenableBuilder(
+              listenable: app,
+              builder: (context, _) => HandButton('voce', on: app.voice.enabled, onTap: app.toggleVoice),
+            ),
+          ],
+        ),
+        if (count.isNotEmpty)
+          Center(
+            child: Text(count, style: K.hand.copyWith(fontSize: 48, color: K.red)),
+          ),
+      ],
+    );
   }
 }

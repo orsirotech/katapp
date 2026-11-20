@@ -18,9 +18,29 @@ class Body {
   final String stance;
 
   const Body({
-    required this.c, required this.up, required this.fw, required this.sd, required this.hipL, required this.hipR, required this.shL, required this.shR,
-    required this.kneeL, required this.kneeR, required this.ankL, required this.ankR, required this.footL, required this.footR, required this.head,
-    required this.faceDir, required this.sideDir, required this.l, required this.r, required this.face, required this.wt, required this.yw, required this.stance,
+    required this.c,
+    required this.up,
+    required this.fw,
+    required this.sd,
+    required this.hipL,
+    required this.hipR,
+    required this.shL,
+    required this.shR,
+    required this.kneeL,
+    required this.kneeR,
+    required this.ankL,
+    required this.ankR,
+    required this.footL,
+    required this.footR,
+    required this.head,
+    required this.faceDir,
+    required this.sideDir,
+    required this.l,
+    required this.r,
+    required this.face,
+    required this.wt,
+    required this.yw,
+    required this.stance,
   });
 
   V3 at(double h) => c + up * h;
@@ -52,11 +72,28 @@ Body solveBody(Pose p) {
   }
 
   return Body(
-    c: c, up: up, fw: fw, sd: sd, hipL: hipL, hipR: hipR, shL: shL, shR: shR,
-    kneeL: legL.mid, kneeR: legR.mid, ankL: legL.end, ankR: legR.end,
-    footL: foot(_d(p['fL']), _d(p['pL'])), footR: foot(_d(p['fR']), _d(p['pR'])),
-    l: arm(shL, p['L'] as Map, -1), r: arm(shR, p['R'] as Map, 1),
-    head: at(64), faceDir: rot(const V3(1, 0, 0)), sideDir: rot(const V3(0, 0, 1)),
-    face: face, wt: _d(p['wt']), yw: yw, stance: (p['stance'] as String?) ?? '',
+    c: c,
+    up: up,
+    fw: fw,
+    sd: sd,
+    hipL: hipL,
+    hipR: hipR,
+    shL: shL,
+    shR: shR,
+    kneeL: legL.mid,
+    kneeR: legR.mid,
+    ankL: legL.end,
+    ankR: legR.end,
+    footL: foot(_d(p['fL']), _d(p['pL'])),
+    footR: foot(_d(p['fR']), _d(p['pR'])),
+    l: arm(shL, p['L'] as Map, -1),
+    r: arm(shR, p['R'] as Map, 1),
+    head: at(64),
+    faceDir: rot(const V3(1, 0, 0)),
+    sideDir: rot(const V3(0, 0, 1)),
+    face: face,
+    wt: _d(p['wt']),
+    yw: yw,
+    stance: (p['stance'] as String?) ?? '',
   );
 }

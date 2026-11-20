@@ -23,9 +23,9 @@ class KatApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: 'KatApp',
-        debugShowCheckedModeBanner: false,
-        theme: K.theme(),
-        home: Shell(app: app),
-      );
+    title: 'KatApp',
+    debugShowCheckedModeBanner: false,
+    theme: K.theme(),
+    home: Shell(app: app),
+  );
 }

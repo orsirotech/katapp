@@ -32,7 +32,11 @@ class StanceResult {
   final int score;
   final List<Tip> tips;
   const StanceResult(this.score, this.tips);
-  String get verdict => score == 100 ? 'ottimo' : score >= 60 ? 'quasi' : 'da correggere';
+  String get verdict => score == 100
+      ? 'ottimo'
+      : score >= 60
+      ? 'quasi'
+      : 'da correggere';
   Tip? get firstWrong => tips.where((t) => !t.ok).firstOrNull;
 }
 
@@ -105,6 +109,14 @@ StanceResult checkStance(String id, Points p) {
     return Offset(q.x, q.y);
   }
 
-  final still = pose.Anim(id: '${t.id}-fermo', duration: 1, follow: false, view: view.id, keys: [pose.Key(0, p, pose.easeByName(null)), pose.Key(1, p, pose.easeByName(null))], marks: const [0], kiai: const []);
+  final still = pose.Anim(
+    id: '${t.id}-fermo',
+    duration: 1,
+    follow: false,
+    view: view.id,
+    keys: [pose.Key(0, p, pose.easeByName(null)), pose.Key(1, p, pose.easeByName(null))],
+    marks: const [0],
+    kiai: const [],
+  );
   return (still, {'shL': pt(b.shL), 'shR': pt(b.shR), 'hipL': pt(b.hipL), 'hipR': pt(b.hipR), 'kneeL': pt(b.kneeL), 'kneeR': pt(b.kneeR), 'ankL': pt(b.ankL), 'ankR': pt(b.ankR)});
 }

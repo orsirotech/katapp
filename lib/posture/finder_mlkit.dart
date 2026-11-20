@@ -41,7 +41,9 @@ class _MlKit implements PoseFinder {
     final f = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 1600);
     if (f == null) return null;
     final bytes = await f.readAsBytes(), img = await decodeImageFromList(bytes);
-    final det = PoseDetector(options: PoseDetectorOptions(mode: PoseDetectionMode.single, model: PoseDetectionModel.accurate));
+    final det = PoseDetector(
+      options: PoseDetectorOptions(mode: PoseDetectionMode.single, model: PoseDetectionModel.accurate),
+    );
     try {
       final pts = _points(await det.processImage(InputImage.fromFilePath(f.path)));
       return PhotoPose(pts, Size(img.width.toDouble(), img.height.toDouble()), MemoryImage(bytes));
@@ -106,7 +108,10 @@ class _LiveState extends State<_Live> {
       final fmt = InputImageFormatValue.fromRawValue(img.format.raw as int);
       if (fmt == null) return;
       final bytes = img.planes.length == 1 ? img.planes.first.bytes : Uint8List.fromList([for (final p in img.planes) ...p.bytes]);
-      final input = InputImage.fromBytes(bytes: bytes, metadata: InputImageMetadata(size: Size(img.width.toDouble(), img.height.toDouble()), rotation: rot, format: fmt, bytesPerRow: img.planes.first.bytesPerRow));
+      final input = InputImage.fromBytes(
+        bytes: bytes,
+        metadata: InputImageMetadata(size: Size(img.width.toDouble(), img.height.toDouble()), rotation: rot, format: fmt, bytesPerRow: img.planes.first.bytesPerRow),
+      );
       final p = _points(await det.processImage(input));
       // ML Kit restituisce le coordinate dell'immagine già raddrizzata
       final turned = rot == InputImageRotation.rotation90deg || rot == InputImageRotation.rotation270deg;
@@ -133,16 +138,32 @@ class _LiveState extends State<_Live> {
   Widget build(BuildContext context) {
     if (error != null) return Text(error!);
     final c = cam;
-    if (c == null || !c.value.isInitialized) return const AspectRatio(aspectRatio: 3 / 4, child: Center(child: Text('Apro la fotocamera…')));
+    if (c == null || !c.value.isInitialized)
+      return const AspectRatio(
+        aspectRatio: 3 / 4,
+        child: Center(child: Text('Apro la fotocamera…')),
+      );
     return AspectRatio(
       aspectRatio: upright.width / upright.height,
-      child: LayoutBuilder(builder: (context, box) {
-        final k = box.maxWidth / upright.width;
-        // anteprima frontale specchiata: i punti vanno specchiati allo stesso modo
-        final shown = pts == null ? null : {for (final e in pts!.entries) e.key: Offset(box.maxWidth - e.value.dx * k, e.value.dy * k)};
-        return Stack(fit: StackFit.expand, children: [ClipRect(child: FittedBox(fit: BoxFit.cover, child: SizedBox(width: upright.width, height: upright.height, child: CameraPreview(c)))), widget.overlay(shown)]);
-      }),
+      child: LayoutBuilder(
+        builder: (context, box) {
+          final k = box.maxWidth / upright.width;
+          // anteprima frontale specchiata: i punti vanno specchiati allo stesso modo
+          final shown = pts == null ? null : {for (final e in pts!.entries) e.key: Offset(box.maxWidth - e.value.dx * k, e.value.dy * k)};
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              ClipRect(
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: SizedBox(width: upright.width, height: upright.height, child: CameraPreview(c)),
+                ),
+              ),
+              widget.overlay(shown),
+            ],
+          );
+        },
+      ),
     );
   }
 }
-

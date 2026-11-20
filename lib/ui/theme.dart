@@ -7,16 +7,12 @@ class K {
   static const hand = TextStyle(fontFamily: 'Caveat', fontWeight: FontWeight.w700, color: lead, height: 1.05);
 
   static ThemeData theme() => ThemeData(
-        useMaterial3: true,
-        scaffoldBackgroundColor: paper,
-        colorScheme: ColorScheme.fromSeed(seedColor: lead, surface: paper, primary: lead, secondary: red),
-        textTheme: const TextTheme(bodyMedium: TextStyle(color: lead, fontSize: 15, height: 1.45)),
-        navigationBarTheme: NavigationBarThemeData(
-          backgroundColor: paper,
-          indicatorColor: paper2,
-          labelTextStyle: WidgetStateProperty.all(hand.copyWith(fontSize: 16)),
-        ),
-      );
+    useMaterial3: true,
+    scaffoldBackgroundColor: paper,
+    colorScheme: ColorScheme.fromSeed(seedColor: lead, surface: paper, primary: lead, secondary: red),
+    textTheme: const TextTheme(bodyMedium: TextStyle(color: lead, fontSize: 15, height: 1.45)),
+    navigationBarTheme: NavigationBarThemeData(backgroundColor: paper, indicatorColor: paper2, labelTextStyle: WidgetStateProperty.all(hand.copyWith(fontSize: 16))),
+  );
 }
 
 /// Riquadro dal bordo "a mano libera".
@@ -61,7 +57,12 @@ class HandButton extends StatelessWidget {
     return Semantics(
       button: true,
       selected: on,
-      child: outlined ? RoughBox(onTap: onTap, padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2), child: t) : InkWell(onTap: onTap, child: Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), child: t)),
+      child: outlined
+          ? RoughBox(onTap: onTap, padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2), child: t)
+          : InkWell(
+              onTap: onTap,
+              child: Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), child: t),
+            ),
     );
   }
 }

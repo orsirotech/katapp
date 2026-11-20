@@ -36,7 +36,10 @@ class TechThumb extends StatelessWidget {
               alignment: const Alignment(-.05, -1),
               maxWidth: kW,
               maxHeight: kH,
-              child: CustomPaint(size: const Size(kW, kH), painter: PencilPainter(anim: a, t: thumbTime(tech), view: views[a.view] ?? views['34']!, insets: false, seed: 2)),
+              child: CustomPaint(
+                size: const Size(kW, kH),
+                painter: PencilPainter(anim: a, t: thumbTime(tech), view: views[a.view] ?? views['34']!, insets: false, seed: 2),
+              ),
             ),
           ),
         ),
